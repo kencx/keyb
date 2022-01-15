@@ -1,6 +1,9 @@
 # keyb
 
-`keyb` is a custom configured, global hotkey cheatsheet, inspired by awesomeWM.
+`keyb` is a custom configured, global hotkey cheatsheet, inspired by
+awesomeWM's very own cheatsheet.
+
+With `keyb`, you can list any hotkeys from any program, all in one place!
 
 ## Usage
 List your custom keybindings in a config file. `keyb` supports yaml & json

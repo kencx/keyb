@@ -25,40 +25,83 @@ var (
 			Bold(true).
 			MarginTop(1)
 
-	cursorStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#FA7921"))
+	cursorStyle = lipgloss.NewStyle().Background(lipgloss.Color("#448488"))
 )
 
-type Programs map[string]pkg.Program
-type model struct {
-	title    string
-	programs Programs
-	names    []string
+type (
+	Categories map[string]pkg.Program
 
-	headings   map[int]string
-	keyLines   map[int]string
-	numOfLines int
+	model struct {
+		title      string     // title text
+		categories Categories // map of programs from config file
+		headings   []string   // *ordered* slice of category names
 
-	height, width int
-	offset        int
-	cursor        int
+		headingMap map[int]string // map of headings with line no.
+		lineMap    map[int]string // map of all key bindings with line no.
+		lineCount  int            // total number of lines
+		body       []string
 
-	builder strings.Builder
+		height, width int
+		offset        int
+		cursor        int
+
+		// builder strings.Builder
+	}
+)
+
+func New(cat Categories) *model {
+	m := model{
+		title:      "All your key bindings in one place\n",
+		categories: cat,
+		headings:   sortKeys(cat), // maintain an ordered slices of names
+		cursor:     1,
+	}
+
+	m.headingMap, m.lineMap = m.splitHeadingsAndKeys()
+	m.lineCount = len(m.headingMap) + len(m.lineMap) - 1
+
+	keyTable := alignKeyTable(m.lineMap) // generate properly aligned table
+
+	// split body into lines to insert headings
+	m.body = strings.Split(keyTable, "\n")
+	m.insertHeadings()
+
+	return &m
 }
 
-func New(programs Programs) model {
-	return model{
-		title:    "All your key bindings in one place\n\n",
-		programs: programs,
-		names:    orderNames(programs), // maintain an ordered slices of names
+// generate 2 maps from categories: unbtabbed headings and tabbed lines
+func (m *model) splitHeadingsAndKeys() (map[int]string, map[int]string) {
+
+	headingMap := make(map[int]string)
+	lineMap := make(map[int]string)
+	headingIdx := 1
+
+	for _, h := range m.headings {
+		headingMap[headingIdx] = titleStyle.Render(h)
+		p := m.categories[h]
+
+		for i, key := range p.KeyBinds {
+			lineMap[headingIdx+i+1] = fmt.Sprintf("%s\t%s", key.Command, key.Key)
+		}
+		headingIdx += len(p.KeyBinds)
+	}
+	return headingMap, lineMap
+}
+
+// insert headings at respective line numbers
+func (m *model) insertHeadings() {
+	for i := 1; i < m.lineCount; i++ {
+		if heading, ok := m.headingMap[i]; ok {
+			m.body = insertAtIndex(i, heading, m.body)
+		}
 	}
 }
 
 func main() {
-
 	prog := pkg.GetConfig()
 	m := New(prog)
 
-	p := tea.NewProgram(&m)
+	p := tea.NewProgram(m)
 	p.EnterAltScreen()
 	defer p.ExitAltScreen()
 
@@ -76,7 +119,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 
 		switch msg.String() {
-		case "ctrl + c", "q":
+		case "ctrl+c", "q":
 			return m, tea.Quit
 		case "up":
 			m.cursor--
@@ -94,54 +137,11 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m *model) View() string {
-	v := fmt.Sprintf("%s %s", m.title, m.viewContent())
-	return docStyle.Render(v)
-}
-
-func (m *model) viewContent() string {
-
-	n, headings, keyLines := m.orderLines()
-	tabbedLines := m.alignKeyLines(keyLines)
-	tabbedLinesSlice := strings.Split(tabbedLines, "\n")
-
-	// insert headings
-	for i := 1; i < n; i++ {
-		if heading, ok := headings[i]; ok {
-			tabbedLinesSlice = append(tabbedLinesSlice[:i+1], tabbedLinesSlice[i:]...)
-			tabbedLinesSlice[i] = heading
-		}
-	}
-
-	// insert color
-	for i, line := range tabbedLinesSlice {
-		if m.cursor == i && strings.Contains(line, " ") {
-			tabbedLinesSlice[i] = cursorStyle.Render(line)
-		}
-	}
-	final := strings.Join(tabbedLinesSlice, "\n")
-	return final
-}
-
-// generate table for key lines
-func (m *model) alignKeyLines(lines map[int]string) string {
-
-	defer m.builder.Reset()
-	tw := tabwriter.NewWriter(&m.builder, 20, 8, 10, ' ', 0)
-
-	for i := 1; i < len(lines); i++ {
-		line := lines[i]
-		fmt.Fprintln(tw, line)
-	}
-	tw.Flush()
-	return m.builder.String()
-}
-
 func (m *model) updateCursor() {
 	if m.cursor < 0 {
 		m.cursor = 0
-	} else if m.cursor > m.numOfLines {
-		m.cursor = m.numOfLines - 1
+	} else if m.cursor > m.lineCount {
+		m.cursor = m.lineCount - 1
 	}
 }
 
@@ -156,33 +156,59 @@ func (m *model) updateOffset() {
 	}
 }
 
+func (m *model) View() string {
+	v := fmt.Sprintf("%s %s", m.title, m.generateBody())
+	return docStyle.Render(v)
+}
+
+func (m *model) generateBody() string {
+
+	// deep copy slice
+	cpy := make([]string, len(m.body))
+	copy(cpy, m.body)
+
+	renderedBody := renderCursor(cpy, m.cursor)
+	body := strings.Join(renderedBody, "\n")
+	return body
+}
+
+// render cursor style at position
+func renderCursor(lines []string, cursorPosition int) []string {
+	for i, line := range lines {
+		if cursorPosition == i && strings.Contains(line, " ") {
+			lines[i] = cursorStyle.Render(line)
+		}
+	}
+	return lines
+}
+
 // returns slice of sorted keys
-func orderNames(p Programs) []string {
-	keys := make([]string, 0, len(p))
-	for k := range p {
+func sortKeys(cat Categories) []string {
+	keys := make([]string, 0, len(cat))
+	for k := range cat {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
 	return keys
 }
 
-func (m *model) orderLines() (int, map[int]string, map[int]string) {
-	keyLines := make(map[int]string)
-	headings := make(map[int]string)
-	headingIdx := 1
+// generate properly aligned table
+func alignKeyTable(lineMap map[int]string) string {
 
-	for _, name := range m.names {
-		p := m.programs[name]
-		headings[headingIdx] = titleStyle.Render(name)
+	var sb strings.Builder
+	tw := tabwriter.NewWriter(&sb, 20, 8, 10, ' ', 0)
 
-		for j, key := range p.KeyBinds {
-			line := fmt.Sprintf("%s\t%s", key.Command, key.Key)
-			keyLines[headingIdx+j+1] = line
-		}
-		numOfKeys := len(p.KeyBinds)
-		headingIdx += numOfKeys
+	// order keys by line no.
+	for i := 1; i < len(lineMap); i++ {
+		line := lineMap[i]
+		fmt.Fprintln(tw, line)
 	}
+	tw.Flush()
+	return sb.String()
+}
 
-	m.numOfLines = len(keyLines) + len(headings)
-	return len(keyLines) + len(headings), headings, keyLines
+func insertAtIndex(index int, element string, array []string) []string {
+	array = append(array[:index+1], array[index:]...)
+	array[index] = element
+	return array
 }

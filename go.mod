@@ -1,9 +1,8 @@
-module gokeys
+module keyb
 
 go 1.17
 
 require (
-	github.com/charmbracelet/bubbles v0.10.0
 	github.com/charmbracelet/bubbletea v0.19.3
 	github.com/charmbracelet/lipgloss v0.4.0
 	github.com/spf13/viper v1.10.1

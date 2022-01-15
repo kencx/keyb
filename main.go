@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gokeys/pkg"
+	"keyb/pkg"
 	"log"
 	"sort"
 	"strings"

@@ -3,44 +3,75 @@ package main
 import (
 	"fmt"
 	"gokeys/pkg"
+	"log"
+	"sort"
 	"strings"
 	"text/tabwriter"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
-type model struct {
-	Title string
+var (
+	docStyle = lipgloss.NewStyle().
+			Margin(1, 4).
+			Padding(1, 2).
+			Width(88).
+			Height(20).
+			BorderStyle(lipgloss.NormalBorder()).
+			BorderForeground(lipgloss.Color("#ebdbb2"))
 
-	width, height int
+	titleStyle = lipgloss.NewStyle().
+			Bold(true).
+			MarginTop(1)
+
+	cursorStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#FA7921"))
+)
+
+type Programs map[string]pkg.Program
+type model struct {
+	title    string
+	programs Programs
+	names    []string
+
+	headings   map[int]string
+	keyLines   map[int]string
+	numOfLines int
+
+	height, width int
+	offset        int
 	cursor        int
 
-	Apps       map[string]pkg.App
-	numOfApps  int
-	numOfLines int
+	builder strings.Builder
 }
 
-func New(apps map[string]pkg.App) model {
+func New(programs Programs) model {
 	return model{
-		Apps:       apps,
-		numOfApps:  len(apps),
-		numOfLines: countLines(apps),
+		title:    "All your key bindings in one place\n\n",
+		programs: programs,
+		names:    orderNames(programs), // maintain an ordered slices of names
 	}
 }
 
-func countLines(apps map[string]pkg.App) int {
-	var result int
-	for _, app := range apps {
-		result += len(app.KeyBinds) + 1 // +1 for app name
+func main() {
+
+	prog := pkg.GetConfig()
+	m := New(prog)
+
+	p := tea.NewProgram(&m)
+	p.EnterAltScreen()
+	defer p.ExitAltScreen()
+
+	if err := p.Start(); err != nil {
+		log.Fatalln(err)
 	}
-	return result
 }
 
-func (m model) Init() tea.Cmd {
+func (m *model) Init() tea.Cmd {
 	return nil
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 
@@ -48,56 +79,110 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "ctrl + c", "q":
 			return m, tea.Quit
 		case "up":
-			if m.cursor > 0 {
-				m.cursor--
-			}
+			m.cursor--
+			m.updateCursor()
+			m.updateOffset()
 		case "down":
-			if m.cursor < len(m.Apps)-1 {
-				m.cursor++
-			}
+			m.cursor++
+			m.updateCursor()
+			m.updateOffset()
 		}
+		// case tea.WindowSizeMsg:
+		// 	m.width = msg.Width
+		// 	m.height = msg.Height
 	}
 	return m, nil
 }
 
-func (m model) View() string {
-	m.Title = "Key bindings\n\n"
-	s := m.Title
+func (m *model) View() string {
+	v := fmt.Sprintf("%s %s", m.title, m.viewContent())
+	return docStyle.Render(v)
+}
 
-	for name, app := range m.Apps {
-		str, err := appView(name, app)
-		if err != nil {
-			fmt.Println(err)
+func (m *model) viewContent() string {
+
+	n, headings, keyLines := m.orderLines()
+	tabbedLines := m.alignKeyLines(keyLines)
+	tabbedLinesSlice := strings.Split(tabbedLines, "\n")
+
+	// insert headings
+	for i := 1; i < n; i++ {
+		if heading, ok := headings[i]; ok {
+			tabbedLinesSlice = append(tabbedLinesSlice[:i+1], tabbedLinesSlice[i:]...)
+			tabbedLinesSlice[i] = heading
 		}
-		s += str
-		s += "\n"
 	}
-	s += "\nPress q to Quit\n"
-	return s
+
+	// insert color
+	for i, line := range tabbedLinesSlice {
+		if m.cursor == i && strings.Contains(line, " ") {
+			tabbedLinesSlice[i] = cursorStyle.Render(line)
+		}
+	}
+	final := strings.Join(tabbedLinesSlice, "\n")
+	return final
 }
 
-func appView(name string, app pkg.App) (string, error) {
-	var sb strings.Builder
-	sb.WriteString(fmt.Sprintln(name))
-	w := tabwriter.NewWriter(&sb, 1, 1, 1, ' ', 0)
+// generate table for key lines
+func (m *model) alignKeyLines(lines map[int]string) string {
 
-	for _, key := range app.KeyBinds {
-		fmt.Fprintf(w, "%s\t%s\n", key.Command, key.Key)
-	}
+	defer m.builder.Reset()
+	tw := tabwriter.NewWriter(&m.builder, 20, 8, 10, ' ', 0)
 
-	if err := w.Flush(); err != nil {
-		return "", fmt.Errorf("error: %w", err)
+	for i := 1; i < len(lines); i++ {
+		line := lines[i]
+		fmt.Fprintln(tw, line)
 	}
-	return sb.String(), nil
+	tw.Flush()
+	return m.builder.String()
 }
 
-func main() {
-
-	appMap := pkg.GetConfig()
-	m := New(appMap)
-
-	p := tea.NewProgram(m)
-	if err := p.Start(); err != nil {
-		fmt.Errorf("unexpected error: %w", err)
+func (m *model) updateCursor() {
+	if m.cursor < 0 {
+		m.cursor = 0
+	} else if m.cursor > m.numOfLines {
+		m.cursor = m.numOfLines - 1
 	}
+}
+
+func (m *model) updateOffset() {
+	// scroll down
+	if m.cursor >= m.offset+m.height {
+		m.offset = m.cursor - m.height + 1
+	}
+	// scroll up
+	if m.cursor < m.offset {
+		m.offset = m.cursor
+	}
+}
+
+// returns slice of sorted keys
+func orderNames(p Programs) []string {
+	keys := make([]string, 0, len(p))
+	for k := range p {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+func (m *model) orderLines() (int, map[int]string, map[int]string) {
+	keyLines := make(map[int]string)
+	headings := make(map[int]string)
+	headingIdx := 1
+
+	for _, name := range m.names {
+		p := m.programs[name]
+		headings[headingIdx] = titleStyle.Render(name)
+
+		for j, key := range p.KeyBinds {
+			line := fmt.Sprintf("%s\t%s", key.Command, key.Key)
+			keyLines[headingIdx+j+1] = line
+		}
+		numOfKeys := len(p.KeyBinds)
+		headingIdx += numOfKeys
+	}
+
+	m.numOfLines = len(keyLines) + len(headings)
+	return len(keyLines) + len(headings), headings, keyLines
 }

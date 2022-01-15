@@ -6,19 +6,20 @@ import (
 	"github.com/spf13/viper"
 )
 
-type App struct {
-	Prefix   string
+type Program struct {
+	Prefix   string    `mapstructure:"prefix,omitempty"`
 	KeyBinds []KeyBind `mapstructure:"keybinds"`
 }
 
 type KeyBind struct {
 	Command string
 	Key     string
+	Comment string `mapstructure:"comment,omitempty"`
 }
 
-func GetConfig() map[string]App {
+func GetConfig() map[string]Program {
 
-	var config map[string]App
+	var config map[string]Program
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./")

@@ -1,17 +1,18 @@
 # keyb
 
-keyb is a global hotkey cheatsheet inspired by awesomeWM.
+`keyb` is a global hotkey cheatsheet inspired by awesomeWM. 
 
-keyb offers a helpful reference to your custom key bindings for any program. It
-parses all listed key bindings and displays them in a neat, tabular interface.
+It offers a helpful reference to your custom key bindings for any program by parsing all listed key bindings and displaying them in a neat, tabular interface.
 
+<p align="center">
 <img src="https://raw.githubusercontent.com/kencx/keyb/master/assets/keyb.png" alt="showcase">
+</p>
 
-Features:
+### Features:
 - Categorize your key bindings for easy reference
-- Export neatly formatted output to stdout or file
+- Export formatted output to stdout or file (compatible with fzf or rofi)
 
-Planned:
+### Planned:
 - Prefix support
 - Fuzzy search
 - vim key bindings
@@ -31,28 +32,28 @@ $ go get -u github.com/kencx/keyb
 usage: keyb [options] [file]
 
 Flags:
-  -p, --print			Print to stdout
+  -p, --print		Print to stdout
   -e, --export [file]	Export to file
-  -k, --key [file]		Pass custom key bindings file
+  -k, --key [file]	Pass custom key bindings file
   -c, --config [file]	Pass custom config file
 
-  -h, --help			help for keyb
+  -h, --help		help for keyb
 ```
 
 
-keyb requires a keybinding `yaml` file to work. List your keybindings in the file as so:
+keyb requires a `yaml` file with your listed key bindings to work. List your keybindings in the file as so:
 ```yaml
 tmux:
   prefix: ctrl + a
   keybinds:
-    - command: split vertical
+    - desc: split vertical
       key: "|"
-    - command: split horizontal
+    - desc: split horizontal
       key: "-"
 bspwm:
   keybinds:
-    - command: open configs
-	  key: super + z
+    - desc: open configs
+      key: super + z
 ```
 or refer to the defaults provided in `examples`.
 
@@ -66,7 +67,7 @@ or refer to the defaults provided in `examples`.
 | Ctrl + c, q | Quit		 |
 
 
-### fzf, rofi
+## fzf, rofi
 
 keyb also supports exporting of a formatted output for use with other programs
 like fzf:

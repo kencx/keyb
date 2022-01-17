@@ -7,16 +7,16 @@ import (
 
 var testData = map[string]Program{
 	"tmux": {KeyBinds: []KeyBind{
-		{Command: "close window", Key: "shift + x"},
+		{Desc: "close window", Key: "shift + x"},
 	}},
 	"vim": {KeyBinds: []KeyBind{
-		{Command: "focus left", Key: "ctrl + h"},
-		{Command: "swap left", Key: "ctrl + shift + h"},
+		{Desc: "focus left", Key: "ctrl + h"},
+		{Desc: "swap left", Key: "ctrl + shift + h"},
 	}},
 	"firefox": {KeyBinds: []KeyBind{
-		{Command: "incognito", Key: "ctrl + shift + p"},
-		{Command: "new tab", Key: "ctrl + shift + t"},
-		{Command: "bookmarks bar", Key: "ctrl + b"},
+		{Desc: "incognito", Key: "ctrl + shift + p"},
+		{Desc: "new tab", Key: "ctrl + shift + t"},
+		{Desc: "bookmarks bar", Key: "ctrl + b"},
 	}},
 }
 
@@ -48,7 +48,7 @@ func TestSplitHeadingsAndKeys(t *testing.T) {
 		7: " focus left\tctrl + h ",
 		8: " swap left\tctrl + shift + h ",
 	}
-	wantLineCount := 8
+	wantLineCount := 9
 
 	assertMapEqual(t, gotHeadings, wantHeadings)
 	assertMapEqual(t, gotLines, wantLines)

@@ -1,0 +1,60 @@
+---
+bspwm:
+  keybinds:
+    - desc: terminal
+      key: super + Return
+    - desc: program launcher
+      key: super + space
+    - desc: reload sxhkd
+      key: super + Escape
+    - desc: quit/escape bspwm
+      key: super + alt + {q,r}
+
+    - desc: toggle tiled and monocle layout
+      key: super + m
+    - desc: swap current node and biggest window
+      key: super + g
+    - desc: send newest node to newest preselection
+      key: super + y
+
+    - desc: set tiled state
+      key: super + t
+    - desc: set pseudo tiled state
+      key: super + shift + t
+    - desc: set floating state
+      key: super + s
+    - desc: set fullscreen state
+      key: super + f
+    - desc: set node to {marked, locked, sticky, private}
+      key: super + ctrl + {m, x, y, z}
+
+    - desc: focus node in direction
+      key: super + h,j,k,l
+    - desc: focus {parent, brother, first, second} node
+      key: super + p, b, comma, period
+    - desc: focus {next, prev} window in current desktop
+      key: super + {_, shift +} c
+    - desc: focus {next, prev} desktop
+      key: super + bracket{left, right}
+    - desc: focus last node/desktop
+      key: super + {grave, tab}
+    - desc: focus {older, newer} node in history
+      key: super + {o, i}
+    - desc: focus or send to desktop
+      key: super + {_, shift +} 1-9,0
+
+    - desc: preselect direction
+      key: super + ctrl + {h,j,k,l}
+    - desc: preselect ratio
+      key: super + ctrl + {1-9}
+    - desc: cancel preselection for focused node
+      key: super + ctrl + space
+    - desc: cancel preselection for focused desktop
+      key: super + ctrl + shift + space
+
+    - desc: expand window
+      key: super + alt + {h,j,k,l}
+    - desc: contract window
+      key: super + alt + shift + {h,j,k,l}
+    - desc: move floating window
+      key: super + {Left,Down,Up,Right}

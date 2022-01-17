@@ -54,9 +54,9 @@ func New(cat Categories, config map[string]string) *model {
 		maxWidth: 88,
 		padding:  4,
 
-		title: config["title"],
-		curFg: config["curFg"],
-		curBg: config["curBg"],
+		title: config["TITLE"],
+		curFg: config["CURSORFG"],
+		curBg: config["CURSORBG"],
 
 		mouseEnabled: true,
 		mouseDelta:   3,
@@ -97,12 +97,12 @@ func (m *model) splitHeadingsAndKeys() (map[int]string, map[int]string, int) {
 		for i, key := range p.KeyBinds {
 
 			// handle word wrapping for long lines
-			if len(key.Command) >= m.maxWidth {
-				wrappedLineCount = (len(key.Command) / m.maxWidth) + 1
-				key.Command = wordwrap.String(key.Command, min(m.width, m.maxWidth))
+			if len(key.Desc) >= m.maxWidth {
+				wrappedLineCount = (len(key.Desc) / m.maxWidth) + 1
+				key.Desc = wordwrap.String(key.Desc, min(m.width, m.maxWidth))
 			}
 
-			line := fmt.Sprintf("%s\t%s", key.Command, key.Key)
+			line := fmt.Sprintf("%s\t%s", key.Desc, key.Key)
 			lineMap[headingIdx+i+1] = lineStyle.Render(line)
 		}
 		// total num of keys + heading + num of (extra) wrapped lines
@@ -239,7 +239,9 @@ func (m *model) updateBody() string {
 
 // render cursor style at position
 func (m *model) renderCursor(lines []string) []string {
-	cursorStyle := lipgloss.NewStyle().Background(lipgloss.Color(m.curBg)).Foreground(lipgloss.Color(m.curFg))
+	cursorStyle := lipgloss.NewStyle().
+		Background(lipgloss.Color(m.curBg)).
+		Foreground(lipgloss.Color(m.curFg))
 
 	for i, line := range lines {
 		if m.cursor == i {

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -12,10 +13,10 @@ import (
 const help = `usage: keyb [options] [file]
 
 Flags:
-  -p		Print to stdout
-  -e		Export to file
-  -k		Key bindings at custom path
-  -c		Config file at custom path
+  -p, --print	Print to stdout
+  -e, --export	Export to file
+  -k, --key		Key bindings at custom path
+  -c, --config	Config file at custom path
 
   -h, --help	help for keyb
 `
@@ -30,19 +31,27 @@ var (
 func main() {
 
 	flag.BoolVar(&output, "p", false, "print to stdout")
+	flag.BoolVar(&output, "print", false, "print to stdout")
 	flag.StringVar(&export, "e", "", "export to file")
+	flag.StringVar(&export, "export", "", "export to file")
 	flag.StringVar(&keybindings, "k", "", "keybindings file at custom path")
+	flag.StringVar(&keybindings, "key", "", "keybindings file at custom path")
 	flag.StringVar(&keybrc, "c", "", "config file at custom path")
+	flag.StringVar(&keybrc, "config", "", "config file at custom path")
 
 	flag.Usage = func() { os.Stdout.Write([]byte(help)) }
 	flag.Parse()
 
+	if err := CreateConfigFile(); err != nil {
+		log.Fatal(err)
+	}
+
 	if keybindings == "" {
-		keybindings = "examples/config.yml"
+		keybindings = "examples/test.yml"
 	}
 
 	if keybrc == "" {
-		keybrc = "examples/.keybrc"
+		keybrc = path.Join(os.Getenv("HOME"), ".config/keyb/.keybrc")
 	}
 
 	// initialize model

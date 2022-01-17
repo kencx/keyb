@@ -1,0 +1,51 @@
+---
+tmux (windows):
+  prefix: ctrl + b
+  keybinds:
+    - desc: "Create new window"
+      key: "c"
+    - desc: "Detach from session"
+      key: "d"
+    - desc: "Rename current window"
+      key: ","
+    - desc: "Close current window"
+      key: "&"
+    - desc: "List windows"
+      key: "w"
+
+    - desc: "Previous window"
+      key: "p"
+    - desc: "Next window"
+      key: "n"
+
+tmux (panes):
+  prefix: ctrl + b
+  keybinds:
+    - desc: "Split pane vertically"
+      key: "\""
+    - desc: "Split pane horizontally"
+      key: "%"
+
+    - desc: "Next pane"
+      key: "o"
+    - desc: "Previous pane"
+      key: ";"
+
+    - desc: "Show pane numbers"
+      key: "q"
+    - desc: "Toggle pane zoom"
+      key: "z"
+    - desc: "Convert pane into a window"
+      key: "!"
+    - desc: "Kill current pane"
+      key: "x"
+
+    - desc: "Move to the previous pane"
+      key: "{"
+    - desc: "Move to the next pane"
+      key: "}"
+
+    - desc: "Toggle between pane layouts"
+      key: "Space"
+    - desc: "Resize pane"
+      key: "ctrl + {up, down, left, right}"

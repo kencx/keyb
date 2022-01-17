@@ -14,12 +14,10 @@ var (
 	titleStyle = lipgloss.NewStyle().Bold(true)
 	lineStyle  = lipgloss.NewStyle().Margin(0, 1)
 	docStyle   = lipgloss.NewStyle().Margin(1, 4)
-	// cursorStyle = lipgloss.NewStyle().Background(lipgloss.Color("#FFFFFF"))
 )
 
 type Categories map[string]Program
 type model struct {
-	title      string
 	categories Categories // map of programs from config file
 	headings   []string   // *ordered* slice of category names
 
@@ -38,13 +36,16 @@ type model struct {
 	offset        int
 
 	// styling
+	title string
 	curFg string
 	curBg string
+
+	mouseEnabled bool
+	mouseDelta   int
 }
 
 func New(cat Categories, config map[string]string) *model {
 	m := model{
-		title:      config["title"],
 		categories: cat,
 		headings:   sortKeys(cat), // ordered slices of names
 
@@ -53,8 +54,12 @@ func New(cat Categories, config map[string]string) *model {
 		maxWidth: 88,
 		padding:  4,
 
+		title: config["title"],
 		curFg: config["curFg"],
 		curBg: config["curBg"],
+
+		mouseEnabled: true,
+		mouseDelta:   3,
 	}
 	if len(m.headings) > 0 {
 		m.initBody()
@@ -156,6 +161,20 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "G":
 			m.cursor = m.lineCount - 1
 		}
+	case tea.MouseMsg:
+		if !m.mouseEnabled {
+			break
+		}
+		switch msg.Type {
+
+		// TODO smoother scrolling
+		case tea.MouseWheelUp:
+			m.cursor -= m.mouseDelta
+			m.updateCursor()
+		case tea.MouseWheelDown:
+			m.cursor += m.mouseDelta
+			m.updateCursor()
+		}
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height - m.padding
@@ -171,7 +190,6 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// 	m.initBody()
 		// }
 	}
-
 	m.updateOffset()
 	return m, nil
 }

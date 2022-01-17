@@ -78,6 +78,7 @@ func main() {
 func startProgram(m *model) error {
 
 	p := tea.NewProgram(m)
+	p.EnableMouseCellMotion()
 	p.EnterAltScreen()
 	defer p.ExitAltScreen()
 

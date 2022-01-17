@@ -3,7 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/spf13/viper"
+	"github.com/knadh/koanf"
+	"github.com/knadh/koanf/parsers/dotenv"
+	"github.com/knadh/koanf/parsers/yaml"
+	"github.com/knadh/koanf/providers/file"
 )
 
 type Program struct {
@@ -17,22 +20,28 @@ type KeyBind struct {
 	Comment string `mapstructure:"comment,omitempty"`
 }
 
-func GetConfig() map[string]Program {
+func GetConfig(keybrc string) (map[string]string, error) {
 
-	var config map[string]Program
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath("./")
+	var config map[string]string
+	var k = koanf.New(".")
 
-	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			fmt.Println("config file not found")
-		}
-		fmt.Printf("error in config: %v", err)
+	if err := k.Load(file.Provider(keybrc), dotenv.Parser()); err != nil {
+		return nil, fmt.Errorf("error loading config: %w", err)
 	}
 
-	if err := viper.Unmarshal(&config); err != nil {
-		fmt.Printf("failed to decode: %v", err)
+	k.Unmarshal("", &config)
+	return config, nil
+}
+
+func GetPrograms(keyFile string) (map[string]Program, error) {
+
+	var programs map[string]Program
+	var k = koanf.New(".")
+
+	if err := k.Load(file.Provider(keyFile), yaml.Parser()); err != nil {
+		return nil, fmt.Errorf("error loading keymap: %w", err)
 	}
-	return config
+
+	k.Unmarshal("", &programs)
+	return programs, nil
 }

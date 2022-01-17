@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"sort"
 	"strings"
 	"text/tabwriter"
 
@@ -12,10 +11,10 @@ import (
 )
 
 var (
-	titleStyle  = lipgloss.NewStyle().Bold(true)
-	lineStyle   = lipgloss.NewStyle().Margin(0, 1)
-	docStyle    = lipgloss.NewStyle().Margin(1, 4)
-	cursorStyle = lipgloss.NewStyle().Background(lipgloss.Color("#448488"))
+	titleStyle = lipgloss.NewStyle().Bold(true)
+	lineStyle  = lipgloss.NewStyle().Margin(0, 1)
+	docStyle   = lipgloss.NewStyle().Margin(1, 4)
+	// cursorStyle = lipgloss.NewStyle().Background(lipgloss.Color("#FFFFFF"))
 )
 
 type Categories map[string]Program
@@ -37,11 +36,15 @@ type model struct {
 	padding       int // bottom padding
 	cursor        int
 	offset        int
+
+	// styling
+	curFg string
+	curBg string
 }
 
-func New(cat Categories) *model {
+func New(cat Categories, config map[string]string) *model {
 	m := model{
-		title:      "All your key bindings in one place",
+		title:      config["title"],
 		categories: cat,
 		headings:   sortKeys(cat), // ordered slices of names
 
@@ -49,8 +52,17 @@ func New(cat Categories) *model {
 		width:    60,
 		maxWidth: 88,
 		padding:  4,
-	}
 
+		curFg: config["curFg"],
+		curBg: config["curBg"],
+	}
+	if len(m.headings) > 0 {
+		m.initBody()
+	}
+	return &m
+}
+
+func (m *model) initBody() {
 	m.headingMap, m.lineMap, m.lineCount = m.splitHeadingsAndKeys()
 
 	// generate properly aligned table
@@ -59,18 +71,6 @@ func New(cat Categories) *model {
 	// split body into lines to insert headings
 	m.body = strings.Split(keyTable, "\n")
 	m.insertHeadings()
-
-	return &m
-}
-
-// returns slice of sorted keys
-func sortKeys(cat Categories) []string {
-	keys := make([]string, 0, len(cat))
-	for k := range cat {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-	return keys
 }
 
 // generate 2 maps from categories: unbtabbed headings and tabbed lines
@@ -106,7 +106,7 @@ func (m *model) splitHeadingsAndKeys() (map[int]string, map[int]string, int) {
 		headingIdx += len(p.KeyBinds) + max(1, wrappedLineCount)
 		wrappedLineCount = 0 // reset
 	}
-	return headingMap, lineMap, totalLineCount - 1
+	return headingMap, lineMap, totalLineCount
 }
 
 // generate properly aligned table
@@ -134,12 +134,7 @@ func (m *model) insertHeadings() {
 	}
 }
 
-func insertAtIndex(index int, element string, array []string) []string {
-	array = append(array[:index+1], array[index:]...)
-	array[index] = element
-	return array
-}
-
+// bubbletea
 func (m *model) Init() tea.Cmd {
 	return nil
 }
@@ -165,6 +160,16 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.width = msg.Width
 		m.height = msg.Height - m.padding
 		m.offset = 0
+
+		// refresh line wrapping (WIP)
+		// if msg.Width/2 < m.maxWidth {
+		// 	m.maxWidth = msg.Width / 2
+		// 	m.initBody()
+		// }
+		// if msg.Width > m.maxWidth*2 {
+		// 	m.maxWidth = msg.Width
+		// 	m.initBody()
+		// }
 	}
 
 	m.updateOffset()
@@ -191,16 +196,21 @@ func (m *model) updateOffset() {
 }
 
 func (m *model) View() string {
-	view := fmt.Sprintf("%s\n\n%s", m.title, m.setBody())
+	view := fmt.Sprintf("%s\n\n%s", m.title, m.updateBody())
 	return docStyle.Render(view)
 }
 
-func (m *model) setBody() string {
+func (m *model) updateBody() string {
+
+	if len(m.body) <= 0 {
+		return "No key bindings found"
+	}
+
 	// deep copy slice
 	cpy := make([]string, len(m.body))
 	copy(cpy, m.body)
 
-	body := renderCursor(cpy, m.cursor)
+	body := m.renderCursor(cpy)
 
 	if m.lineCount >= m.offset+m.height {
 		body = body[m.offset : m.offset+m.height]
@@ -210,25 +220,13 @@ func (m *model) setBody() string {
 }
 
 // render cursor style at position
-func renderCursor(lines []string, cursorPosition int) []string {
+func (m *model) renderCursor(lines []string) []string {
+	cursorStyle := lipgloss.NewStyle().Background(lipgloss.Color(m.curBg)).Foreground(lipgloss.Color(m.curFg))
+
 	for i, line := range lines {
-		if cursorPosition == i {
+		if m.cursor == i {
 			lines[i] = cursorStyle.Render(line)
 		}
 	}
 	return lines
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
-func max(a, b int) int {
-	if a < b {
-		return b
-	}
-	return a
 }

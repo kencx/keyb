@@ -88,13 +88,15 @@ func CreateConfigDir() (string, error) {
 	dirPath := filepath.Join(basedir, parentdir)
 
 	_, err = os.Stat(dirPath)
-	if errors.Is(err, os.ErrNotExist) {
-		err := os.MkdirAll(dirPath, 0755)
-		if err != nil {
-			return "", fmt.Errorf("error creating parent dir: %v", err)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			err := os.MkdirAll(dirPath, 0755)
+			if err != nil {
+				return "", fmt.Errorf("error creating parent dir: %v", err)
+			}
+		} else {
+			return "", fmt.Errorf("error determining file structure: %v", err)
 		}
-	} else {
-		return "", fmt.Errorf("error determining file structure: %v", err)
 	}
 	return dirPath, nil
 }

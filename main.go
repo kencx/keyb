@@ -46,10 +46,12 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// TODO set path
 	if keybindings == "" {
 		keybindings = "examples/test.yml"
 	}
 
+	// TODO set path
 	if keybrc == "" {
 		keybrc = path.Join(os.Getenv("HOME"), ".config/keyb/.keybrc")
 	}

@@ -1,16 +1,13 @@
 # keyb
 
-Quick search for application hotkeys at the tip of your fingers. Powered by
-koanf, bubbletea and lipgloss.
+<p align="center">Quick search for application hotkeys at the tip of your fingers.</p>
 
-<p align="center">
-<img src="https://raw.githubusercontent.com/kencx/keyb/master/assets/keyb.png" alt="showcase">
-</p>
+<p align="center">Powered by koanf, bubbletea and lipgloss.</p>
 
-keyb displays your custom key bindings in a tabular reference. Write your own custom cheatsheet or use one of the defaults available.
+[![keyb demo](https://asciinema.org/a/1fwoiNql5GBKF7lfmSpTpSQTJ.png)](https://asciinema.org/a/1fwoiNql5GBKF7lfmSpTpSQTJ)
 
-Features:
-- Categorize your key bindings for easy reference
+### Features:
+- Tabular reference for custom key bindings
 - Export formatted output to stdout or file
 - fzf, rofi support
 
@@ -22,7 +19,7 @@ Features:
 - More default cheatsheets
 
 ## Install
-keyb is still a work in progress and not ready. Use it at your own risk.
+keyb is still a work in progress. Use it at your own risk.
 
 ```bash
 $ go get -u github.com/kencx/keyb
@@ -30,20 +27,22 @@ $ go get -u github.com/kencx/keyb
 
 ## Usage
 
-```bash
+```text
 usage: keyb [options] [file]
 
 Flags:
-  -p, --print		Print to stdout
-  -e, --export [file]	Export to file
-  -k, --key [file]	Pass custom key bindings file
-  -c, --config [file]	Pass custom config file
+  -p, --print           Print to stdout
+  -e, --export [file]   Export to file
+  -s, --strip           Strip ANSI chars (only for print/export)
+  -k, --key [file]      Pass custom key bindings file
+  -c, --config [file]   Pass custom config file
 
-  -h, --help		help for keyb
+  -h, --help            help for keyb
 ```
 
 keyb requires a `yaml` file with your listed key bindings to work. List your keybindings in the file as so:
 ```yaml
+# $XDG_CONFIG_HOME/keyb/keyb.yml
 tmux:
   prefix: ctrl + a
   keybinds:
@@ -59,8 +58,13 @@ bspwm:
 ```
 or refer to the defaults provided in `examples`.
 
->Note: While word wrapping is supported, long text of > 88 characters are not
+>Note: Word wrapping is not well supported. Long text of > 88 characters is not
 >recommended.
+
+### Configuration
+Configure your keyb instance with `$XDG_CONFIG_HOME/keyb/config`.
+
+Refer to `examples/config` for the default config.
 
 ### Navigation
 
@@ -76,19 +80,14 @@ or refer to the defaults provided in `examples`.
 keyb also supports the export of a formatted output for use with other programs
 like fzf:
 ```bash
-$ keyb -e output
-$ cat output | fzf
+$ keyb -p | fzf
 ```
 
 For rofi, the output must be stripped of ansi formatting first:
 ```bash
-$ keyb -e output -s
-$ cat output | rofi -dmenu
+$ keyb -e output.txt -s
+$ cat output.txt | rofi -dmenu
 ```
-
-## Configuration
-The default config path is `$HOME/.config/keyb`.
-
 
 ## Inspiration
 - [awesomeWM](https://github.com/awesomeWM/awesome)

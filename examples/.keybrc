@@ -1,6 +1,0 @@
-TITLE="All your keybindings in one place"
-
-CURSORFB="#edb"
-CURSORBG="#448448"
-
-KEYBRC_DIR="$HOME/.config/keyrc"

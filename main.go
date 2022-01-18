@@ -15,67 +15,54 @@ const help = `usage: keyb [options] [file]
 Flags:
   -p, --print	Print to stdout
   -e, --export	Export to file
-  -k, --key		Key bindings at custom path
+  -s, --strip   Strip ANSI chars (only for print/export)
+  -k, --key     Key bindings at custom path
   -c, --config	Config file at custom path
 
   -h, --help	help for keyb
 `
 
-var (
-	output      bool
-	export      string
-	keybindings string
-	keybrc      string
-)
-
 func main() {
 
+	var (
+		strip      bool
+		output     bool
+		exportFile string
+		keybFile   string
+		configFile string
+	)
+	var defaultConfig = path.Join(os.Getenv("HOME"), ".config/keyb/config")
+	var defaultKeyb = path.Join(os.Getenv("HOME"), ".config/keyb/keyb.yaml")
+
+	flag.BoolVar(&strip, "s", false, "strip ANSI chars")
+	flag.BoolVar(&strip, "strip", false, "strip ANSI chars")
 	flag.BoolVar(&output, "p", false, "print to stdout")
 	flag.BoolVar(&output, "print", false, "print to stdout")
-	flag.StringVar(&export, "e", "", "export to file")
-	flag.StringVar(&export, "export", "", "export to file")
-	flag.StringVar(&keybindings, "k", "", "keybindings file at custom path")
-	flag.StringVar(&keybindings, "key", "", "keybindings file at custom path")
-	flag.StringVar(&keybrc, "c", "", "config file at custom path")
-	flag.StringVar(&keybrc, "config", "", "config file at custom path")
+	flag.StringVar(&exportFile, "e", "", "export to file")
+	flag.StringVar(&exportFile, "export", "", "export to file")
+	flag.StringVar(&keybFile, "k", defaultKeyb, "keybindings file")
+	flag.StringVar(&keybFile, "key", defaultKeyb, "keybindings file")
+	flag.StringVar(&configFile, "c", defaultConfig, "config file")
+	flag.StringVar(&configFile, "config", defaultConfig, "config file")
 
 	flag.Usage = func() { os.Stdout.Write([]byte(help)) }
 	flag.Parse()
 
-	if err := CreateConfigFile(); err != nil {
-		log.Fatal(err)
-	}
-
-	// TODO set path
-	if keybindings == "" {
-		keybindings = "examples/test.yml"
-	}
-
-	// TODO set path
-	if keybrc == "" {
-		keybrc = path.Join(os.Getenv("HOME"), ".config/keyb/.keybrc")
-	}
-
-	// initialize model
-	prog, err := GetPrograms(keybindings)
-	if err != nil {
-		log.Fatal(err)
-	}
-	config, err := GetConfig(keybrc)
+	prog, config, err := handleFlags(keybFile, configFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 	m := New(prog, config)
 
 	if output {
-		if err := m.OutputBodyToStdout(false); err != nil {
+		if err := m.OutputBodyToStdout(strip); err != nil {
 			log.Fatal(err)
 		}
 		os.Exit(0)
 	}
 
-	if export != "" {
-		if err := m.OutputBodyToFile(export, false); err != nil {
+	if exportFile != "" {
+		if err := m.OutputBodyToFile(exportFile, strip); err != nil {
 			log.Fatal(err)
 		}
 		os.Exit(0)
@@ -84,6 +71,27 @@ func main() {
 	if err := startProgram(m); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func handleFlags(keybFile, configFile string) (map[string]Program, *Config, error) {
+
+	if err := createConfigFile(); err != nil {
+		return nil, nil, err
+	}
+	config, err := GetConfig(configFile)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	customKeybFile := config.KeybPath
+	if customKeybFile != "" {
+		keybFile = customKeybFile
+	}
+	prog, err := GetPrograms(keybFile)
+	if err != nil {
+		return nil, nil, err
+	}
+	return prog, config, nil
 }
 
 func startProgram(m *model) error {
@@ -97,14 +105,4 @@ func startProgram(m *model) error {
 		return fmt.Errorf("failed to start program: %w", err)
 	}
 	return nil
-}
-
-func isFlagPassed(name string) bool {
-	var found bool
-	flag.Visit(func(f *flag.Flag) {
-		if f.Name == name {
-			found = true
-		}
-	})
-	return found
 }

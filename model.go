@@ -44,7 +44,7 @@ type model struct {
 	mouseDelta   int
 }
 
-func New(cat Categories, config map[string]string) *model {
+func New(cat Categories, config *Config) *model {
 	m := model{
 		categories: cat,
 		headings:   sortKeys(cat), // ordered slices of names
@@ -54,9 +54,9 @@ func New(cat Categories, config map[string]string) *model {
 		maxWidth: 88,
 		padding:  4,
 
-		title: config["TITLE"],
-		curFg: config["CURSORFG"],
-		curBg: config["CURSORBG"],
+		title: config.Title,
+		curFg: config.Cursor_fg,
+		curBg: config.Cursor_bg,
 
 		mouseEnabled: true,
 		mouseDelta:   3,

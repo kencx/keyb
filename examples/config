@@ -1,0 +1,7 @@
+TITLE = "All your keybindings in one place"
+VIM = true
+KEYB_PATH = "$HOME/.config/keyb/keyb.yml"
+CURSOR_FG = `#edb`
+CURSOR_BG = `#448448`
+BORDER = true
+BORDER_COLOR = ""

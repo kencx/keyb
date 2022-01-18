@@ -3,63 +3,105 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
 
-	"github.com/knadh/koanf"
-	"github.com/knadh/koanf/parsers/dotenv"
-	"github.com/knadh/koanf/parsers/yaml"
-	"github.com/knadh/koanf/providers/file"
+	"gopkg.in/ini.v1"
+	"gopkg.in/yaml.v2"
 )
 
-const parentdir = "keyb"
-const configTempl = `TITLE="All your keybindings in one place"
+const (
+	parentDir  = "keyb"
+	configFile = "config"
 
-CURSORFB="#edb"
-CURSORBG="#448448"
-
-KEYBRC_DIR="$HOME/.config/keyrc"
+	// TODO reformat templ
+	configTempl = `TITLE = "All your keybindings in one place"
+VIM = true
+KEYB_PATH = "$HOME/.config/keyb/keyb.yml"
+` +
+		"CURSOR_FG = `#edb`\n" +
+		"CURSOR_BG = `#448448`\n" +
+		`BORDER = true
+BORDER_COLOR = ""
 `
+)
+
+type Config struct {
+	Title    string
+	Vim      bool
+	KeybPath string
+
+	Cursor_fg    string
+	Cursor_bg    string
+	Border       bool
+	Border_color string
+}
 
 type Program struct {
-	Prefix   string    `mapstructure:"prefix,omitempty"`
-	KeyBinds []KeyBind `mapstructure:"keybinds"`
+	Prefix   string
+	KeyBinds []KeyBind
 }
 
 type KeyBind struct {
 	Desc    string
 	Key     string
-	Comment string `mapstructure:"comment,omitempty"`
+	Comment string
 }
 
-func GetConfig(keybrc string) (map[string]string, error) {
+func GetConfig(configFile string) (*Config, error) {
 
-	var config map[string]string
-	var k = koanf.New(".")
-
-	if err := k.Load(file.Provider(keybrc), dotenv.Parser()); err != nil {
+	options := ini.LoadOptions{
+		SkipUnrecognizableLines: true,
+		AllowBooleanKeys:        true,
+	}
+	config, err := ini.LoadSources(options, os.ExpandEnv(configFile))
+	if err != nil {
 		return nil, fmt.Errorf("error loading config: %w", err)
 	}
 
-	k.Unmarshal("", &config)
-	return config, nil
-}
+	cfgSection := config.Section("")
 
-func GetPrograms(keyFile string) (map[string]Program, error) {
-
-	var programs map[string]Program
-	var k = koanf.New(".")
-
-	if err := k.Load(file.Provider(keyFile), yaml.Parser()); err != nil {
-		return nil, fmt.Errorf("error loading keymap: %w", err)
+	// parse booleans
+	vim, err := cfgSection.Key("VIM").Bool()
+	if err != nil {
+		return nil, fmt.Errorf("error: %w", err)
+	}
+	border, err := cfgSection.Key("BORDER").Bool()
+	if err != nil {
+		return nil, fmt.Errorf("error: %w", err)
 	}
 
-	k.Unmarshal("", &programs)
+	cfg := &Config{
+		Title:    cfgSection.Key("TITLE").String(),
+		Vim:      vim,
+		KeybPath: cfgSection.Key("KEYB_PATH").String(),
+
+		Cursor_fg:    cfgSection.Key("CURSOR_FG").String(),
+		Cursor_bg:    cfgSection.Key("CURSOR_BG").String(),
+		Border:       border,
+		Border_color: cfgSection.Key("BORDER_COLOR").String(),
+	}
+	return cfg, nil
+}
+
+func GetPrograms(keybFile string) (map[string]Program, error) {
+
+	var programs map[string]Program
+
+	file, err := ioutil.ReadFile(os.ExpandEnv(keybFile))
+	if err != nil {
+		return nil, fmt.Errorf("error reading keyb.yaml: %w", err)
+	}
+
+	if err := yaml.Unmarshal(file, &programs); err != nil {
+		return nil, fmt.Errorf("error unmarshalling keyb.yaml: %w", err)
+	}
 	return programs, nil
 }
 
-func GetBaseDir() (string, error) {
+func getBaseDir() (string, error) {
 	var err error
 	var path string
 
@@ -67,51 +109,62 @@ func GetBaseDir() (string, error) {
 	case "windows":
 		path = os.Getenv("APPDATA")
 	case "linux":
-		// check config for custom dir
-		path = os.Getenv("XDG_DATA_HOME")
+		path = os.Getenv("XDG_CONFIG_HOME")
 		if path == "" {
-			homepath := os.Getenv("HOME")
-			path = filepath.Join(homepath, ".config")
+			path = filepath.Join(os.Getenv("HOME"), ".config")
 		}
 	default:
-		err = fmt.Errorf("unsupported platform")
+		err = fmt.Errorf("error: unsupported platform")
+	}
+
+	if path == "" {
+		return "", fmt.Errorf("error: base directory not found")
 	}
 	return path, err
 }
 
-func CreateConfigDir() (string, error) {
+func createConfigDir() (string, error) {
 
-	basedir, err := GetBaseDir()
+	baseDir, err := getBaseDir()
 	if err != nil {
 		return "", err
 	}
-	dirPath := filepath.Join(basedir, parentdir)
+	configPath := filepath.Join(baseDir, parentDir)
 
-	_, err = os.Stat(dirPath)
+	_, err = os.Stat(configPath)
 	if err != nil {
+
 		if errors.Is(err, os.ErrNotExist) {
-			err := os.MkdirAll(dirPath, 0755)
+			err := os.MkdirAll(configPath, 0755)
 			if err != nil {
-				return "", fmt.Errorf("error creating parent dir: %v", err)
+				return "", fmt.Errorf("error creating config dir: %w", err)
 			}
 		} else {
-			return "", fmt.Errorf("error determining file structure: %v", err)
+			return "", fmt.Errorf("error determining file structure: %w", err)
 		}
 	}
-	return dirPath, nil
+	return configPath, nil
 }
 
-// add default config file
-func CreateConfigFile() error {
+func createConfigFile() error {
 
-	basePath, err := CreateConfigDir()
+	basePath, err := createConfigDir()
 	if err != nil {
 		return err
 	}
 
-	fullPath := filepath.Join(basePath, ".keybrc")
-	if err := os.WriteFile(fullPath, []byte(configTempl), 0755); err != nil {
-		return fmt.Errorf("error writing config file: %v", err)
+	fullPath := filepath.Join(basePath, configFile)
+
+	_, err = os.Stat(fullPath)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			if err := os.WriteFile(fullPath, []byte(configTempl), 0755); err != nil {
+				return fmt.Errorf("error writing config file: %w", err)
+			}
+		} else {
+			return fmt.Errorf("error determining file structure: %w", err)
+		}
 	}
+
 	return nil
 }

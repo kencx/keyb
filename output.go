@@ -12,7 +12,9 @@ func (m *model) OutputBodyToFile(path string, strip bool) error {
 	if strip {
 		output = stripANSI(output)
 	}
-	if err := os.WriteFile(path, []byte(output), 0744); err != nil {
+
+	path = os.ExpandEnv(path)
+	if err := os.WriteFile(path, []byte(output), 0664); err != nil {
 		return fmt.Errorf("error writing to file: %w", err)
 	}
 	return nil

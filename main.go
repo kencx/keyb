@@ -12,15 +12,23 @@ import (
 
 const help = `usage: keyb [options] [file]
 
-Flags:
-  -p, --print	Print to stdout
-  -e, --export	Export to file
-  -s, --strip   Strip ANSI chars (only for print/export)
-  -k, --key     Key bindings at custom path
-  -c, --config	Config file at custom path
+  Flags:
+    -p, --print	    Print to stdout
+    -e, --export    Export to file
+    -s, --strip     Strip ANSI chars (only for print/export)
+    -k, --key       Key bindings at custom path
+    -c, --config    Config file at custom path
 
-  -h, --help	help for keyb
+    -h, --help	    help for keyb
 `
+
+// TODO support diff OS
+var (
+	defaultConfig = path.Join(os.Getenv("HOME"), ".config/keyb/config")
+	defaultKeyb   = path.Join(os.Getenv("HOME"), ".config/keyb/keyb.yaml")
+)
+
+type Categories map[string]Program
 
 func main() {
 
@@ -31,8 +39,6 @@ func main() {
 		keybFile   string
 		configFile string
 	)
-	var defaultConfig = path.Join(os.Getenv("HOME"), ".config/keyb/config")
-	var defaultKeyb = path.Join(os.Getenv("HOME"), ".config/keyb/keyb.yaml")
 
 	flag.BoolVar(&strip, "s", false, "strip ANSI chars")
 	flag.BoolVar(&strip, "strip", false, "strip ANSI chars")
@@ -40,19 +46,19 @@ func main() {
 	flag.BoolVar(&output, "print", false, "print to stdout")
 	flag.StringVar(&exportFile, "e", "", "export to file")
 	flag.StringVar(&exportFile, "export", "", "export to file")
-	flag.StringVar(&keybFile, "k", defaultKeyb, "keybindings file")
-	flag.StringVar(&keybFile, "key", defaultKeyb, "keybindings file")
+	flag.StringVar(&keybFile, "k", "", "keybindings file")
+	flag.StringVar(&keybFile, "key", "", "keybindings file")
 	flag.StringVar(&configFile, "c", defaultConfig, "config file")
 	flag.StringVar(&configFile, "config", defaultConfig, "config file")
 
 	flag.Usage = func() { os.Stdout.Write([]byte(help)) }
 	flag.Parse()
 
-	prog, config, err := handleFlags(keybFile, configFile)
+	program, config, err := handleFlags(keybFile, configFile)
 	if err != nil {
 		log.Fatal(err)
 	}
-	m := New(prog, config)
+	m := New(program, config)
 
 	if output {
 		if err := m.OutputBodyToStdout(strip); err != nil {
@@ -73,21 +79,25 @@ func main() {
 	}
 }
 
-func handleFlags(keybFile, configFile string) (map[string]Program, *Config, error) {
+func handleFlags(keybPath, configPath string) (Categories, *Config, error) {
 
 	if err := createConfigFile(); err != nil {
 		return nil, nil, err
 	}
-	config, err := GetConfig(configFile)
+	config, err := GetConfig(configPath)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	customKeybFile := config.KeybPath
-	if customKeybFile != "" {
-		keybFile = customKeybFile
+	customKeybPath := config.KeybPath
+
+	if keybPath != "" { // flag takes priority
+		customKeybPath = keybPath
+	} else if customKeybPath == "" && keybPath == "" {
+		return nil, nil, fmt.Errorf("ERROR: no keyb file found")
 	}
-	prog, err := GetPrograms(keybFile)
+
+	prog, err := GetPrograms(customKeybPath)
 	if err != nil {
 		return nil, nil, err
 	}

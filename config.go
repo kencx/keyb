@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -12,20 +13,12 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+//go:embed examples/config
+var configTempl string
+
 const (
 	parentDir  = "keyb"
 	configFile = "config"
-
-	// TODO reformat templ
-	configTempl = `TITLE = "All your keybindings in one place"
-VIM = true
-KEYB_PATH = "$HOME/.config/keyb/keyb.yml"
-` +
-		"CURSOR_FG = `#edb`\n" +
-		"CURSOR_BG = `#448448`\n" +
-		`BORDER = true
-BORDER_COLOR = ""
-`
 )
 
 type Config struct {
@@ -35,7 +28,7 @@ type Config struct {
 
 	Cursor_fg    string
 	Cursor_bg    string
-	Border       bool
+	Border       string
 	Border_color string
 }
 
@@ -51,25 +44,21 @@ type KeyBind struct {
 	Ignore_Prefix bool `yaml:ignore_prefix`
 }
 
-func GetConfig(configFile string) (*Config, error) {
+func GetConfig(configPath string) (*Config, error) {
 
 	options := ini.LoadOptions{
 		SkipUnrecognizableLines: true,
 		AllowBooleanKeys:        true,
 	}
-	config, err := ini.LoadSources(options, os.ExpandEnv(configFile))
+	config, err := ini.LoadSources(options, os.ExpandEnv(configPath))
 	if err != nil {
 		return nil, fmt.Errorf("error loading config: %w", err)
 	}
 
 	cfgSection := config.Section("")
 
-	// parse booleans
+	// parse boolean
 	vim, err := cfgSection.Key("VIM").Bool()
-	if err != nil {
-		return nil, fmt.Errorf("error: %w", err)
-	}
-	border, err := cfgSection.Key("BORDER").Bool()
 	if err != nil {
 		return nil, fmt.Errorf("error: %w", err)
 	}
@@ -81,23 +70,23 @@ func GetConfig(configFile string) (*Config, error) {
 
 		Cursor_fg:    cfgSection.Key("CURSOR_FG").String(),
 		Cursor_bg:    cfgSection.Key("CURSOR_BG").String(),
-		Border:       border,
+		Border:       cfgSection.Key("BORDER").String(),
 		Border_color: cfgSection.Key("BORDER_COLOR").String(),
 	}
 	return cfg, nil
 }
 
-func GetPrograms(keybFile string) (map[string]Program, error) {
+func GetPrograms(keybPath string) (Categories, error) {
 
-	var programs map[string]Program
+	var programs Categories
 
-	file, err := ioutil.ReadFile(os.ExpandEnv(keybFile))
+	file, err := ioutil.ReadFile(os.ExpandEnv(keybPath))
 	if err != nil {
-		return nil, fmt.Errorf("error reading keyb.yaml: %w", err)
+		return nil, fmt.Errorf("error reading %s: %w", keybPath, err)
 	}
 
 	if err := yaml.Unmarshal(file, &programs); err != nil {
-		return nil, fmt.Errorf("error unmarshalling keyb.yaml: %w", err)
+		return nil, fmt.Errorf("error unmarshalling %s: %w", keybPath, err)
 	}
 	return programs, nil
 }
@@ -115,11 +104,11 @@ func getBaseDir() (string, error) {
 			path = filepath.Join(os.Getenv("HOME"), ".config")
 		}
 	default:
-		err = fmt.Errorf("error: unsupported platform")
+		err = fmt.Errorf("ERROR: unsupported platform")
 	}
 
 	if path == "" {
-		return "", fmt.Errorf("error: base directory not found")
+		return "", fmt.Errorf("ERROR: base config directory not found")
 	}
 	return path, err
 }
@@ -136,7 +125,7 @@ func createConfigDir() (string, error) {
 	if err != nil {
 
 		if errors.Is(err, os.ErrNotExist) {
-			err := os.MkdirAll(configPath, 0755)
+			err := os.MkdirAll(configPath, 0664)
 			if err != nil {
 				return "", fmt.Errorf("error creating config dir: %w", err)
 			}
@@ -159,13 +148,12 @@ func createConfigFile() error {
 	_, err = os.Stat(fullPath)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			if err := os.WriteFile(fullPath, []byte(configTempl), 0755); err != nil {
+			if err := os.WriteFile(fullPath, []byte(configTempl), 0664); err != nil {
 				return fmt.Errorf("error writing config file: %w", err)
 			}
 		} else {
 			return fmt.Errorf("error determining file structure: %w", err)
 		}
 	}
-
 	return nil
 }

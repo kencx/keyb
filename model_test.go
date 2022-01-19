@@ -38,17 +38,17 @@ func TestSplitHeadingsAndKeys(t *testing.T) {
 	gotHeadings, gotLines, gotLineCount := m.splitHeadingsAndKeys()
 
 	wantHeadings := map[int]string{
-		0: "\x1b[1mfirefox\x1b[0m",
-		4: "\x1b[1mtmux\x1b[0m",
-		6: "\x1b[1mvim\x1b[0m",
+		0: " \x1b[1mfirefox\x1b[0m ",
+		4: " \x1b[1mtmux\x1b[0m ",
+		6: " \x1b[1mvim\x1b[0m ",
 	}
 	wantLines := map[int]string{
-		1: " incognito\tctrl + shift + p ",
-		2: " new tab\tctrl + shift + t ",
-		3: " bookmarks bar\tctrl + b ",
-		5: " close window\tctrl + b ; shift + x ",
-		7: " focus left\tctrl + h ",
-		8: " swap left\tctrl + shift + h ",
+		1: "  incognito\tctrl + shift + p  ",
+		2: "  new tab\tctrl + shift + t  ",
+		3: "  bookmarks bar\tctrl + b  ",
+		5: "  close window\tctrl + b ; shift + x  ",
+		7: "  focus left\tctrl + h  ",
+		8: "  swap left\tctrl + shift + h  ",
 	}
 	wantLineCount := 9
 

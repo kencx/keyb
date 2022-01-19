@@ -2,6 +2,7 @@
 *.toml
 *.ini
 
+*.gitcommit
 test.yml
 keyb
 output

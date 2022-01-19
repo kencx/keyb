@@ -1,7 +1,19 @@
+# title text
 TITLE = "All your keybindings in one place"
+
+# turn vim mode on or off
 VIM = true
+
+# default keyb file path
 KEYB_PATH = "$HOME/.config/keyb/keyb.yml"
+
+# cursor styling
 CURSOR_FG = `#edb`
 CURSOR_BG = `#448448`
-BORDER = true
+
+# accepted values: normal, rounded, double, thick, hidden
+BORDER =
 BORDER_COLOR = ""
+
+PADDING = 1 # space between text and border
+MARGIN = 1 # space between window and border

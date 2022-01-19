@@ -10,15 +10,8 @@ import (
 	"github.com/muesli/reflow/wordwrap"
 )
 
-var (
-	titleStyle = lipgloss.NewStyle().Bold(true)
-	lineStyle  = lipgloss.NewStyle().Margin(0, 1)
-	docStyle   = lipgloss.NewStyle().Margin(1, 4)
-)
-
-type Categories map[string]Program
 type model struct {
-	categories Categories // map of programs from config file
+	categories Categories // map of programs from keyb file
 	headings   []string   // *ordered* slice of category names
 
 	headingMap map[int]string // map of headings with line no.
@@ -26,37 +19,44 @@ type model struct {
 	lineCount  int            // total number of lines
 
 	// body is the final output split into lines. It is split to update the cursor
-	// for each line.
+	// in updateBody()
 	body []string
 
 	height, width int
 	maxWidth      int // for word wrapping
-	padding       int // bottom padding
+	padding       int // vertical padding - necessary to stabilize scrolling
+	offset        int // for vertical scrolling
 	cursor        int
-	offset        int
 
-	// styling
-	title string
-	curFg string
-	curBg string
+	// customization
+	bodyStyle   lipgloss.Style
+	title       string
+	curFg       string
+	curBg       string
+	border      string
+	borderColor string
 
 	mouseEnabled bool
 	mouseDelta   int
 }
 
 func New(cat Categories, config *Config) *model {
+
 	m := model{
 		categories: cat,
-		headings:   sortKeys(cat), // ordered slices of names
+		headings:   sortKeys(cat),
 
 		height:   40,
 		width:    60,
 		maxWidth: 88,
 		padding:  4,
 
-		title: config.Title,
-		curFg: config.Cursor_fg,
-		curBg: config.Cursor_bg,
+		bodyStyle:   lipgloss.NewStyle(),
+		title:       config.Title,
+		curFg:       config.Cursor_fg,
+		curBg:       config.Cursor_bg,
+		border:      config.Border,
+		borderColor: config.Border_color,
 
 		mouseEnabled: true,
 		mouseDelta:   3,
@@ -68,12 +68,10 @@ func New(cat Categories, config *Config) *model {
 }
 
 func (m *model) initBody() {
-	m.headingMap, m.lineMap, m.lineCount = m.splitHeadingsAndKeys()
 
-	// generate properly aligned table
+	m.headingMap, m.lineMap, m.lineCount = m.splitHeadingsAndKeys()
 	keyTable := m.alignKeyTable() // TODO word wrapped lines do not align well
 
-	// split body into lines to insert headings
 	m.body = strings.Split(keyTable, "\n")
 	m.insertHeadings()
 }
@@ -81,18 +79,21 @@ func (m *model) initBody() {
 // generate 2 maps from categories: unbtabbed headings and tabbed lines
 func (m *model) splitHeadingsAndKeys() (map[int]string, map[int]string, int) {
 
+	var (
+		headingStyle = lipgloss.NewStyle().Bold(true).Margin(0, 1)
+		lineStyle    = lipgloss.NewStyle().Margin(0, 2)
+
+		headingIdx     int
+		totalLineCount int // track total number of lines
+		line           string
+	)
+
 	headingMap := make(map[int]string)
 	lineMap := make(map[int]string)
 
-	var (
-		headingIdx       int
-		totalLineCount   int // track total number of lines
-		wrappedLineCount int // account for wrapping of lines > maxWidth
-		line             string
-	)
-
 	for _, h := range m.headings {
-		headingMap[headingIdx] = titleStyle.Render(h)
+		var wrappedLineCount int // account for wrapping of lines > maxWidth
+		headingMap[headingIdx] = headingStyle.Render(h)
 
 		p := m.categories[h]
 		for i, key := range p.KeyBinds {
@@ -110,16 +111,16 @@ func (m *model) splitHeadingsAndKeys() (map[int]string, map[int]string, int) {
 			}
 			lineMap[headingIdx+i+1] = lineStyle.Render(line)
 		}
-		// total num of keys + heading + num of (extra) wrapped lines
+		// each category contributes: num of keys + heading + num of (extra) wrapped lines
 		totalLineCount += len(p.KeyBinds) + 1 + wrappedLineCount
 
+		// required offset
 		headingIdx += len(p.KeyBinds) + max(1, wrappedLineCount)
-		wrappedLineCount = 0 // reset
 	}
 	return headingMap, lineMap, totalLineCount
 }
 
-// generate properly aligned table
+// generate aligned table
 func (m *model) alignKeyTable() string {
 
 	var sb strings.Builder
@@ -144,7 +145,6 @@ func (m *model) insertHeadings() {
 	}
 }
 
-// bubbletea
 func (m *model) Init() tea.Cmd {
 	return nil
 }
@@ -165,6 +165,12 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.updateCursor()
 		case "G":
 			m.cursor = m.lineCount - 1
+		case "ctrl+d":
+			m.cursor += m.height / 2
+			m.updateCursor()
+		case "ctrl+u":
+			m.cursor -= m.height / 2
+			m.updateCursor()
 		}
 	case tea.MouseMsg:
 		if !m.mouseEnabled {
@@ -201,10 +207,10 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m *model) updateCursor() {
 	if m.cursor < 0 {
-		m.cursor = 0
-
-	} else if m.cursor >= m.lineCount-1 {
 		m.cursor = m.lineCount - 1
+
+	} else if m.cursor > m.lineCount-1 {
+		m.cursor = 0
 	}
 }
 
@@ -219,8 +225,12 @@ func (m *model) updateOffset() {
 }
 
 func (m *model) View() string {
-	view := fmt.Sprintf("%s\n\n%s", m.title, m.updateBody())
-	return docStyle.Render(view)
+	body := m.updateBody()
+	view := fmt.Sprintf("%s\n\n%s", m.title, body)
+
+	m.setStyle()
+	return m.bodyStyle.Render(view)
+
 }
 
 func (m *model) updateBody() string {
@@ -254,4 +264,32 @@ func (m *model) renderCursor(lines []string) []string {
 		}
 	}
 	return lines
+}
+
+func (m *model) setStyle() {
+	m.bodyStyle = m.bodyStyle.Margin(1, 2)
+	m.handleBorder()
+}
+
+// issues with border:
+// does not resize with window size
+// width changes when lines shrink and grow
+func (m *model) handleBorder() {
+	var borderStyle lipgloss.Border
+
+	switch m.border {
+	case "normal":
+		borderStyle = lipgloss.NormalBorder()
+	case "rounded":
+		borderStyle = lipgloss.RoundedBorder()
+	case "double":
+		borderStyle = lipgloss.DoubleBorder()
+	case "thick":
+		borderStyle = lipgloss.ThickBorder()
+	default:
+		borderStyle = lipgloss.HiddenBorder()
+	}
+
+	m.bodyStyle = m.bodyStyle.Border(borderStyle)
+	m.padding += m.bodyStyle.GetBorderTopWidth() + m.bodyStyle.GetBorderBottomSize()
 }

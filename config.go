@@ -45,9 +45,10 @@ type Program struct {
 }
 
 type KeyBind struct {
-	Desc    string
-	Key     string
-	Comment string
+	Desc          string
+	Key           string
+	Comment       string
+	Ignore_Prefix bool `yaml:ignore_prefix`
 }
 
 func GetConfig(configFile string) (*Config, error) {

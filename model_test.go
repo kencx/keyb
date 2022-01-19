@@ -6,18 +6,20 @@ import (
 )
 
 var testData = map[string]Program{
-	"tmux": {KeyBinds: []KeyBind{
-		{Desc: "close window", Key: "shift + x"},
-	}},
+	"tmux": {Prefix: "ctrl + b",
+		KeyBinds: []KeyBind{
+			{Desc: "close window", Key: "shift + x"},
+		}},
 	"vim": {KeyBinds: []KeyBind{
 		{Desc: "focus left", Key: "ctrl + h"},
 		{Desc: "swap left", Key: "ctrl + shift + h"},
 	}},
-	"firefox": {KeyBinds: []KeyBind{
-		{Desc: "incognito", Key: "ctrl + shift + p"},
-		{Desc: "new tab", Key: "ctrl + shift + t"},
-		{Desc: "bookmarks bar", Key: "ctrl + b"},
-	}},
+	"firefox": {Prefix: "test",
+		KeyBinds: []KeyBind{
+			{Desc: "incognito", Key: "ctrl + shift + p", Ignore_Prefix: true},
+			{Desc: "new tab", Key: "ctrl + shift + t", Ignore_Prefix: true},
+			{Desc: "bookmarks bar", Key: "ctrl + b", Ignore_Prefix: true},
+		}},
 }
 
 func TestSortKeys(t *testing.T) {
@@ -44,7 +46,7 @@ func TestSplitHeadingsAndKeys(t *testing.T) {
 		1: " incognito\tctrl + shift + p ",
 		2: " new tab\tctrl + shift + t ",
 		3: " bookmarks bar\tctrl + b ",
-		5: " close window\tshift + x ",
+		5: " close window\tctrl + b ; shift + x ",
 		7: " focus left\tctrl + h ",
 		8: " swap left\tctrl + shift + h ",
 	}

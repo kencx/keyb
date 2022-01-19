@@ -88,6 +88,7 @@ func (m *model) splitHeadingsAndKeys() (map[int]string, map[int]string, int) {
 		headingIdx       int
 		totalLineCount   int // track total number of lines
 		wrappedLineCount int // account for wrapping of lines > maxWidth
+		line             string
 	)
 
 	for _, h := range m.headings {
@@ -102,7 +103,11 @@ func (m *model) splitHeadingsAndKeys() (map[int]string, map[int]string, int) {
 				key.Desc = wordwrap.String(key.Desc, min(m.width, m.maxWidth))
 			}
 
-			line := fmt.Sprintf("%s\t%s", key.Desc, key.Key)
+			if p.Prefix != "" && !key.Ignore_Prefix {
+				line = fmt.Sprintf("%s\t%s ; %s", key.Desc, p.Prefix, key.Key)
+			} else {
+				line = fmt.Sprintf("%s\t%s", key.Desc, key.Key)
+			}
 			lineMap[headingIdx+i+1] = lineStyle.Render(line)
 		}
 		// total num of keys + heading + num of (extra) wrapped lines

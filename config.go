@@ -33,18 +33,21 @@ type Config struct {
 }
 
 type Program struct {
-	Prefix   string
+	Prefix   string `yaml:",omitempty"`
 	KeyBinds []KeyBind
 }
 
 type KeyBind struct {
 	Desc          string
 	Key           string
-	Comment       string
-	Ignore_Prefix bool `yaml:ignore_prefix`
+	Comment       string `yaml:",omitempty"`
+	Ignore_Prefix bool   `yaml:"ignore_prefix,omitempty"`
 }
 
 func GetConfig(configPath string) (*Config, error) {
+	if configPath == "" {
+		return nil, fmt.Errorf("no config path given")
+	}
 
 	options := ini.LoadOptions{
 		SkipUnrecognizableLines: true,
@@ -52,7 +55,7 @@ func GetConfig(configPath string) (*Config, error) {
 	}
 	config, err := ini.LoadSources(options, os.ExpandEnv(configPath))
 	if err != nil {
-		return nil, fmt.Errorf("error loading config: %w", err)
+		return nil, fmt.Errorf("failed to load config path: %w", err)
 	}
 
 	cfgSection := config.Section("")
@@ -82,11 +85,11 @@ func GetPrograms(keybPath string) (Categories, error) {
 
 	file, err := ioutil.ReadFile(os.ExpandEnv(keybPath))
 	if err != nil {
-		return nil, fmt.Errorf("error reading %s: %w", keybPath, err)
+		return nil, fmt.Errorf("failed to read keyb file: %w", err)
 	}
 
 	if err := yaml.Unmarshal(file, &programs); err != nil {
-		return nil, fmt.Errorf("error unmarshalling %s: %w", keybPath, err)
+		return nil, fmt.Errorf("failed to unmarshall keyb file: %w", err)
 	}
 	return programs, nil
 }
@@ -104,11 +107,11 @@ func getBaseDir() (string, error) {
 			path = filepath.Join(os.Getenv("HOME"), ".config")
 		}
 	default:
-		err = fmt.Errorf("ERROR: unsupported platform")
+		err = fmt.Errorf("unsupported platform")
 	}
 
 	if path == "" {
-		return "", fmt.Errorf("ERROR: base config directory not found")
+		return "", fmt.Errorf("base config directory not found")
 	}
 	return path, err
 }
@@ -127,10 +130,10 @@ func createConfigDir() (string, error) {
 		if errors.Is(err, os.ErrNotExist) {
 			err := os.MkdirAll(configPath, 0664)
 			if err != nil {
-				return "", fmt.Errorf("error creating config dir: %w", err)
+				return "", fmt.Errorf("failed to create config dir: %w", err)
 			}
 		} else {
-			return "", fmt.Errorf("error determining file structure: %w", err)
+			return "", fmt.Errorf("failed to determine file structure: %w", err)
 		}
 	}
 	return configPath, nil
@@ -149,10 +152,10 @@ func createConfigFile() error {
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			if err := os.WriteFile(fullPath, []byte(configTempl), 0664); err != nil {
-				return fmt.Errorf("error writing config file: %w", err)
+				return fmt.Errorf("failed to write config file: %w", err)
 			}
 		} else {
-			return fmt.Errorf("error determining file structure: %w", err)
+			return fmt.Errorf("failed to determine file structure: %w", err)
 		}
 	}
 	return nil

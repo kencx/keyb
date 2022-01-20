@@ -29,7 +29,10 @@ type model struct {
 	cursor        int
 
 	// customization
-	bodyStyle   lipgloss.Style
+	bodyStyle    lipgloss.Style
+	headingStyle lipgloss.Style
+	lineStyle    lipgloss.Style
+
 	title       string
 	curFg       string
 	curBg       string
@@ -40,7 +43,7 @@ type model struct {
 	mouseDelta   int
 }
 
-func New(cat Categories, config *Config) *model {
+func NewModel(cat Categories, config *Config) *model {
 
 	m := model{
 		categories: cat,
@@ -51,12 +54,14 @@ func New(cat Categories, config *Config) *model {
 		maxWidth: 88,
 		padding:  4,
 
-		bodyStyle:   lipgloss.NewStyle(),
-		title:       config.Title,
-		curFg:       config.Cursor_fg,
-		curBg:       config.Cursor_bg,
-		border:      config.Border,
-		borderColor: config.Border_color,
+		bodyStyle:    lipgloss.NewStyle(),
+		headingStyle: lipgloss.NewStyle().Bold(true).Margin(0, 1),
+		lineStyle:    lipgloss.NewStyle().Margin(0, 2),
+		title:        config.Title,
+		curFg:        config.Cursor_fg,
+		curBg:        config.Cursor_bg,
+		border:       config.Border,
+		borderColor:  config.Border_color,
 
 		mouseEnabled: true,
 		mouseDelta:   3,
@@ -69,31 +74,30 @@ func New(cat Categories, config *Config) *model {
 
 func (m *model) initBody() {
 
-	m.headingMap, m.lineMap, m.lineCount = m.splitHeadingsAndKeys()
-	keyTable := m.alignKeyTable() // TODO word wrapped lines do not align well
+	m.headingMap, m.lineMap = m.splitHeadingsAndKeys()
+	keyTable := m.alignKeyLines()
 
 	m.body = strings.Split(keyTable, "\n")
 	m.insertHeadings()
 }
 
-// generate 2 maps from categories: unbtabbed headings and tabbed lines
-func (m *model) splitHeadingsAndKeys() (map[int]string, map[int]string, int) {
+// generate 2 maps from categories: untabbed headings and tabbed lines
+func (m *model) splitHeadingsAndKeys() (map[int]string, map[int]string) {
 
-	var (
-		headingStyle = lipgloss.NewStyle().Bold(true).Margin(0, 1)
-		lineStyle    = lipgloss.NewStyle().Margin(0, 2)
+	var headingIdx int
+	var line string
 
-		headingIdx     int
-		totalLineCount int // track total number of lines
-		line           string
-	)
-
-	headingMap := make(map[int]string)
+	headingMap := make(map[int]string, len(m.headings))
 	lineMap := make(map[int]string)
 
 	for _, h := range m.headings {
-		var wrappedLineCount int // account for wrapping of lines > maxWidth
-		headingMap[headingIdx] = headingStyle.Render(h)
+
+		// headingIdx tracks the heading's line num and is offset
+		// by the previous category's number of key lines
+		headingMap[headingIdx] = m.headingStyle.Render(h)
+
+		// this accounts for the wrapping of lines with width > max width
+		var wrappedLineCount int
 
 		p := m.categories[h]
 		for i, key := range p.KeyBinds {
@@ -109,19 +113,24 @@ func (m *model) splitHeadingsAndKeys() (map[int]string, map[int]string, int) {
 			} else {
 				line = fmt.Sprintf("%s\t%s", key.Desc, key.Key)
 			}
-			lineMap[headingIdx+i+1] = lineStyle.Render(line)
+
+			// each key's line num is offset's by its headingIdx
+			lineMap[headingIdx+i+1] = m.lineStyle.Render(line)
 		}
-		// each category contributes: num of keys + heading + num of (extra) wrapped lines
-		totalLineCount += len(p.KeyBinds) + 1 + wrappedLineCount
+
+		// each category contributes to the total line count:
+		// heading + num of keys + num of (extra) wrapped lines
+		m.lineCount += len(p.KeyBinds) + 1 + wrappedLineCount
 
 		// required offset
 		headingIdx += len(p.KeyBinds) + max(1, wrappedLineCount)
 	}
-	return headingMap, lineMap, totalLineCount
+	return headingMap, lineMap
 }
 
 // generate aligned table
-func (m *model) alignKeyTable() string {
+// TODO word wrapped lines do not align well
+func (m *model) alignKeyLines() string {
 
 	var sb strings.Builder
 	tw := tabwriter.NewWriter(&sb, 20, 8, 10, ' ', 0)
@@ -271,7 +280,7 @@ func (m *model) setStyle() {
 	m.handleBorder()
 }
 
-// issues with border:
+// TODO issues with border:
 // does not resize with window size
 // width changes when lines shrink and grow
 func (m *model) handleBorder() {

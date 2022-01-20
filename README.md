@@ -78,8 +78,6 @@ Configure your keyb instance in `$XDG_CONFIG_HOME/keyb/config`.
 
 Refer to `examples/config` for more details.
 
-### Navigation
-
 | Key Binding | Description      |
 |------------ | ------------     |
 | j,k/Up,Down | Move cursor      |

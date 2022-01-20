@@ -15,7 +15,7 @@ func (m *model) OutputBodyToFile(path string, strip bool) error {
 
 	path = os.ExpandEnv(path)
 	if err := os.WriteFile(path, []byte(output), 0664); err != nil {
-		return fmt.Errorf("error writing to file: %w", err)
+		return fmt.Errorf("failed to write to file: %w", err)
 	}
 	return nil
 }
@@ -28,7 +28,7 @@ func (m *model) OutputBodyToStdout(strip bool) error {
 	}
 	_, err := os.Stdout.Write([]byte(output))
 	if err != nil {
-		return fmt.Errorf("error writing to stdout: %w", err)
+		return fmt.Errorf("failed to write to stdout: %w", err)
 	}
 	return nil
 }

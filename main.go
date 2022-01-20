@@ -32,6 +32,9 @@ type Categories map[string]Program
 
 func main() {
 
+	log.SetPrefix("keyb: ")
+	log.SetFlags(0)
+
 	var (
 		strip      bool
 		output     bool
@@ -58,7 +61,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	m := New(program, config)
+	m := NewModel(program, config)
 
 	if output {
 		if err := m.OutputBodyToStdout(strip); err != nil {
@@ -82,7 +85,7 @@ func main() {
 func handleFlags(keybPath, configPath string) (Categories, *Config, error) {
 
 	if err := createConfigFile(); err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("error: could not locate config file: %w", err)
 	}
 	config, err := GetConfig(configPath)
 	if err != nil {

@@ -5,27 +5,30 @@ import (
 	"testing"
 )
 
-var testData = map[string]Program{
-	"tmux": {Prefix: "ctrl + b",
-		KeyBinds: []KeyBind{
-			{Desc: "close window", Key: "shift + x"},
+var testData = map[string]App{
+	"tmux": {prefix: "ctrl + b",
+		keybinds: []KeyBind{
+			{comment: "close window", key: "shift + x"},
 		}},
-	"vim": {KeyBinds: []KeyBind{
-		{Desc: "focus left", Key: "ctrl + h"},
-		{Desc: "swap left", Key: "ctrl + shift + h"},
+	"vim": {keybinds: []KeyBind{
+		{comment: "focus left", key: "ctrl + h"},
+		{comment: "swap left", key: "ctrl + shift + h"},
 	}},
-	"firefox": {Prefix: "test",
-		KeyBinds: []KeyBind{
-			{Desc: "incognito", Key: "ctrl + shift + p", Ignore_Prefix: true},
-			{Desc: "new tab", Key: "ctrl + shift + t", Ignore_Prefix: true},
-			{Desc: "bookmarks bar", Key: "ctrl + b", Ignore_Prefix: true},
+	"firefox": {prefix: "test",
+		keybinds: []KeyBind{
+			{comment: "incognito", key: "ctrl + shift + p", ignorePrefix: true},
+			{comment: "new tab", key: "ctrl + shift + t", ignorePrefix: true},
+			{comment: "bookmarks bar", key: "ctrl + b", ignorePrefix: true},
 		}},
 }
 
 func TestSortKeys(t *testing.T) {
 	got := sortKeys(testData)
 	want := []string{"firefox", "tmux", "vim"}
-	assertSliceEqual(t, got, want)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %q, want %q", got, want)
+	}
 }
 
 func TestSplitHeadingsAndKeys(t *testing.T) {
@@ -59,24 +62,6 @@ func TestSplitHeadingsAndKeys(t *testing.T) {
 	}
 }
 
-func assertSliceEqual(t testing.TB, got, want []string) {
-	t.Helper()
-	if len(got) != len(want) {
-		t.Errorf("length not equal: got (%d), want (%d)", len(got), len(want))
-	}
-	for i := 0; i < len(got); i++ {
-		if got[i] != want[i] {
-			t.Errorf("got %q, want %q", got, want)
-		}
-	}
-}
-
-func assertMapEqual(t testing.TB, got, want map[int]string) {
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("\ngot %q\nwant %q", got, want)
-	}
-}
-
 func BenchmarkSplitHeadingsAndKeys(b *testing.B) {
 	m := &model{
 		categories: testData,
@@ -85,5 +70,11 @@ func BenchmarkSplitHeadingsAndKeys(b *testing.B) {
 	}
 	for i := 0; i < b.N; i++ {
 		m.splitHeadingsAndKeys()
+	}
+}
+
+func assertMapEqual(t testing.TB, got, want map[int]string) {
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("\ngot %q\nwant %q", got, want)
 	}
 }

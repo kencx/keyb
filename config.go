@@ -32,18 +32,6 @@ type Config struct {
 	Border_color string
 }
 
-type Program struct {
-	Prefix   string `yaml:",omitempty"`
-	KeyBinds []KeyBind
-}
-
-type KeyBind struct {
-	Desc          string
-	Key           string
-	Comment       string `yaml:",omitempty"`
-	Ignore_Prefix bool   `yaml:"ignore_prefix,omitempty"`
-}
-
 func GetConfig(configPath string) (*Config, error) {
 	if configPath == "" {
 		return nil, fmt.Errorf("no config path given")

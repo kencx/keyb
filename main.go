@@ -28,8 +28,6 @@ var (
 	defaultKeyb   = path.Join(os.Getenv("HOME"), ".config/keyb/keyb.yaml")
 )
 
-type Categories map[string]Program
-
 func main() {
 
 	log.SetPrefix("keyb: ")
@@ -77,7 +75,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	if err := startProgram(m); err != nil {
+	if err := start(m); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -107,7 +105,7 @@ func handleFlags(keybPath, configPath string) (Categories, *Config, error) {
 	return prog, config, nil
 }
 
-func startProgram(m *model) error {
+func start(m *model) error {
 
 	p := tea.NewProgram(m)
 	p.EnableMouseCellMotion()

@@ -20,7 +20,7 @@ func max(a, b int) int {
 }
 
 // returns slice of sorted keys from map[string]T
-func sortKeys(m map[string]Program) []string {
+func sortKeys(m map[string]App) []string {
 	keys := make([]string, 0, len(m))
 	for k := range m {
 		keys = append(keys, k)

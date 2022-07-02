@@ -5,12 +5,27 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/muesli/reflow/wordwrap"
 )
 
+type Categories map[string]App
+
+type App struct {
+	prefix   string `yaml:",omitempty"`
+	keybinds []KeyBind
+}
+
+type KeyBind struct {
+	comment      string
+	key          string
+	ignorePrefix bool `yaml:"ignore_prefix,omitempty"`
+}
+
 type model struct {
+	Styles
+	Settings
+
 	categories Categories // map of programs from keyb file
 	headings   []string   // *ordered* slice of category names
 
@@ -27,8 +42,9 @@ type model struct {
 	padding       int // vertical padding - necessary to stabilize scrolling
 	offset        int // for vertical scrolling
 	cursor        int
+}
 
-	// customization
+type Styles struct {
 	bodyStyle    lipgloss.Style
 	headingStyle lipgloss.Style
 	lineStyle    lipgloss.Style
@@ -38,22 +54,16 @@ type model struct {
 	curBg       string
 	border      string
 	borderColor string
+}
 
+type Settings struct {
 	mouseEnabled bool
 	mouseDelta   int
 }
 
 func NewModel(cat Categories, config *Config) *model {
 
-	m := model{
-		categories: cat,
-		headings:   sortKeys(cat),
-
-		height:   40,
-		width:    60,
-		maxWidth: 88,
-		padding:  4,
-
+	st := Styles{
 		bodyStyle:    lipgloss.NewStyle(),
 		headingStyle: lipgloss.NewStyle().Bold(true).Margin(0, 1),
 		lineStyle:    lipgloss.NewStyle().Margin(0, 2),
@@ -62,9 +72,23 @@ func NewModel(cat Categories, config *Config) *model {
 		curBg:        config.Cursor_bg,
 		border:       config.Border,
 		borderColor:  config.Border_color,
+	}
 
+	s := Settings{
 		mouseEnabled: true,
 		mouseDelta:   3,
+	}
+
+	m := model{
+		Styles:     st,
+		Settings:   s,
+		categories: cat,
+		headings:   sortKeys(cat),
+
+		height:   40,
+		width:    60,
+		maxWidth: 88,
+		padding:  4,
 	}
 	if len(m.headings) > 0 {
 		m.initBody()
@@ -99,19 +123,19 @@ func (m *model) splitHeadingsAndKeys() (map[int]string, map[int]string) {
 		// this accounts for the wrapping of lines with width > max width
 		var wrappedLineCount int
 
-		p := m.categories[h]
-		for i, key := range p.KeyBinds {
+		app := m.categories[h]
+		for i, key := range app.keybinds {
 
 			// handle word wrapping for long lines
-			if len(key.Desc) >= m.maxWidth {
-				wrappedLineCount = (len(key.Desc) / m.maxWidth) + 1
-				key.Desc = wordwrap.String(key.Desc, min(m.width, m.maxWidth))
+			if len(key.comment) >= m.maxWidth {
+				wrappedLineCount = (len(key.comment) / m.maxWidth) + 1
+				key.comment = wordwrap.String(key.comment, min(m.width, m.maxWidth))
 			}
 
-			if p.Prefix != "" && !key.Ignore_Prefix {
-				line = fmt.Sprintf("%s\t%s ; %s", key.Desc, p.Prefix, key.Key)
+			if app.prefix != "" && !key.ignorePrefix {
+				line = fmt.Sprintf("%s\t%s ; %s", key.comment, app.prefix, key.key)
 			} else {
-				line = fmt.Sprintf("%s\t%s", key.Desc, key.Key)
+				line = fmt.Sprintf("%s\t%s", key.comment, key.key)
 			}
 
 			// each key's line num is offset's by its headingIdx
@@ -120,10 +144,10 @@ func (m *model) splitHeadingsAndKeys() (map[int]string, map[int]string) {
 
 		// each category contributes to the total line count:
 		// heading + num of keys + num of (extra) wrapped lines
-		m.lineCount += len(p.KeyBinds) + 1 + wrappedLineCount
+		m.lineCount += len(app.keybinds) + 1 + wrappedLineCount
 
 		// required offset
-		headingIdx += len(p.KeyBinds) + max(1, wrappedLineCount)
+		headingIdx += len(app.keybinds) + max(1, wrappedLineCount)
 	}
 	return headingMap, lineMap
 }
@@ -152,153 +176,4 @@ func (m *model) insertHeadings() {
 			m.body = insertAtIndex(i, heading, m.body)
 		}
 	}
-}
-
-func (m *model) Init() tea.Cmd {
-	return nil
-}
-
-func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-
-		switch msg.String() {
-		case "ctrl+c", "q":
-			return m, tea.Quit
-		case "up", "k":
-			m.cursor--
-			m.updateCursor()
-		case "down", "j":
-			m.cursor++
-			m.updateCursor()
-		case "G":
-			m.cursor = m.lineCount - 1
-		case "ctrl+d":
-			m.cursor += m.height / 2
-			m.updateCursor()
-		case "ctrl+u":
-			m.cursor -= m.height / 2
-			m.updateCursor()
-		}
-	case tea.MouseMsg:
-		if !m.mouseEnabled {
-			break
-		}
-		switch msg.Type {
-
-		// TODO smoother scrolling
-		case tea.MouseWheelUp:
-			m.cursor -= m.mouseDelta
-			m.updateCursor()
-		case tea.MouseWheelDown:
-			m.cursor += m.mouseDelta
-			m.updateCursor()
-		}
-	case tea.WindowSizeMsg:
-		m.width = msg.Width
-		m.height = msg.Height - m.padding
-		m.offset = 0
-
-		// refresh line wrapping (WIP)
-		// if msg.Width/2 < m.maxWidth {
-		// 	m.maxWidth = msg.Width / 2
-		// 	m.initBody()
-		// }
-		// if msg.Width > m.maxWidth*2 {
-		// 	m.maxWidth = msg.Width
-		// 	m.initBody()
-		// }
-	}
-	m.updateOffset()
-	return m, nil
-}
-
-func (m *model) updateCursor() {
-	if m.cursor < 0 {
-		m.cursor = m.lineCount - 1
-
-	} else if m.cursor > m.lineCount-1 {
-		m.cursor = 0
-	}
-}
-
-// scrolling
-func (m *model) updateOffset() {
-	if m.cursor < m.offset {
-		m.offset = m.cursor
-	}
-	if m.cursor >= m.offset+m.height {
-		m.offset = m.cursor - m.height + 1
-	}
-}
-
-func (m *model) View() string {
-	body := m.updateBody()
-	view := fmt.Sprintf("%s\n\n%s", m.title, body)
-
-	m.setStyle()
-	return m.bodyStyle.Render(view)
-
-}
-
-func (m *model) updateBody() string {
-
-	if len(m.body) <= 0 {
-		return "No key bindings found"
-	}
-
-	// deep copy slice
-	cpy := make([]string, len(m.body))
-	copy(cpy, m.body)
-
-	body := m.renderCursor(cpy)
-
-	if m.lineCount >= m.offset+m.height {
-		body = body[m.offset : m.offset+m.height]
-	}
-	result := strings.Join(body, "\n")
-	return result
-}
-
-// render cursor style at position
-func (m *model) renderCursor(lines []string) []string {
-	cursorStyle := lipgloss.NewStyle().
-		Background(lipgloss.Color(m.curBg)).
-		Foreground(lipgloss.Color(m.curFg))
-
-	for i, line := range lines {
-		if m.cursor == i {
-			lines[i] = cursorStyle.Render(line)
-		}
-	}
-	return lines
-}
-
-func (m *model) setStyle() {
-	m.bodyStyle = m.bodyStyle.Margin(1, 2)
-	m.handleBorder()
-}
-
-// TODO issues with border:
-// does not resize with window size
-// width changes when lines shrink and grow
-func (m *model) handleBorder() {
-	var borderStyle lipgloss.Border
-
-	switch m.border {
-	case "normal":
-		borderStyle = lipgloss.NormalBorder()
-	case "rounded":
-		borderStyle = lipgloss.RoundedBorder()
-	case "double":
-		borderStyle = lipgloss.DoubleBorder()
-	case "thick":
-		borderStyle = lipgloss.ThickBorder()
-	default:
-		borderStyle = lipgloss.HiddenBorder()
-	}
-
-	m.bodyStyle = m.bodyStyle.Border(borderStyle)
-	m.padding += m.bodyStyle.GetBorderTopWidth() + m.bodyStyle.GetBorderBottomSize()
 }

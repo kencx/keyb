@@ -6,24 +6,24 @@ import (
 )
 
 var testData = map[string]App{
-	"tmux": {prefix: "ctrl + b",
-		keybinds: []KeyBind{
-			{comment: "close window", key: "shift + x"},
+	"tmux": {Prefix: "ctrl + b",
+		Keybinds: []KeyBind{
+			{Comment: "close window", Key: "shift + x"},
 		}},
-	"vim": {keybinds: []KeyBind{
-		{comment: "focus left", key: "ctrl + h"},
-		{comment: "swap left", key: "ctrl + shift + h"},
+	"vim": {Keybinds: []KeyBind{
+		{Comment: "focus left", Key: "ctrl + h"},
+		{Comment: "swap left", Key: "ctrl + shift + h"},
 	}},
-	"firefox": {prefix: "test",
-		keybinds: []KeyBind{
-			{comment: "incognito", key: "ctrl + shift + p", ignorePrefix: true},
-			{comment: "new tab", key: "ctrl + shift + t", ignorePrefix: true},
-			{comment: "bookmarks bar", key: "ctrl + b", ignorePrefix: true},
+	"firefox": {Prefix: "test",
+		Keybinds: []KeyBind{
+			{Comment: "incognito", Key: "ctrl + shift + p", IgnorePrefix: true},
+			{Comment: "new tab", Key: "ctrl + shift + t", IgnorePrefix: true},
+			{Comment: "bookmarks bar", Key: "ctrl + b", IgnorePrefix: true},
 		}},
 }
 
 func TestSortKeys(t *testing.T) {
-	got := sortKeys(testData)
+	got := sortedKeys(testData)
 	want := []string{"firefox", "tmux", "vim"}
 
 	if !reflect.DeepEqual(got, want) {
@@ -34,9 +34,11 @@ func TestSortKeys(t *testing.T) {
 func TestSplitHeadingsAndKeys(t *testing.T) {
 
 	m := &model{
-		categories: testData,
-		headings:   []string{"firefox", "tmux", "vim"},
-		maxWidth:   88,
+		BindStructure: BindStructure{
+			binds:    testData,
+			headings: []string{"firefox", "tmux", "vim"},
+		},
+		maxWidth: 88,
 	}
 	gotHeadings, gotLines := m.splitHeadingsAndKeys()
 
@@ -64,9 +66,11 @@ func TestSplitHeadingsAndKeys(t *testing.T) {
 
 func BenchmarkSplitHeadingsAndKeys(b *testing.B) {
 	m := &model{
-		categories: testData,
-		headings:   []string{"firefox", "tmux", "vim"},
-		maxWidth:   88,
+		BindStructure: BindStructure{
+			binds:    testData,
+			headings: []string{"firefox", "tmux", "vim"},
+		},
+		maxWidth: 88,
 	}
 	for i := 0; i < b.N; i++ {
 		m.splitHeadingsAndKeys()

@@ -8,7 +8,7 @@ import (
 
 func (m *model) OutputBodyToFile(path string, strip bool) error {
 
-	output := strings.Join(m.body, "\n")
+	output := strings.Join(m.Table.Output, "\n")
 	if strip {
 		output = stripANSI(output)
 	}
@@ -22,7 +22,7 @@ func (m *model) OutputBodyToFile(path string, strip bool) error {
 
 func (m *model) OutputBodyToStdout(strip bool) error {
 
-	output := strings.Join(m.body, "\n")
+	output := strings.Join(m.Table.Output, "\n")
 	if strip {
 		output = stripANSI(output)
 	}

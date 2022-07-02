@@ -67,19 +67,19 @@ func GetConfig(configPath string) (*Config, error) {
 	return cfg, nil
 }
 
-func GetPrograms(keybPath string) (Categories, error) {
+func GetBindings(keybPath string) (Bindings, error) {
 
-	var programs Categories
+	var b Bindings
 
 	file, err := ioutil.ReadFile(os.ExpandEnv(keybPath))
 	if err != nil {
 		return nil, fmt.Errorf("failed to read keyb file: %w", err)
 	}
 
-	if err := yaml.Unmarshal(file, &programs); err != nil {
+	if err := yaml.Unmarshal(file, &b); err != nil {
 		return nil, fmt.Errorf("failed to unmarshall keyb file: %w", err)
 	}
-	return programs, nil
+	return b, nil
 }
 
 func getBaseDir() (string, error) {

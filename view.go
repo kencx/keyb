@@ -27,7 +27,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.cursor++
 			m.updateCursor()
 		case "G":
-			m.cursor = m.lineCount - 1
+			m.cursor = m.Table.LineCount - 1
 		case "ctrl+d":
 			m.cursor += m.height / 2
 			m.updateCursor()
@@ -70,9 +70,9 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m *model) updateCursor() {
 	if m.cursor < 0 {
-		m.cursor = m.lineCount - 1
+		m.cursor = m.Table.LineCount - 1
 
-	} else if m.cursor > m.lineCount-1 {
+	} else if m.cursor > m.Table.LineCount-1 {
 		m.cursor = 0
 	}
 }
@@ -88,26 +88,26 @@ func (m *model) updateOffset() {
 }
 func (m *model) View() string {
 	body := m.updateBody()
-	view := fmt.Sprintf("%s\n\n%s", m.title, body)
+	view := fmt.Sprintf("%s\n\n%s", m.Table.Title, body)
 
 	m.setStyle()
-	return m.bodyStyle.Render(view)
+	return m.Table.BodyStyle.Render(view)
 
 }
 
 func (m *model) updateBody() string {
 
-	if len(m.body) <= 0 {
+	if len(m.Table.Output) == 0 {
 		return "No key bindings found"
 	}
 
 	// deep copy slice
-	cpy := make([]string, len(m.body))
-	copy(cpy, m.body)
+	cpy := make([]string, len(m.Table.Output))
+	copy(cpy, m.Table.Output)
 
 	body := m.renderCursor(cpy)
 
-	if m.lineCount >= m.offset+m.height {
+	if m.Table.LineCount >= m.offset+m.height {
 		body = body[m.offset : m.offset+m.height]
 	}
 	result := strings.Join(body, "\n")
@@ -117,8 +117,8 @@ func (m *model) updateBody() string {
 // render cursor style at position
 func (m *model) renderCursor(lines []string) []string {
 	cursorStyle := lipgloss.NewStyle().
-		Background(lipgloss.Color(m.curBg)).
-		Foreground(lipgloss.Color(m.curFg))
+		Background(lipgloss.Color(m.Table.CursorBackground)).
+		Foreground(lipgloss.Color(m.Table.CursorForeground))
 
 	for i, line := range lines {
 		if m.cursor == i {
@@ -129,7 +129,7 @@ func (m *model) renderCursor(lines []string) []string {
 }
 
 func (m *model) setStyle() {
-	m.bodyStyle = m.bodyStyle.Margin(1, 2)
+	m.Table.BodyStyle = m.Table.BodyStyle.Margin(1, 2)
 	m.handleBorder()
 }
 
@@ -140,7 +140,7 @@ func (m *model) setStyle() {
 func (m *model) handleBorder() {
 	var borderStyle lipgloss.Border
 
-	switch m.border {
+	switch m.Table.Border {
 	case "normal":
 		borderStyle = lipgloss.NormalBorder()
 	case "rounded":
@@ -153,6 +153,6 @@ func (m *model) handleBorder() {
 		borderStyle = lipgloss.HiddenBorder()
 	}
 
-	m.bodyStyle = m.bodyStyle.Border(borderStyle)
-	m.padding += m.bodyStyle.GetBorderTopWidth() + m.bodyStyle.GetBorderBottomSize()
+	m.Table.BodyStyle = m.Table.BodyStyle.Border(borderStyle)
+	m.padding += m.Table.BodyStyle.GetBorderTopWidth() + m.Table.BodyStyle.GetBorderBottomSize()
 }

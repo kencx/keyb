@@ -80,7 +80,7 @@ func main() {
 	}
 }
 
-func handleFlags(keybPath, configPath string) (Categories, *Config, error) {
+func handleFlags(keybPath, configPath string) (Bindings, *Config, error) {
 
 	if err := createConfigFile(); err != nil {
 		return nil, nil, fmt.Errorf("error: could not locate config file: %w", err)
@@ -98,11 +98,11 @@ func handleFlags(keybPath, configPath string) (Categories, *Config, error) {
 		return nil, nil, fmt.Errorf("ERROR: no keyb file found")
 	}
 
-	prog, err := GetPrograms(customKeybPath)
+	bindings, err := GetBindings(customKeybPath)
 	if err != nil {
 		return nil, nil, err
 	}
-	return prog, config, nil
+	return bindings, config, nil
 }
 
 func start(m *model) error {

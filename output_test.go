@@ -7,7 +7,9 @@ import (
 )
 
 var m = &model{
-	body: []string{"\x1b[1mthis is a test string\x1b[0m", "followed by the second line"},
+	BindStructure: BindStructure{
+		output: []string{"\x1b[1mthis is a test string\x1b[0m", "followed by the second line"},
+	},
 }
 
 func TestOutputBodyToStdout(t *testing.T) {

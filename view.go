@@ -88,7 +88,7 @@ func (m *model) updateOffset() {
 }
 func (m *model) View() string {
 	body := m.updateBody()
-	view := fmt.Sprintf("%s\n\n%s", m.Table.Title, body)
+	view := fmt.Sprintf("%s\n\n%s", m.Title, body)
 
 	m.setStyle()
 	return m.Table.BodyStyle.Render(view)
@@ -117,8 +117,8 @@ func (m *model) updateBody() string {
 // render cursor style at position
 func (m *model) renderCursor(lines []string) []string {
 	cursorStyle := lipgloss.NewStyle().
-		Background(lipgloss.Color(m.Table.CursorBackground)).
-		Foreground(lipgloss.Color(m.Table.CursorForeground))
+		Background(lipgloss.Color(m.CursorBackground)).
+		Foreground(lipgloss.Color(m.CursorForeground))
 
 	for i, line := range lines {
 		if m.cursor == i {
@@ -140,7 +140,7 @@ func (m *model) setStyle() {
 func (m *model) handleBorder() {
 	var borderStyle lipgloss.Border
 
-	switch m.Table.Border {
+	switch m.Border {
 	case "normal":
 		borderStyle = lipgloss.NormalBorder()
 	case "rounded":

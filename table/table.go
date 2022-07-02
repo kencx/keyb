@@ -9,8 +9,8 @@ import (
 )
 
 type Table struct {
-	heading   string
-	rows      []string
+	Heading   string
+	Rows      []string
 	Output    []string
 	LineCount int
 	Styles
@@ -20,52 +20,52 @@ type Styles struct {
 	BodyStyle    lipgloss.Style
 	HeadingStyle lipgloss.Style
 	LineStyle    lipgloss.Style
-
-	Title            string
-	CursorForeground string
-	CursorBackground string
-	Border           string
-	BorderColor      string
 }
 
 func New(heading string, rows []string, style Styles) *Table {
-	return &Table{
-		heading:   heading,
-		rows:      rows,
-		Styles:    style,
-		LineCount: len(rows) + 1,
+	t := &Table{
+		Heading: heading,
+		Rows:    rows,
+		Styles:  style,
 	}
+	t.Render()
+	return t
 }
 
-func (t *Table) AddRow(row string) {
-	t.rows = append(t.rows, row)
-	t.LineCount += 1
-}
-
-func (t *Table) AddRows(rows ...string) {
-	t.rows = append(t.rows, rows...)
-	t.LineCount += len(rows)
-}
-
-func (t *Table) align() {
-
-	var sb strings.Builder
-	tw := tabwriter.NewWriter(&sb, 20, 8, 10, ' ', 0)
-
-	for _, row := range t.rows {
-		fmt.Fprintln(tw, row)
-	}
-
-	tw.Flush()
-	t.rows = strings.Split(sb.String(), "\n")
-}
+// func (t *Table) AppendRow(row string) {
+// 	t.Rows = append(t.Rows, row)
+// }
+//
+// func (t *Table) AppendRows(rows ...string) {
+// 	t.Rows = append(t.Rows, rows...)
+// }
+//
+// func (t *Table) PrependRow(row string) {
+// 	t.Rows = append([]string{row}, t.Rows...)
+// }
 
 func (t *Table) Render() {
-	heading := t.HeadingStyle.Render(t.heading)
+	heading := t.HeadingStyle.Render(t.Heading)
 	t.Output = append(t.Output, heading)
 
-	for _, row := range t.rows {
+	for _, row := range t.Rows {
 		line := t.LineStyle.Render(row)
 		t.Output = append(t.Output, line)
 	}
+}
+
+func (t *Table) Align() {
+	var sb strings.Builder
+	tw := tabwriter.NewWriter(&sb, 20, 8, 10, ' ', 0)
+
+	for _, row := range t.Output {
+		fmt.Fprintln(tw, row)
+	}
+	tw.Flush()
+	t.Output = strings.Split(sb.String(), "\n")
+}
+
+func (t *Table) Join(table *Table) {
+	t.Output = append(t.Output, table.Output...)
+	t.LineCount = len(t.Output)
 }

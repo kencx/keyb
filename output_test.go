@@ -2,13 +2,14 @@ package main
 
 import (
 	"io/ioutil"
+	"keyb/table"
 	"os"
 	"testing"
 )
 
 var m = &model{
-	BindStructure: BindStructure{
-		output: []string{"\x1b[1mthis is a test string\x1b[0m", "followed by the second line"},
+	Table: &table.Table{
+		Output: []string{"\x1b[1mthis is a test string\x1b[0m", "followed by the second line"},
 	},
 }
 

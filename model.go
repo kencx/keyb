@@ -81,6 +81,12 @@ func NewModel(binds Bindings, config *Config) *model {
 		LineStyle:    lipgloss.NewStyle().Margin(0, 2),
 	}
 
+	if len(binds) == 0 {
+		m.Table = table.New("", []string{""}, tableStyles)
+		m.Table.Output = []string{"No key bindings found"}
+		return &m
+	}
+
 	m.Table = bindingsToTable(binds, tableStyles)
 	return &m
 }

@@ -5,6 +5,7 @@ import (
 	"keyb/table"
 	"sort"
 
+	"github.com/charmbracelet/bubbles/viewport"
 	"github.com/charmbracelet/lipgloss"
 )
 
@@ -34,10 +35,11 @@ type KeyBind struct {
 
 type model struct {
 	Table         *table.Table
+	Viewport      viewport.Model
+	ready         bool
 	height, width int
 	maxWidth      int // for word wrapping
 	padding       int // vertical padding - necessary to stabilize scrolling
-	offset        int // for vertical scrolling
 	cursor        int
 	Settings
 	GlobalStyle
@@ -53,7 +55,6 @@ type GlobalStyle struct {
 
 type Settings struct {
 	mouseEnabled bool
-	mouseDelta   int
 }
 
 func NewModel(binds Bindings, config *Config) *model {
@@ -64,7 +65,6 @@ func NewModel(binds Bindings, config *Config) *model {
 		padding:  4,
 		Settings: Settings{
 			mouseEnabled: true,
-			mouseDelta:   3,
 		},
 		GlobalStyle: GlobalStyle{
 			Title:            config.Title,

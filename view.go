@@ -17,12 +17,12 @@ func (m *model) View() string {
 	}
 
 	view := fmt.Sprintf("%s\n"+
-		"\n"+
+		"%s\n"+
 		"%s\n"+
 		"\n"+
 		" keys: %d",
 		m.Title,
-		// m.SearchBar,
+		m.textinput.View(),
 		m.Viewport.View(),
 		m.Table.LineCount)
 

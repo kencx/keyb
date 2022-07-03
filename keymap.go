@@ -11,6 +11,9 @@ type KeyMap struct {
 	HalfDown   key.Binding
 	GoToTop    key.Binding
 	GoToBottom key.Binding
+
+	Search key.Binding
+	Normal key.Binding
 }
 
 func DefaultKeyMap() KeyMap {
@@ -35,6 +38,13 @@ func DefaultKeyMap() KeyMap {
 		),
 		GoToBottom: key.NewBinding(
 			key.WithKeys("G"),
+		),
+
+		Search: key.NewBinding(
+			key.WithKeys("/"),
+		),
+		Normal: key.NewBinding(
+			key.WithKeys("esc"),
 		),
 	}
 }

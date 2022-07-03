@@ -5,6 +5,7 @@ import (
 	"keyb/table"
 	"sort"
 
+	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -34,15 +35,19 @@ type KeyBind struct {
 }
 
 type model struct {
-	Table         *table.Table
-	Viewport      viewport.Model
-	keys          KeyMap
-	ready         bool
-	debug         bool
+	Table     *table.Table
+	textinput textinput.Model
+	Viewport  viewport.Model
+	keys      KeyMap
+
+	search bool
+	ready  bool
+	debug  bool
+
 	height, width int
-	maxWidth      int // for word wrapping
 	padding       int // vertical padding - necessary to stabilize scrolling
 	cursor        int
+	maxWidth      int // for word wrapping
 	Settings
 	GlobalStyle
 }

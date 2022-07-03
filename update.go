@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/bubbles/key"
+	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -11,14 +12,41 @@ import (
 
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
-	lastLine := m.Table.LineCount - 1
+	var (
+		cmd      tea.Cmd
+		lastLine = m.Table.LineCount - 1
+	)
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 
+		if m.search && m.textinput.Focused() {
+			switch {
+			case msg.String() == "ctrl+c":
+				return m, tea.Quit
+			case key.Matches(msg, m.keys.Normal):
+				if m.search {
+					m.search = false
+					m.textinput.Blur()
+				}
+			}
+
+			m.textinput, cmd = m.textinput.Update(msg)
+			return m, cmd
+		}
+
 		switch {
 		case key.Matches(msg, m.keys.Quit):
 			return m, tea.Quit
+
+		case key.Matches(msg, m.keys.Search):
+			m.search = true
+			m.textinput.Focus()
+		case key.Matches(msg, m.keys.Normal):
+			if m.search {
+				m.search = false
+				m.textinput.Blur()
+			}
 
 		case key.Matches(msg, m.keys.Up):
 			m.cursor--
@@ -81,6 +109,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.WindowSizeMsg:
 		if !m.ready {
+			m.textinput = textinput.New()
 			m.Viewport = viewport.New(msg.Width, msg.Height-m.padding)
 			m.Viewport.SetContent(strings.Join(m.Table.Output, "\n"))
 			m.Viewport.MouseWheelEnabled = m.mouseEnabled

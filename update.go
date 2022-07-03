@@ -3,6 +3,7 @@ package main
 import (
 	"strings"
 
+	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -15,37 +16,44 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 
-		switch msg.String() {
-		case "ctrl+c", "q":
+		switch {
+		case key.Matches(msg, m.keys.Quit):
 			return m, tea.Quit
 
-		case "up", "k":
+		case key.Matches(msg, m.keys.Up):
 			m.cursor--
 			if m.cursorAtViewTop() {
 				m.Viewport.LineUp(1)
 			}
-		case "down", "j":
+		case key.Matches(msg, m.keys.Down):
 			m.cursor++
 			if m.cursorAtViewBottom() {
 				m.Viewport.LineDown(1)
 			}
 
-		case "G":
+		case key.Matches(msg, m.keys.GoToTop):
+			m.cursor = 0
+			m.Viewport.GotoTop()
+		case key.Matches(msg, m.keys.GoToBottom):
 			m.cursor = lastLine
 			m.Viewport.GotoBottom()
 
-		case "ctrl+u":
+		case key.Matches(msg, m.keys.HalfUp):
 			m.cursor -= m.Viewport.Height / 2
-			m.Viewport.HalfViewUp()
+			if m.cursorAtViewTop() {
+				m.Viewport.HalfViewUp()
+			}
 
 			// don't loop around
 			if m.cursor < 0 {
 				m.cursor = 0
 				m.Viewport.GotoTop()
 			}
-		case "ctrl+d":
+		case key.Matches(msg, m.keys.HalfDown):
 			m.cursor += m.Viewport.Height / 2
-			m.Viewport.HalfViewDown()
+			if m.cursorAtViewBottom() {
+				m.Viewport.HalfViewDown()
+			}
 
 			// don't loop around
 			if m.cursor > lastLine {
@@ -104,18 +112,8 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Viewport.GotoTop()
 	}
 
-	m.updateYOffset()
 	m.renderCursor()
 	return m, nil
-}
-
-func (m *model) updateYOffset() {
-	if m.cursor < m.Viewport.YOffset {
-		m.Viewport.YOffset = m.cursor
-	}
-	if m.cursor >= m.Viewport.YOffset+m.Viewport.Height {
-		m.Viewport.YOffset = m.cursor - m.Viewport.Height
-	}
 }
 
 func (m *model) renderCursor() {

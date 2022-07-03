@@ -36,6 +36,7 @@ type KeyBind struct {
 type model struct {
 	Table         *table.Table
 	Viewport      viewport.Model
+	keys          KeyMap
 	ready         bool
 	height, width int
 	maxWidth      int // for word wrapping
@@ -59,6 +60,7 @@ type Settings struct {
 
 func NewModel(binds Bindings, config *Config) *model {
 	m := model{
+		keys:     DefaultKeyMap(),
 		height:   40,
 		width:    60,
 		maxWidth: 88,

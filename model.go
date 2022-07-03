@@ -38,6 +38,7 @@ type model struct {
 	Viewport      viewport.Model
 	keys          KeyMap
 	ready         bool
+	debug         bool
 	height, width int
 	maxWidth      int // for word wrapping
 	padding       int // vertical padding - necessary to stabilize scrolling
@@ -61,6 +62,7 @@ type Settings struct {
 func NewModel(binds Bindings, config *Config) *model {
 	m := model{
 		keys:     DefaultKeyMap(),
+		debug:    true,
 		height:   40,
 		width:    60,
 		maxWidth: 88,

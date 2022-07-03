@@ -15,8 +15,21 @@ func (m *model) View() string {
 	if !m.ready {
 		return "\n Initializing..."
 	}
-	// TODO remove after debugging
-	view := fmt.Sprintf("%s\n\n%s\nLine: %d\tYOffset: %d\tHeight: %d", m.Title, m.Viewport.View(), m.cursor, m.Viewport.YOffset, m.Viewport.Height)
+
+	view := fmt.Sprintf("%s\n"+
+		"\n"+
+		"%s\n"+
+		"\n"+
+		" keys: %d",
+		m.Title,
+		// m.SearchBar,
+		m.Viewport.View(),
+		m.Table.LineCount)
+
+	if m.debug {
+		view = fmt.Sprintf("%s\tLine: %d YOffset: %d Height: %d",
+			view, m.cursor, m.Viewport.YOffset, m.Viewport.Height)
+	}
 	// m.setStyle()
 	return m.Table.BodyStyle.Render(view)
 }

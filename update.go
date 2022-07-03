@@ -91,16 +91,6 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.Viewport.Width = msg.Width
 			m.Viewport.Height = msg.Height - m.padding
 		}
-
-		// refresh line wrapping (WIP)
-		// if msg.Width/2 < m.maxWidth {
-		// 	m.maxWidth = msg.Width / 2
-		// 	m.initBody()
-		// }
-		// if msg.Width > m.maxWidth*2 {
-		// 	m.maxWidth = msg.Width
-		// 	m.initBody()
-		// }
 	}
 
 	// cursor loop around

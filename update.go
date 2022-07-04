@@ -157,9 +157,20 @@ func (m *model) handleSearch(msg tea.Msg) tea.Cmd {
 		cmds = append(cmds, cmd)
 		matches := filter(m.searchBar.Value(), m.table.Output)
 
+		// style matched rune indices
+		var styledMatches []string
+		matchedStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFA066"))
+		for _, m := range matches {
+			styledMatches = append(styledMatches, highlight(m, matchedStyle))
+		}
+
 		// present new filtered rows
 		m.filteredTable.Reset()
-		m.filteredTable.AppendRows(matches...)
+		if len(styledMatches) == 0 {
+			m.filteredTable.AppendRow("")
+		} else {
+			m.filteredTable.AppendRows(styledMatches...)
+		}
 		m.cursorGoToTop()
 	}
 
@@ -170,17 +181,28 @@ func (m *model) handleSearch(msg tea.Msg) tea.Cmd {
 	return tea.Batch(cmds...)
 }
 
-func filter(term string, target []string) []string {
-
+func filter(term string, target []string) fuzzy.Matches {
 	matches := fuzzy.Find(term, target)
 	sort.Stable(matches)
+	return matches
+}
 
-	var result []string
-	for _, m := range matches {
-		result = append(result, target[m.Index])
+func highlight(m fuzzy.Match, style lipgloss.Style) string {
+	var b strings.Builder
+
+	for i, rune := range []rune(m.Str) {
+		styled := false
+		for _, mi := range m.MatchedIndexes {
+			if i == mi {
+				b.WriteString(style.Render(string(rune)))
+				styled = true
+			}
+		}
+		if !styled {
+			b.WriteString(string(rune))
+		}
 	}
-	// TODO style matched char indices
-	return result
+	return b.String()
 }
 
 func (m *model) resetOutput() {
@@ -203,6 +225,11 @@ func (m *model) viewItems() {
 }
 
 func (m *model) renderCursor(rows []string) {
+	if len(rows) == 0 {
+		m.viewport.SetContent("")
+		return
+	}
+
 	cursorStyle := lipgloss.NewStyle().
 		Background(lipgloss.Color(m.CursorBackground)).
 		Foreground(lipgloss.Color(m.CursorForeground))

@@ -8,7 +8,7 @@ import (
 )
 
 var m = &model{
-	Table: &table.Table{
+	table: &table.Table{
 		Output: []string{"\x1b[1mthis is a test string\x1b[0m", "followed by the second line"},
 	},
 }

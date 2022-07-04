@@ -5,12 +5,19 @@ import "github.com/charmbracelet/bubbles/key"
 type KeyMap struct {
 	Quit key.Binding
 
-	Up         key.Binding
-	Down       key.Binding
-	HalfUp     key.Binding
-	HalfDown   key.Binding
-	GoToTop    key.Binding
-	GoToBottom key.Binding
+	Up            key.Binding
+	Down          key.Binding
+	HalfUp        key.Binding
+	HalfDown      key.Binding
+	FullUp        key.Binding
+	FullDown      key.Binding
+	GoToFirstLine key.Binding
+	GoToLastLine  key.Binding
+	GoToTop       key.Binding
+	GoToMiddle    key.Binding
+	GoToBottom    key.Binding
+
+	CenterCursor key.Binding
 
 	Search key.Binding
 	Normal key.Binding
@@ -33,11 +40,30 @@ func DefaultKeyMap() KeyMap {
 		HalfDown: key.NewBinding(
 			key.WithKeys("ctrl+d"),
 		),
-		GoToTop: key.NewBinding(
+		FullUp: key.NewBinding(
+			key.WithKeys("ctrl+b"),
+		),
+		FullDown: key.NewBinding(
+			key.WithKeys("ctrl+f"),
+		),
+		GoToFirstLine: key.NewBinding(
 			key.WithKeys("g"),
 		),
-		GoToBottom: key.NewBinding(
+		GoToLastLine: key.NewBinding(
 			key.WithKeys("G"),
+		),
+		GoToTop: key.NewBinding(
+			key.WithKeys("H"),
+		),
+		GoToMiddle: key.NewBinding(
+			key.WithKeys("M"),
+		),
+		GoToBottom: key.NewBinding(
+			key.WithKeys("L"),
+		),
+
+		CenterCursor: key.NewBinding(
+			key.WithKeys("Z"),
 		),
 
 		Search: key.NewBinding(

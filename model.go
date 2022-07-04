@@ -59,11 +59,10 @@ type model struct {
 	filterState   filterState
 	filteredTable *table.Table
 
-	height, width int
-	padding       int // vertical padding - necessary to stabilize scrolling
-	cursor        int
-	maxWidth      int // for word wrapping
-	maxRows       int
+	padding  int // vertical padding - necessary to stabilize scrolling
+	cursor   int
+	maxWidth int // for word wrapping
+	maxRows  int
 	Settings
 	GlobalStyle
 }
@@ -82,12 +81,12 @@ type Settings struct {
 
 func NewModel(binds Bindings, config *Config) *model {
 	m := model{
-		keys:     DefaultKeyMap(),
-		debug:    true,
-		height:   40,
-		width:    60,
-		maxWidth: 88,
+		keys:  DefaultKeyMap(),
+		debug: true,
+
 		padding:  4,
+		maxWidth: 88,
+
 		Settings: Settings{
 			mouseEnabled: true,
 		},

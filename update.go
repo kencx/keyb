@@ -29,7 +29,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.viewport.Width = msg.Width
 			m.viewport.Height = msg.Height - m.padding
 			if m.cursorPastViewBottom() {
-				m.cursorGoToViewBottom()
+				m.cursor = m.viewport.YOffset + m.viewport.Height - 1
 			}
 		}
 
@@ -59,11 +59,11 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	// cursor loop around
-	if m.cursorPastTop() {
-		m.cursorGoToBottom()
+	if m.cursorPastBeginning() {
+		m.cursorToEnd()
 		m.viewport.GotoBottom()
-	} else if m.cursorPastBottom() {
-		m.cursorGoToTop()
+	} else if m.cursorPastEnd() {
+		m.cursorToBeginning()
 		m.viewport.GotoTop()
 	}
 
@@ -95,13 +95,6 @@ func (m *model) handleNormal(msg tea.Msg) tea.Cmd {
 				m.viewport.LineDown(1)
 			}
 
-		case key.Matches(msg, m.keys.GoToTop):
-			m.cursorGoToTop()
-			m.viewport.GotoTop()
-		case key.Matches(msg, m.keys.GoToBottom):
-			m.cursorGoToBottom()
-			m.viewport.GotoBottom()
-
 		case key.Matches(msg, m.keys.HalfUp):
 			m.cursor -= m.viewport.Height / 2
 			if m.cursorPastViewTop() {
@@ -109,8 +102,8 @@ func (m *model) handleNormal(msg tea.Msg) tea.Cmd {
 			}
 
 			// don't loop around
-			if m.cursorPastTop() {
-				m.cursorGoToTop()
+			if m.cursorPastBeginning() {
+				m.cursorToBeginning()
 				m.viewport.GotoTop()
 			}
 		case key.Matches(msg, m.keys.HalfDown):
@@ -120,10 +113,59 @@ func (m *model) handleNormal(msg tea.Msg) tea.Cmd {
 			}
 
 			// don't loop around
-			if m.cursorPastBottom() {
-				m.cursorGoToBottom()
+			if m.cursorPastEnd() {
+				m.cursorToEnd()
 				m.viewport.GotoBottom()
 			}
+
+		case key.Matches(msg, m.keys.FullUp):
+			m.cursor -= m.viewport.Height
+			if m.cursorPastViewTop() {
+				m.viewport.ViewUp()
+			}
+
+			// don't loop around
+			if m.cursorPastBeginning() {
+				m.cursorToBeginning()
+				m.viewport.GotoTop()
+			}
+
+		case key.Matches(msg, m.keys.FullDown):
+			m.cursor += m.viewport.Height
+			if m.cursorPastViewBottom() {
+				m.viewport.ViewDown()
+			}
+
+			// don't loop around
+			if m.cursorPastEnd() {
+				m.cursorToEnd()
+				m.viewport.GotoBottom()
+			}
+
+		case key.Matches(msg, m.keys.GoToFirstLine):
+			m.cursorToBeginning()
+			m.viewport.GotoTop()
+		case key.Matches(msg, m.keys.GoToLastLine):
+			m.cursorToEnd()
+			m.viewport.GotoBottom()
+
+		case key.Matches(msg, m.keys.GoToTop):
+			m.cursorToViewTop()
+
+		case key.Matches(msg, m.keys.GoToMiddle):
+			m.cursorToViewMiddle()
+
+		case key.Matches(msg, m.keys.GoToBottom):
+			m.cursorToViewBottom()
+
+			// case key.Matches(msg, m.keys.CenterCursor):
+			// 	middle := m.viewport.Height / 2
+			// 	diff := m.cursor - middle
+			// 	if diff > 0 {
+			// 		m.viewport.LineDown(diff)
+			// 	} else {
+			// 		m.viewport.LineUp(diff)
+			// 	}
 		}
 	}
 	return nil
@@ -171,7 +213,7 @@ func (m *model) handleSearch(msg tea.Msg) tea.Cmd {
 		} else {
 			m.filteredTable.AppendRows(styledMatches...)
 		}
-		m.cursorGoToTop()
+		m.cursorToBeginning()
 	}
 
 	// reset if search input is empty regardless of filterState
@@ -210,7 +252,7 @@ func (m *model) resetOutput() {
 	m.searchBar.Reset()
 	m.filterState = unfiltered
 
-	m.cursorGoToTop()
+	m.cursorToBeginning()
 	m.viewItems()
 }
 
@@ -242,16 +284,24 @@ func (m *model) renderCursor(rows []string) {
 	m.viewport.SetContent(strings.Join(cpy, "\n"))
 }
 
-func (m *model) cursorGoToTop() {
+func (m *model) cursorToBeginning() {
 	m.cursor = 0
 }
 
-func (m *model) cursorGoToBottom() {
+func (m *model) cursorToEnd() {
 	m.cursor = m.maxRows - 1
 }
 
-func (m *model) cursorGoToViewBottom() {
-	m.cursor = m.viewport.YOffset + m.viewport.Height - 1
+func (m *model) cursorToViewTop() {
+	m.cursor = m.viewport.YOffset + 3
+}
+
+func (m *model) cursorToViewMiddle() {
+	m.cursor = (m.viewport.YOffset + m.viewport.Height) / 2
+}
+
+func (m *model) cursorToViewBottom() {
+	m.cursor = m.viewport.YOffset + m.viewport.Height - 3
 }
 
 func (m *model) cursorPastViewTop() bool {
@@ -262,10 +312,10 @@ func (m *model) cursorPastViewBottom() bool {
 	return m.cursor > m.viewport.YOffset+m.viewport.Height-1
 }
 
-func (m *model) cursorPastTop() bool {
+func (m *model) cursorPastBeginning() bool {
 	return m.cursor < 0
 }
 
-func (m *model) cursorPastBottom() bool {
+func (m *model) cursorPastEnd() bool {
 	return m.cursor > m.maxRows-1
 }

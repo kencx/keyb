@@ -3,12 +3,11 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 )
 
 func (m *model) OutputBodyToFile(path string, strip bool) error {
 
-	output := strings.Join(m.Table.Output, "\n")
+	output := m.table.ParsedOutput()
 	if strip {
 		output = stripANSI(output)
 	}
@@ -22,7 +21,7 @@ func (m *model) OutputBodyToFile(path string, strip bool) error {
 
 func (m *model) OutputBodyToStdout(strip bool) error {
 
-	output := strings.Join(m.Table.Output, "\n")
+	output := m.table.ParsedOutput()
 	if strip {
 		output = stripANSI(output)
 	}

@@ -6,6 +6,7 @@ require (
 	github.com/charmbracelet/bubbles v0.12.0
 	github.com/charmbracelet/bubbletea v0.21.0
 	github.com/charmbracelet/lipgloss v0.5.0
+	github.com/sahilm/fuzzy v0.1.0
 	gopkg.in/ini.v1 v1.66.2
 	gopkg.in/yaml.v2 v2.4.0
 )

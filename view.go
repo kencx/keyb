@@ -22,21 +22,21 @@ func (m *model) View() string {
 		"\n"+
 		" keys: %d",
 		m.Title,
-		m.textinput.View(),
-		m.Viewport.View(),
-		m.Table.LineCount)
+		m.searchBar.View(),
+		m.viewport.View(),
+		m.table.LineCount)
 
 	if m.debug {
 		view = fmt.Sprintf("%s\tLine: %d YOffset: %d Height: %d",
-			view, m.cursor, m.Viewport.YOffset, m.Viewport.Height)
+			view, m.cursor, m.viewport.YOffset, m.viewport.Height)
 	}
 	// m.setStyle()
-	return m.Table.BodyStyle.Render(view)
+	return m.table.BodyStyle.Render(view)
 }
 
 // set global styles
 func (m *model) setStyle() {
-	m.Table.BodyStyle = m.Table.BodyStyle.Margin(1, 2)
+	m.table.BodyStyle = m.table.BodyStyle.Margin(1, 2)
 	m.handleBorder()
 }
 
@@ -60,6 +60,6 @@ func (m *model) handleBorder() {
 		borderStyle = lipgloss.HiddenBorder()
 	}
 
-	m.Table.BodyStyle = m.Table.BodyStyle.Border(borderStyle)
-	m.padding += m.Table.BodyStyle.GetBorderTopWidth() + m.Table.BodyStyle.GetBorderBottomSize()
+	m.table.BodyStyle = m.table.BodyStyle.Border(borderStyle)
+	m.padding += m.table.BodyStyle.GetBorderTopWidth() + m.table.BodyStyle.GetBorderBottomSize()
 }

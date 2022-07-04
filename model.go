@@ -34,20 +34,36 @@ type KeyBind struct {
 	IgnorePrefix bool   `yaml:"ignore_prefix,omitempty"`
 }
 
-type model struct {
-	Table     *table.Table
-	textinput textinput.Model
-	Viewport  viewport.Model
-	keys      KeyMap
+func (k KeyBind) String() string {
+	return fmt.Sprintf("%s\t%s", k.Comment, k.Key)
+}
 
-	search bool
-	ready  bool
-	debug  bool
+type filterState int
+
+const (
+	unfiltered filterState = iota
+	filtering
+)
+
+type model struct {
+	keys     KeyMap
+	viewport viewport.Model
+	table    *table.Table
+
+	ready bool
+	debug bool
+
+	search    bool
+	searchBar textinput.Model
+
+	filterState   filterState
+	filteredTable *table.Table
 
 	height, width int
 	padding       int // vertical padding - necessary to stabilize scrolling
 	cursor        int
 	maxWidth      int // for word wrapping
+	maxRows       int
 	Settings
 	GlobalStyle
 }
@@ -90,13 +106,20 @@ func NewModel(binds Bindings, config *Config) *model {
 		LineStyle:    lipgloss.NewStyle().Margin(0, 2),
 	}
 
+	filteredStyles := table.Styles{
+		BodyStyle:    lipgloss.NewStyle(),
+		HeadingStyle: lipgloss.NewStyle(),
+		LineStyle:    lipgloss.NewStyle(),
+	}
+
 	if len(binds) == 0 {
-		m.Table = table.New("", []string{""}, tableStyles)
-		m.Table.Output = []string{"No key bindings found"}
+		m.table = table.New("", []string{"No key bindings found"}, tableStyles)
 		return &m
 	}
 
-	m.Table = bindingsToTable(binds, tableStyles)
+	m.table = bindingsToTable(binds, tableStyles)
+	m.maxRows = m.table.LineCount
+	m.filteredTable = table.New("", make([]string, 1, m.table.LineCount), filteredStyles)
 	return &m
 }
 
@@ -104,9 +127,11 @@ func bindingsToTable(bindings Bindings, style table.Styles) *table.Table {
 	keys := bindings.sortedKeys()
 	parentTable := appToTable(keys[0], bindings[keys[0]], style)
 
-	for _, k := range keys[1:] {
-		table := appToTable(k, bindings[k], style)
-		parentTable.Join(table)
+	if len(keys) > 0 {
+		for _, k := range keys[1:] {
+			table := appToTable(k, bindings[k], style)
+			parentTable.Join(table)
+		}
 	}
 
 	parentTable.Align()
@@ -116,7 +141,7 @@ func bindingsToTable(bindings Bindings, style table.Styles) *table.Table {
 func appToTable(heading string, app App, styles table.Styles) *table.Table {
 	var rows []string
 	for _, kb := range app.Keybinds {
-		rows = append(rows, fmt.Sprintf("%s\t%s", kb.Comment, kb.Key))
+		rows = append(rows, kb.String())
 	}
 	heading = fmt.Sprintf("%s\t%s", heading, " ")
 	return table.New(heading, rows, styles)

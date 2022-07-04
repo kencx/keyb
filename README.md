@@ -1,25 +1,44 @@
 # keyb
 
-<p align="center">Quick search for application hotkeys at the tip of your fingers.</p>
+<p align="center">Global, custom hotkeys reference</p>
 
-<p align="center">Powered by Go, bubbletea and lipgloss.</p>
+<p align="center">
+	<img width="500" src="https://github.com/kencx/keyb/blob/master/assets/keyb.png?raw=true">
+</p>
 
-[![keyb demo](https://asciinema.org/a/1fwoiNql5GBKF7lfmSpTpSQTJ.png)](https://asciinema.org/a/1fwoiNql5GBKF7lfmSpTpSQTJ)
+<p align="center">Create your own hotkeys reference sheet for quick reference from the terminal</p>
 
-### Features:
-- Tabular reference for custom key bindings
-- Prefix support
-- Export formatted output to stdout or file
+### Features
+- Fuzzy finding
+- Vim key bindings
+- Export reference to stdout, yaml, json
 - fzf, rofi support
+- Fully customizable
+- Single binary
 
-### Planned:
-- Fuzzy search
-- vim key bindings
-- Support for json, toml
-- More default cheatsheets
+### Non-Features
+keyb does **not** support:
 
->`keyb` does not scrape your applications for hotkeys. All hotkeys must be
->listed manually.
+- Auto detection of hotkeys
+- Setting of hotkeys for any applications
+- Command selection
+
+## Motivation
+
+When I first started using tmux, vim and bspwm, there were too many hotkeys and
+key combinations to remember. It was very annoying to have to constantly look up
+the specific hotkey I wanted and I resorted to writing them down on paper - a
+physical cheatsheet. Thus came the idea of building a digital hotkey
+cheatsheet.
+
+With `keyb`, I can list:
+
+- Hotkeys that I occasionally forget
+- Custom key combinations that I defined for my own workflow
+- Hotkeys for tools that I'm new to
+
+This concept is not novel - awesomeWM provides a helpful cheatsheet for its
+defined hotkeys.
 
 ## Install
 keyb is still a work in progress. Use it at your own risk.
@@ -37,13 +56,13 @@ Flags:
   -p, --print           Print to stdout
   -e, --export [file]   Export to file
   -s, --strip           Strip ANSI chars (only for print/export)
-  -k, --key [file]      Pass custom key bindings file
+  -k, --key [file]      Pass custom hotkeys file
   -c, --config [file]   Pass custom config file
 
   -h, --help            help for keyb
 ```
 
-keyb requires a `yaml` file with your listed key bindings to work. List your keybindings in the file:
+keyb requires a `yaml` file with a list of hotkeys:
 
 ```yaml
 # $XDG_CONFIG_HOME/keyb/keyb.yml
@@ -70,19 +89,28 @@ by including a `ignore_prefix=true` field.
 
 Refer to the defaults provided in `examples` for more details.
 
->Note: Word wrapping is not well supported. Long text of > 88 characters is not
->recommended.
+Finally, bind `keyb` to a hotkey for quick reference. For
+example, with sxhkd and st:
+
+```
+super + slash
+	st -c keys keyb
+```
 
 ### Configuration
 Configure your keyb instance in `$XDG_CONFIG_HOME/keyb/config`.
 
 Refer to `examples/config` for more details.
 
-| Key Binding | Description      |
+| Hotkey      | Description      |
 |------------ | ------------     |
-| j,k/Up,Down | Move cursor      |
+| j, k / Up, Down | Move cursor      |
 | Ctrl + u, d | Move half window |
-| G			  | Go to bottom     |
+| Ctrl + b, f | Move full window |
+| H, M, L     | Go to top, middle, bottom of screen |
+| g, G		  | Go to first, last line |
+| /			  | Enter search mode|
+| Esc		  | Exit search mode |
 | Ctrl + c, q | Quit		     |
 
 ## fzf, rofi

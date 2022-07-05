@@ -59,12 +59,16 @@ type model struct {
 	filterState   filterState
 	filteredTable *table.Table
 
-	padding  int // vertical padding - necessary to stabilize scrolling
-	cursor   int
-	maxWidth int // for word wrapping
-	maxRows  int
+	padding int // vertical padding - necessary to stabilize scrolling
+	cursor  int
+	// maxWidth int // for word wrapping
+	maxRows int
 	Settings
 	GlobalStyle
+}
+
+type Settings struct {
+	mouseEnabled bool
 }
 
 type GlobalStyle struct {
@@ -75,17 +79,13 @@ type GlobalStyle struct {
 	BorderColor      string
 }
 
-type Settings struct {
-	mouseEnabled bool
-}
-
 func NewModel(binds Bindings, config *Config) *model {
 	m := model{
 		keys:  DefaultKeyMap(),
 		debug: true,
 
-		padding:  4,
-		maxWidth: 88,
+		padding: 4,
+		// maxWidth: 88,
 
 		Settings: Settings{
 			mouseEnabled: true,
@@ -102,39 +102,34 @@ func NewModel(binds Bindings, config *Config) *model {
 	tableStyles := table.Styles{
 		BodyStyle:    lipgloss.NewStyle(),
 		HeadingStyle: lipgloss.NewStyle().Bold(true).Margin(0, 1),
-		LineStyle:    lipgloss.NewStyle().Margin(0, 2),
-	}
-
-	filteredStyles := table.Styles{
-		BodyStyle:    lipgloss.NewStyle(),
-		HeadingStyle: lipgloss.NewStyle(),
-		LineStyle:    lipgloss.NewStyle(),
+		RowStyle:     lipgloss.NewStyle().Margin(0, 2),
 	}
 
 	if len(binds) == 0 {
-		m.table = table.New("", []string{"No key bindings found"}, tableStyles)
+		m.table = table.NewEmpty(1)
+		m.table.AppendRow("No key bindings found")
 		return &m
 	}
 
 	m.table = bindingsToTable(binds, tableStyles)
 	m.maxRows = m.table.LineCount
-	m.filteredTable = table.New("", make([]string, 1, m.table.LineCount), filteredStyles)
+	m.filteredTable = table.NewEmpty(m.table.LineCount)
+	m.filteredTable.Styles = tableStyles
 	return &m
 }
 
 func bindingsToTable(bindings Bindings, style table.Styles) *table.Table {
 	keys := bindings.sortedKeys()
-	parentTable := appToTable(keys[0], bindings[keys[0]], style)
+	parent := appToTable(keys[0], bindings[keys[0]], style)
 
-	if len(keys) > 0 {
+	if len(keys) > 1 {
 		for _, k := range keys[1:] {
-			table := appToTable(k, bindings[k], style)
-			parentTable.Join(table)
+			child := appToTable(k, bindings[k], style)
+			parent.Join(child)
 		}
 	}
-
-	parentTable.Align()
-	return parentTable
+	parent.Align()
+	return parent
 }
 
 func appToTable(heading string, app App, styles table.Styles) *table.Table {

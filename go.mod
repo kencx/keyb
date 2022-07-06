@@ -1,6 +1,6 @@
 module keyb
 
-go 1.17
+go 1.18
 
 require (
 	github.com/charmbracelet/bubbles v0.12.0

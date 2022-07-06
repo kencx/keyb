@@ -7,7 +7,7 @@ import (
 
 func (m *model) OutputBodyToFile(path string, strip bool) error {
 
-	output := m.table.String()
+	output := m.list.String()
 	if strip {
 		output = stripANSI(output)
 	}
@@ -21,7 +21,7 @@ func (m *model) OutputBodyToFile(path string, strip bool) error {
 
 func (m *model) OutputBodyToStdout(strip bool) error {
 
-	output := m.table.String()
+	output := m.list.String()
 	if strip {
 		output = stripANSI(output)
 	}

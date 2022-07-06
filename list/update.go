@@ -1,40 +1,25 @@
-package main
+package list
 
 import (
-	"sort"
-	"strings"
-
 	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/textinput"
-	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/sahilm/fuzzy"
 )
 
-func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 
 	var cmds []tea.Cmd
 
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		if !m.ready {
-			m.viewport = viewport.New(msg.Width, msg.Height-m.padding)
-			m.viewport.MouseWheelEnabled = m.mouseEnabled
-			m.viewport.SetYOffset(0)
-
-			m.searchBar = textinput.New()
-			m.ready = true
-		} else {
-			m.viewport.Width = msg.Width
-			m.viewport.Height = msg.Height - m.padding
-			if m.cursorPastViewBottom() {
-				m.cursor = m.viewport.YOffset + m.viewport.Height - 1
-			}
+		m.viewport.Width = msg.Width
+		m.viewport.Height = msg.Height - m.padding
+		m.viewport.MouseWheelEnabled = m.MouseEnabled
+		if m.cursorPastViewBottom() {
+			m.cursor = m.viewport.YOffset + m.viewport.Height - 1
 		}
 
 	case tea.MouseMsg:
-		if !m.mouseEnabled {
+		if !m.MouseEnabled {
 			break
 		}
 		switch msg.Type {
@@ -52,7 +37,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	switch {
-	case m.search && m.searchBar.Focused():
+	case m.searchMode():
 		cmds = append(cmds, m.handleSearch(msg))
 	default:
 		cmds = append(cmds, m.handleNormal(msg))
@@ -67,11 +52,11 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.viewport.GotoTop()
 	}
 
-	m.viewItems()
+	m.visibleRows()
 	return m, tea.Batch(cmds...)
 }
 
-func (m *model) handleNormal(msg tea.Msg) tea.Cmd {
+func (m *Model) handleNormal(msg tea.Msg) tea.Cmd {
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
@@ -171,7 +156,7 @@ func (m *model) handleNormal(msg tea.Msg) tea.Cmd {
 	return nil
 }
 
-func (m *model) handleSearch(msg tea.Msg) tea.Cmd {
+func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 
 	var (
 		cmds []tea.Cmd
@@ -199,8 +184,8 @@ func (m *model) handleSearch(msg tea.Msg) tea.Cmd {
 		cmds = append(cmds, cmd)
 		matches := filter(m.searchBar.Value(), m.table.Output)
 
-		// TODO when heading is matched, return whole sub-table?
-		// might be quite messy
+		// TODO when row matched, return corresponding heading as well
+		// when heading matched, return all rows
 
 		// present new filtered rows
 		m.filteredTable.Reset()
@@ -214,9 +199,8 @@ func (m *model) handleSearch(msg tea.Msg) tea.Cmd {
 
 			// highlight matched rune indices
 			var hlMatches []string
-			hlStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FFA066"))
-			for _, m := range matches {
-				hlMatches = append(hlMatches, highlight(m, hlStyle))
+			for _, match := range matches {
+				hlMatches = append(hlMatches, m.highlight(match))
 			}
 
 			// As highlighting is ephemeral, the styled strings are added to the
@@ -230,110 +214,7 @@ func (m *model) handleSearch(msg tea.Msg) tea.Cmd {
 
 	// reset if search input is empty regardless of filterState
 	if m.searchBar.Value() == "" {
-		m.resetOutput()
+		m.Reset()
 	}
 	return tea.Batch(cmds...)
-}
-
-// Resets model state to unfiltered original
-func (m *model) resetOutput() {
-	m.filteredTable.Reset()
-	m.searchBar.Reset()
-	m.filterState = unfiltered
-
-	m.cursorToBeginning()
-	m.viewItems()
-}
-
-// Sets items to be shown. All items are shown unless filtered
-func (m *model) viewItems() {
-	if !m.filteredTable.Empty() {
-		m.updateContent(m.filteredTable.StyledOutput)
-		m.maxRows = m.filteredTable.LineCount
-	} else {
-		// TODO for some reason, len(m.table.StyledOutput) != m.table.LineCount here
-		m.updateContent(m.table.StyledOutput)
-		m.maxRows = m.table.LineCount
-	}
-}
-
-// Updates cursor and sets content to view
-func (m *model) updateContent(rows []string) {
-	if len(rows) == 0 {
-		m.viewport.SetContent("")
-		return
-	}
-
-	cursorStyle := lipgloss.NewStyle().
-		Background(lipgloss.Color(m.CursorBackground)).
-		Foreground(lipgloss.Color(m.CursorForeground))
-
-	// make a deep copy to not preserve cursor position
-	cpy := make([]string, len(rows))
-	copy(cpy, rows)
-
-	cpy[m.cursor] = cursorStyle.Render(cpy[m.cursor])
-	m.viewport.SetContent(strings.Join(cpy, "\n"))
-}
-
-func filter(term string, target []string) fuzzy.Matches {
-	matches := fuzzy.Find(term, target)
-	sort.Stable(matches)
-	return matches
-}
-
-// Highlight matched runes
-func highlight(m fuzzy.Match, style lipgloss.Style) string {
-	var b strings.Builder
-
-	for i, rune := range []rune(m.Str) {
-		styled := false
-		for _, mi := range m.MatchedIndexes {
-			if i == mi {
-				b.WriteString(style.Render(string(rune)))
-				styled = true
-			}
-		}
-		if !styled {
-			b.WriteString(string(rune))
-		}
-	}
-	return b.String()
-}
-
-// Cursor manipulation helpers
-func (m *model) cursorToBeginning() {
-	m.cursor = 0
-}
-
-func (m *model) cursorToEnd() {
-	m.cursor = m.maxRows - 1
-}
-
-func (m *model) cursorToViewTop() {
-	m.cursor = m.viewport.YOffset + 3
-}
-
-func (m *model) cursorToViewMiddle() {
-	m.cursor = (m.viewport.YOffset + m.viewport.Height) / 2
-}
-
-func (m *model) cursorToViewBottom() {
-	m.cursor = m.viewport.YOffset + m.viewport.Height - 3
-}
-
-func (m *model) cursorPastViewTop() bool {
-	return m.cursor < m.viewport.YOffset
-}
-
-func (m *model) cursorPastViewBottom() bool {
-	return m.cursor > m.viewport.YOffset+m.viewport.Height-1
-}
-
-func (m *model) cursorPastBeginning() bool {
-	return m.cursor < 0
-}
-
-func (m *model) cursorPastEnd() bool {
-	return m.cursor > m.maxRows-1
 }

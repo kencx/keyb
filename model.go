@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
+	"keyb/list"
 	"keyb/table"
 	"sort"
 
-	"github.com/charmbracelet/bubbles/textinput"
-	"github.com/charmbracelet/bubbles/viewport"
-	"github.com/charmbracelet/lipgloss"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 type Bindings map[string]App
@@ -38,41 +37,12 @@ func (k KeyBind) String() string {
 	return fmt.Sprintf("%s\t%s", k.Comment, k.Key)
 }
 
-type filterState int
-
-const (
-	unfiltered filterState = iota
-	filtering
-)
-
 type model struct {
-	keys     KeyMap
-	viewport viewport.Model
-	table    *table.Table
-
-	ready bool
-	debug bool
-
-	search    bool
-	searchBar textinput.Model
-
-	filterState   filterState
-	filteredTable *table.Table
-
-	padding int // vertical padding - necessary to stabilize scrolling
-	cursor  int
-	// maxWidth int // for word wrapping
-	maxRows int
-	Settings
+	list list.Model
 	GlobalStyle
 }
 
-type Settings struct {
-	mouseEnabled bool
-}
-
 type GlobalStyle struct {
-	Title            string
 	CursorForeground string
 	CursorBackground string
 	Border           string
@@ -80,51 +50,27 @@ type GlobalStyle struct {
 }
 
 func NewModel(binds Bindings, config *Config) *model {
+	table := bindingsToTable(binds)
+
 	m := model{
-		keys:  DefaultKeyMap(),
-		debug: true,
-
-		padding: 4,
-		// maxWidth: 88,
-
-		Settings: Settings{
-			mouseEnabled: true,
-		},
+		list: list.New(config.Title, table),
 		GlobalStyle: GlobalStyle{
-			Title:            config.Title,
 			CursorForeground: config.Cursor_fg,
 			CursorBackground: config.Cursor_bg,
 			Border:           config.Border,
 			BorderColor:      config.Border_color,
 		},
 	}
-
-	tableStyles := table.Styles{
-		BodyStyle:    lipgloss.NewStyle(),
-		HeadingStyle: lipgloss.NewStyle().Bold(true).Margin(0, 1),
-		RowStyle:     lipgloss.NewStyle().Margin(0, 2),
-	}
-
-	if len(binds) == 0 {
-		m.table = table.NewEmpty(1)
-		m.table.AppendRow("No key bindings found")
-		return &m
-	}
-
-	m.table = bindingsToTable(binds, tableStyles)
-	m.maxRows = m.table.LineCount
-	m.filteredTable = table.NewEmpty(m.table.LineCount)
-	m.filteredTable.Styles = tableStyles
 	return &m
 }
 
-func bindingsToTable(bindings Bindings, style table.Styles) *table.Table {
+func bindingsToTable(bindings Bindings) *table.Model {
 	keys := bindings.sortedKeys()
-	parent := appToTable(keys[0], bindings[keys[0]], style)
+	parent := appToTable(keys[0], bindings[keys[0]])
 
 	if len(keys) > 1 {
 		for _, k := range keys[1:] {
-			child := appToTable(k, bindings[k], style)
+			child := appToTable(k, bindings[k])
 			parent.Join(child)
 		}
 	}
@@ -132,11 +78,37 @@ func bindingsToTable(bindings Bindings, style table.Styles) *table.Table {
 	return parent
 }
 
-func appToTable(heading string, app App, styles table.Styles) *table.Table {
+func appToTable(heading string, app App) *table.Model {
 	var rows []string
 	for _, kb := range app.Keybinds {
 		rows = append(rows, kb.String())
 	}
 	heading = fmt.Sprintf("%s\t%s", heading, " ")
-	return table.New(heading, rows, styles)
+	return table.New(heading, rows)
+}
+
+func (m *model) Init() tea.Cmd {
+	return nil
+}
+
+func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+
+	var (
+		cmd  tea.Cmd
+		cmds []tea.Cmd
+	)
+
+	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		m.list.Resize(msg.Width, msg.Height)
+	}
+
+	m.list, cmd = m.list.Update(msg)
+	cmds = append(cmds, cmd)
+
+	return m, tea.Batch(cmds...)
+}
+
+func (m *model) View() string {
+	return m.list.View()
 }

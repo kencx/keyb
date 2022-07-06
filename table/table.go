@@ -8,7 +8,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-type Table struct {
+type Model struct {
 	heading      string
 	rows         []string
 	Output       []string
@@ -23,11 +23,10 @@ type Styles struct {
 	RowStyle     lipgloss.Style
 }
 
-func New(heading string, rows []string, style Styles) *Table {
-	t := &Table{
+func New(heading string, rows []string) *Model {
+	t := &Model{
 		heading: heading,
 		rows:    rows,
-		Styles:  style,
 	}
 
 	if heading != "" {
@@ -43,9 +42,15 @@ func New(heading string, rows []string, style Styles) *Table {
 	return t
 }
 
+func NewWithStyle(heading string, rows []string, style Styles) *Model {
+	table := New(heading, rows)
+	table.Styles = style
+	return table
+}
+
 // New default empty table with empty heading & maximum of n rows.
-func NewEmpty(n int) *Table {
-	return &Table{
+func NewEmpty(n int) *Model {
+	return &Model{
 		rows:      make([]string, 1, max(2, n)),
 		Styles:    DefaultStyles(),
 		LineCount: 0,
@@ -60,37 +65,37 @@ func DefaultStyles() Styles {
 	}
 }
 
-func (t *Table) String() string {
+func (t *Model) String() string {
 	return strings.Join(t.StyledOutput, "\n")
 }
 
-func (t *Table) Empty() bool {
+func (t *Model) Empty() bool {
 	return t.LineCount <= 0
 }
 
-func (t *Table) AppendRow(row string) {
+func (t *Model) AppendRow(row string) {
 	t.rows = append(t.rows, row)
 	t.LineCount += 1
 	t.Update()
 }
 
-func (t *Table) AppendRows(rows ...string) {
+func (t *Model) AppendRows(rows ...string) {
 	t.rows = append(t.rows, rows...)
 	t.LineCount += len(rows)
 	t.Update()
 }
 
-func (t *Table) PrependRow(row string) {
+func (t *Model) PrependRow(row string) {
 	t.rows = append([]string{row}, t.rows...)
 }
 
-func (t *Table) Update() {
+func (t *Model) Update() {
 	t.Assemble()
 	t.Render()
 }
 
 // Generates unstyled output
-func (t *Table) Assemble() {
+func (t *Model) Assemble() {
 	var rows []string
 	if t.heading != "" && t.heading != "\n" {
 		rows = append(rows, t.heading)
@@ -105,7 +110,7 @@ func (t *Table) Assemble() {
 }
 
 // Generates styled output
-func (t *Table) Render() {
+func (t *Model) Render() {
 	var rows []string
 	if t.heading != "" {
 		heading := t.HeadingStyle.Render(t.heading)
@@ -121,14 +126,14 @@ func (t *Table) Render() {
 	t.StyledOutput = rows
 }
 
-func (t *Table) Join(table *Table) {
+func (t *Model) Join(table *Model) {
 	t.rows = append(t.rows, table.rows...)
 	t.Output = append(t.Output, table.Output...)
 	t.StyledOutput = append(t.StyledOutput, table.StyledOutput...)
 	t.LineCount += table.LineCount
 }
 
-func (t *Table) Reset() {
+func (t *Model) Reset() {
 	t.heading = ""
 	t.rows = nil
 	t.Output = nil
@@ -137,7 +142,7 @@ func (t *Table) Reset() {
 
 // Only works properly after Render
 // Calling this before Join will not align different sub-tables to each other
-func (t *Table) Align() {
+func (t *Model) Align() {
 	var sb strings.Builder
 	tw := tabwriter.NewWriter(&sb, 20, 8, 10, ' ', 0)
 

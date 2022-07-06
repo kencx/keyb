@@ -144,7 +144,7 @@ func (t *Model) Reset() {
 // Calling this before Join will not align different sub-tables to each other
 func (t *Model) Align() {
 	var sb strings.Builder
-	tw := tabwriter.NewWriter(&sb, 20, 8, 10, ' ', 0)
+	tw := tabwriter.NewWriter(&sb, 16, 4, 6, ' ', 0)
 
 	for _, row := range t.StyledOutput {
 		fmt.Fprintln(tw, row)

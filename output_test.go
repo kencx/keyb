@@ -2,23 +2,25 @@ package main
 
 import (
 	"io/ioutil"
-	"keyb/table"
 	"os"
 	"testing"
+
+	"github.com/kencx/keyb/ui"
+	"github.com/kencx/keyb/ui/list"
+	"github.com/kencx/keyb/ui/table"
 )
 
-var m = &model{
-	table: &table.Table{
-		Output: []string{"\x1b[1mthis is a test string\x1b[0m", "followed by the second line"},
-	},
-}
+var (
+	testTable = table.New("\x1b[1mfoo\x1b[0m", []string{"bar"})
+	m         = &ui.Model{List: list.New("", testTable)}
+)
 
 func TestOutputBodyToStdout(t *testing.T) {
 	rescueStdout := os.Stdout
 	r, w, _ := os.Pipe()
 	os.Stdout = w
 
-	err := m.OutputBodyToStdout(true)
+	err := OutputBodyToStdout(m, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -27,7 +29,7 @@ func TestOutputBodyToStdout(t *testing.T) {
 	got, _ := ioutil.ReadAll(r)
 	os.Stdout = rescueStdout
 
-	want := "this is a test string\nfollowed by the second line"
+	want := "foo\nbar"
 	if string(got) != want {
 		t.Errorf("got %q, want %q", got, want)
 	}

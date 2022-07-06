@@ -1,9 +1,10 @@
 package list
 
 import (
-	"keyb/table"
 	"sort"
 	"strings"
+
+	"github.com/kencx/keyb/ui/table"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"

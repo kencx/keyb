@@ -1,8 +1,9 @@
 package list
 
 import (
-	"keyb/table"
 	"testing"
+
+	"github.com/kencx/keyb/ui/table"
 )
 
 var (

@@ -1,7 +1,7 @@
 package list
 
 import (
-	"keyb/table"
+	"github.com/kencx/keyb/ui/table"
 
 	"github.com/charmbracelet/lipgloss"
 )

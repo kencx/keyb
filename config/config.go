@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	_ "embed"
@@ -13,8 +13,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-//go:embed examples/config
-var configTempl string
+var ConfigFs string
 
 const (
 	parentDir  = "keyb"
@@ -116,7 +115,7 @@ func createConfigDir() (string, error) {
 	if err != nil {
 
 		if errors.Is(err, os.ErrNotExist) {
-			err := os.MkdirAll(configPath, 0664)
+			err := os.MkdirAll(configPath, 0744)
 			if err != nil {
 				return "", fmt.Errorf("failed to create config dir: %w", err)
 			}
@@ -127,7 +126,7 @@ func createConfigDir() (string, error) {
 	return configPath, nil
 }
 
-func createConfigFile() error {
+func CreateConfigFile() error {
 
 	basePath, err := createConfigDir()
 	if err != nil {
@@ -139,7 +138,7 @@ func createConfigFile() error {
 	_, err = os.Stat(fullPath)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			if err := os.WriteFile(fullPath, []byte(configTempl), 0664); err != nil {
+			if err := os.WriteFile(fullPath, []byte(ConfigFs), 0744); err != nil {
 				return fmt.Errorf("failed to write config file: %w", err)
 			}
 		} else {

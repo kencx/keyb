@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"flag"
 	"fmt"
 	"log"
@@ -8,6 +9,8 @@ import (
 	"path"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/kencx/keyb/config"
+	"github.com/kencx/keyb/ui"
 )
 
 const help = `usage: keyb [options] [file]
@@ -22,6 +25,9 @@ const help = `usage: keyb [options] [file]
     -h, --help	    help for keyb
 `
 
+//go:embed examples/config
+var configFs string
+
 // TODO support diff OS
 var (
 	defaultConfig = path.Join(os.Getenv("HOME"), ".config/keyb/config")
@@ -29,6 +35,7 @@ var (
 )
 
 func main() {
+	config.ConfigFs = configFs
 
 	log.SetPrefix("keyb: ")
 	log.SetFlags(0)
@@ -59,17 +66,17 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	m := NewModel(program, config)
+	m := ui.NewModel(program, config)
 
 	if output {
-		if err := m.OutputBodyToStdout(strip); err != nil {
+		if err := OutputBodyToStdout(m, strip); err != nil {
 			log.Fatal(err)
 		}
 		os.Exit(0)
 	}
 
 	if exportFile != "" {
-		if err := m.OutputBodyToFile(exportFile, strip); err != nil {
+		if err := OutputBodyToFile(m, exportFile, strip); err != nil {
 			log.Fatal(err)
 		}
 		os.Exit(0)
@@ -80,17 +87,17 @@ func main() {
 	}
 }
 
-func handleFlags(keybPath, configPath string) (Bindings, *Config, error) {
+func handleFlags(keybPath, configPath string) (config.Bindings, *config.Config, error) {
 
-	if err := createConfigFile(); err != nil {
+	if err := config.CreateConfigFile(); err != nil {
 		return nil, nil, fmt.Errorf("error: could not locate config file: %w", err)
 	}
-	config, err := GetConfig(configPath)
+	cfg, err := config.GetConfig(configPath)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	customKeybPath := config.KeybPath
+	customKeybPath := cfg.KeybPath
 
 	if keybPath != "" { // flag takes priority
 		customKeybPath = keybPath
@@ -98,14 +105,14 @@ func handleFlags(keybPath, configPath string) (Bindings, *Config, error) {
 		return nil, nil, fmt.Errorf("ERROR: no keyb file found")
 	}
 
-	bindings, err := GetBindings(customKeybPath)
+	bindings, err := config.GetBindings(customKeybPath)
 	if err != nil {
 		return nil, nil, err
 	}
-	return bindings, config, nil
+	return bindings, cfg, nil
 }
 
-func start(m *model) error {
+func start(m *ui.Model) error {
 
 	p := tea.NewProgram(m)
 	p.EnableMouseCellMotion()

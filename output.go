@@ -3,11 +3,13 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/kencx/keyb/ui"
 )
 
-func (m *model) OutputBodyToFile(path string, strip bool) error {
+func OutputBodyToFile(m *ui.Model, path string, strip bool) error {
 
-	output := m.list.String()
+	output := m.List.String()
 	if strip {
 		output = stripANSI(output)
 	}
@@ -19,9 +21,9 @@ func (m *model) OutputBodyToFile(path string, strip bool) error {
 	return nil
 }
 
-func (m *model) OutputBodyToStdout(strip bool) error {
+func OutputBodyToStdout(m *ui.Model, strip bool) error {
 
-	output := m.list.String()
+	output := m.List.String()
 	if strip {
 		output = stripANSI(output)
 	}

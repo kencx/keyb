@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"reflect"
@@ -23,7 +23,7 @@ var testData = Bindings{
 }
 
 func TestSortKeys(t *testing.T) {
-	got := testData.sortedKeys()
+	got := testData.SortedKeys()
 	want := []string{"firefox", "tmux", "vim"}
 
 	if !reflect.DeepEqual(got, want) {

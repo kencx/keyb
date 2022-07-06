@@ -1,4 +1,4 @@
-module keyb
+module github.com/kencx/keyb
 
 go 1.18
 

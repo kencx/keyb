@@ -87,6 +87,7 @@ func (t *Model) AppendRows(rows ...string) {
 
 func (t *Model) PrependRow(row string) {
 	t.rows = append([]string{row}, t.rows...)
+	t.Update()
 }
 
 func (t *Model) Update() {
@@ -137,6 +138,7 @@ func (t *Model) Reset() {
 	t.heading = ""
 	t.rows = nil
 	t.Output = nil
+	t.StyledOutput = nil
 	t.LineCount = 0
 }
 

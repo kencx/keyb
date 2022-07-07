@@ -1,8 +1,6 @@
 package ui
 
 import (
-	"fmt"
-
 	"github.com/kencx/keyb/config"
 	"github.com/kencx/keyb/ui/list"
 	"github.com/kencx/keyb/ui/table"
@@ -52,12 +50,12 @@ func bindingsToTable(bindings config.Bindings) *table.Model {
 }
 
 func appToTable(heading string, app config.App) *table.Model {
-	var rows []string
+	var rows []table.Row
 	for _, kb := range app.Keybinds {
-		rows = append(rows, kb.String())
+		rows = append(rows, table.NewRow(kb.Comment, kb.Key, ""))
 	}
-	heading = fmt.Sprintf("%s\t%s", heading, " ")
-	return table.New(heading, rows)
+	h := table.NewHeading(heading)
+	return table.New(h, rows)
 }
 
 func (m *Model) Init() tea.Cmd {

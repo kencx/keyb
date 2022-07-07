@@ -9,7 +9,6 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/sahilm/fuzzy"
 )
 
@@ -62,7 +61,7 @@ func New(title string, t *table.Model) Model {
 
 	if t.Empty() {
 		m.table = table.NewEmpty(1)
-		m.table.AppendRow("No key bindings found")
+		m.table.AppendRow(table.NewRow("No key bindings found", "", ""))
 		m.table.Styles = m.styles.Table
 		m.filteredTable = table.NewEmpty(m.table.LineCount)
 		return m
@@ -71,6 +70,7 @@ func New(title string, t *table.Model) Model {
 	m.maxRows = m.table.LineCount
 	m.filteredTable = table.NewEmpty(m.table.LineCount)
 	m.filteredTable.Styles = m.styles.Table
+	m.table.Styles = m.styles.Table
 	return m
 }
 
@@ -127,9 +127,9 @@ func filter(term string, target []string) fuzzy.Matches {
 }
 
 // Highlight matched runes
-func (m *Model) highlight(match fuzzy.Match) string {
-	return lipgloss.StyleRunes(match.Str, match.MatchedIndexes, m.styles.Highlight, lipgloss.NewStyle())
-}
+// func (m *Model) highlight(match fuzzy.Match) table.Row {
+// 	s := lipgloss.StyleRunes(match.Str, match.MatchedIndexes, m.styles.Highlight, lipgloss.NewStyle())
+// }
 
 func (m *Model) String() string {
 	return m.table.String()

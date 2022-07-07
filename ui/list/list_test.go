@@ -7,8 +7,12 @@ import (
 )
 
 var (
-	testRows  = []string{"foo", "bar", "baz"}
-	testTable = table.New("fooTable", testRows)
+	testRows = []table.Row{
+		{Text: "foo"},
+		{Text: "bar"},
+		{Text: "baz"},
+	}
+	testTable = table.New(table.NewHeading("fooTable"), testRows)
 )
 
 func TestNew(t *testing.T) {
@@ -17,17 +21,17 @@ func TestNew(t *testing.T) {
 
 		assertEqual(t, tm.Title, "foo")
 		assertEqual(t, tm.table.LineCount, 4)
-		assertEqual(t, tm.table.String(), "fooTable\nfoo\nbar\nbaz")
+		assertEqual(t, tm.table.String(), "fooTable\t \nfoo\t\nbar\t\nbaz\t")
 		assertEqual(t, tm.filterState, unfiltered)
 		assertEqual(t, tm.filteredTable.LineCount, 0)
 	})
 
 	t.Run("empty", func(t *testing.T) {
-		tm := New("", table.New("", []string{""}))
+		tm := New("", table.New(table.EmptyRow(), []table.Row{table.EmptyRow()}))
 
 		assertEqual(t, tm.Title, "")
 		assertEqual(t, tm.table.LineCount, 1)
-		assertEqual(t, tm.table.String(), "No key bindings found")
+		assertEqual(t, tm.table.String(), "No key bindings found\t")
 		assertEqual(t, tm.filterState, unfiltered)
 		assertEqual(t, tm.filteredTable.LineCount, 0)
 	})
@@ -52,6 +56,6 @@ func TestReset(t *testing.T) {
 
 func assertEqual[T comparable](t *testing.T, got, want T) {
 	if got != want {
-		t.Errorf("got %v, want %v", got, want)
+		t.Errorf("got %#v, want %#v", got, want)
 	}
 }

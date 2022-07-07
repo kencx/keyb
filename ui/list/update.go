@@ -3,6 +3,7 @@ package list
 import (
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/kencx/keyb/ui/table"
 )
 
 func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
@@ -190,7 +191,7 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 		// present new filtered rows
 		m.filteredTable.Reset()
 		if len(matches) == 0 {
-			m.filteredTable.AppendRow("")
+			m.filteredTable.AppendRow(table.EmptyRow())
 
 		} else {
 			// TODO existing styles are disturbed by highlighting:
@@ -198,16 +199,16 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 			// cursor highlights up till matched rune
 
 			// highlight matched rune indices
-			var hlMatches []string
-			for _, match := range matches {
-				hlMatches = append(hlMatches, m.highlight(match))
-			}
+			// var hlMatches []table.Row
+			// for _, match := range matches {
+			// 	hlMatches = append(hlMatches, m.highlight(match))
+			// }
 
 			// As highlighting is ephemeral, the styled strings are added to the
 			// otherwise unstyled filteredTable rows. This ensures all table styles are
 			// applied appropriately later
-			m.filteredTable.AppendRows(hlMatches...)
-			m.filteredTable.Align()
+			// m.filteredTable.AppendRows(hlMatches...)
+			// m.filteredTable.Align()
 		}
 		m.cursorToBeginning()
 	}

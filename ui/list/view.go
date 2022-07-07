@@ -1,23 +1,30 @@
 package list
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/charmbracelet/lipgloss"
+)
 
 func (m *Model) View() string {
 
-	view := fmt.Sprintf("%s\n"+
-		"%s\n"+
-		"%s\n"+
-		"\n"+
-		" keys: %d",
+	status := fmt.Sprintf(" keys: %d", m.table.LineCount)
+	if m.debug {
+		status = fmt.Sprintf("%s\tLine: %d YOffset: %d Height: %d",
+			status, m.cursor, m.viewport.YOffset, m.viewport.Height)
+	}
+
+	view := lipgloss.JoinVertical(
+		lipgloss.Left,
 		m.Title,
 		m.searchBar.View(),
 		m.viewport.View(),
-		m.table.LineCount)
+		status,
+	)
 
-	if m.debug {
-		view = fmt.Sprintf("%s\tLine: %d YOffset: %d Height: %d",
-			view, m.cursor, m.viewport.YOffset, m.viewport.Height)
-	}
-	// m.setStyle()
-	return m.table.BodyStyle.Render(view)
+	style := lipgloss.NewStyle().
+		Margin(0, 1)
+		// Width(m.viewport.Width)
+		// MaxWidth(m.viewport.Width)
+	return style.Render(view)
 }

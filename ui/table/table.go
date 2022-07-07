@@ -9,8 +9,8 @@ import (
 )
 
 type Model struct {
-	heading      string
-	rows         []string
+	heading      Row
+	rows         []Row
 	Output       []string
 	StyledOutput []string
 	LineCount    int
@@ -23,17 +23,17 @@ type Styles struct {
 	RowStyle     lipgloss.Style
 }
 
-func New(heading string, rows []string) *Model {
+func New(heading Row, rows []Row) *Model {
 	t := &Model{
 		heading: heading,
 		rows:    rows,
 	}
 
-	if heading != "" {
+	if heading.String() != "" {
 		t.LineCount += 1
 	}
 
-	if len(rows) > 0 && rows[0] != "" {
+	if len(rows) > 0 && rows[0].String() != "" {
 		t.LineCount += len(rows)
 	}
 
@@ -42,7 +42,7 @@ func New(heading string, rows []string) *Model {
 	return t
 }
 
-func NewWithStyle(heading string, rows []string, style Styles) *Model {
+func NewWithStyle(heading Row, rows []Row, style Styles) *Model {
 	table := New(heading, rows)
 	table.Styles = style
 	return table
@@ -51,7 +51,7 @@ func NewWithStyle(heading string, rows []string, style Styles) *Model {
 // New default empty table with empty heading & maximum of n rows.
 func NewEmpty(n int) *Model {
 	return &Model{
-		rows:      make([]string, 1, max(2, n)),
+		rows:      make([]Row, 1, max(2, n)),
 		Styles:    DefaultStyles(),
 		LineCount: 0,
 	}
@@ -73,20 +73,20 @@ func (t *Model) Empty() bool {
 	return t.LineCount <= 0
 }
 
-func (t *Model) AppendRow(row string) {
+func (t *Model) AppendRow(row Row) {
 	t.rows = append(t.rows, row)
 	t.LineCount += 1
 	t.Update()
 }
 
-func (t *Model) AppendRows(rows ...string) {
+func (t *Model) AppendRows(rows ...Row) {
 	t.rows = append(t.rows, rows...)
 	t.LineCount += len(rows)
 	t.Update()
 }
 
-func (t *Model) PrependRow(row string) {
-	t.rows = append([]string{row}, t.rows...)
+func (t *Model) PrependRow(row Row) {
+	t.rows = append([]Row{row}, t.rows...)
 	t.Update()
 }
 
@@ -98,13 +98,13 @@ func (t *Model) Update() {
 // Generates unstyled output
 func (t *Model) Assemble() {
 	var rows []string
-	if t.heading != "" && t.heading != "\n" {
-		rows = append(rows, t.heading)
+	if t.heading.String() != "" {
+		rows = append(rows, t.heading.String())
 	}
 
 	for _, row := range t.rows {
-		if row != "" && row != "\n" {
-			rows = append(rows, row)
+		if row.String() != "" {
+			rows = append(rows, row.String())
 		}
 	}
 	t.Output = rows
@@ -113,14 +113,14 @@ func (t *Model) Assemble() {
 // Generates styled output
 func (t *Model) Render() {
 	var rows []string
-	if t.heading != "" {
-		heading := t.HeadingStyle.Render(t.heading)
+	if t.heading.String() != "" {
+		heading := t.HeadingStyle.Render(t.heading.String())
 		rows = append(rows, heading)
 	}
 
 	for _, row := range t.rows {
-		if row != "" {
-			line := t.RowStyle.Render(row)
+		if row.String() != "" {
+			line := t.RowStyle.Render(row.String())
 			rows = append(rows, line)
 		}
 	}
@@ -135,7 +135,7 @@ func (t *Model) Join(table *Model) {
 }
 
 func (t *Model) Reset() {
-	t.heading = ""
+	t.heading = EmptyRow()
 	t.rows = nil
 	t.Output = nil
 	t.StyledOutput = nil

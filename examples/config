@@ -1,5 +1,4 @@
-# title text
-TITLE = "All your keybindings in one place"
+TITLE = ""
 
 # turn vim mode on or off
 VIM = true
@@ -7,7 +6,6 @@ VIM = true
 # default keyb file path
 KEYB_PATH = "$HOME/.config/keyb/keyb.yml"
 
-# cursor styling
 CURSOR_FG = `#edb`
 CURSOR_BG = `#448448`
 

@@ -1,9 +1,12 @@
 package list
 
 import (
+	"sort"
+
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/kencx/keyb/ui/table"
+	"github.com/sahilm/fuzzy"
 )
 
 func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
@@ -194,11 +197,8 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 		// filter with search input
 		m.searchBar, cmd = m.searchBar.Update(msg)
 		cmds = append(cmds, cmd)
-		matches := filter(m.searchBar.Value(), m.table.Plain())
-
-		// TODO when row matched, return corresponding heading as well
-		// when heading matched, return all rows
-		// heading match only when full match?
+		// do not match headings
+		matches := filter(m.searchBar.Value(), m.table.PlainWithoutHeading())
 
 		// present new filtered rows
 		m.filteredTable.Reset()
@@ -207,11 +207,14 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 
 		} else {
 			var hlMatches []*table.Row
+			// non-pointers to not propagate filtering changes
+			rows := m.table.GetRowsOnly()
+
 			for _, match := range matches {
-				row := m.table.Rows[match.Index]
+				row := rows[match.Index]
 				row.IsFiltered = true
 				row.MatchedIndex = match.MatchedIndexes
-				hlMatches = append(hlMatches, row)
+				hlMatches = append(hlMatches, &row)
 			}
 			m.filteredTable.AppendRows(hlMatches...)
 		}
@@ -221,6 +224,16 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 	// reset if search input is empty regardless of filterState
 	if m.searchBar.Value() == "" {
 		m.Reset()
+
+		// remain in filtering state
+		// until explicitly return to Normal mode
+		m.filterState = filtering
 	}
 	return tea.Batch(cmds...)
+}
+
+func filter(term string, target []string) fuzzy.Matches {
+	matches := fuzzy.Find(term, target)
+	sort.Stable(matches)
+	return matches
 }

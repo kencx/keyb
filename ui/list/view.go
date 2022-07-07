@@ -2,6 +2,7 @@ package list
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/charmbracelet/lipgloss"
 )
@@ -14,9 +15,15 @@ func (m *Model) View() string {
 			status, m.cursor, m.viewport.YOffset, m.viewport.Height)
 	}
 
+	topbar := m.title
+	if m.filterState == filtering {
+		separator := strings.Repeat(" ", m.viewport.Width-m.padding-lipgloss.Width(m.title)-lipgloss.Width(m.currentHeading))
+		topbar = lipgloss.JoinHorizontal(lipgloss.Center, m.title, separator, m.currentHeading)
+	}
+
 	view := lipgloss.JoinVertical(
 		lipgloss.Left,
-		m.Title,
+		topbar,
 		m.searchBar.View(),
 		m.viewport.View(),
 		status,
@@ -25,6 +32,5 @@ func (m *Model) View() string {
 	style := lipgloss.NewStyle().
 		Margin(0, 1)
 		// Width(m.viewport.Width)
-		// MaxWidth(m.viewport.Width)
 	return style.Render(view)
 }

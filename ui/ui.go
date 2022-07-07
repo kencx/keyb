@@ -50,7 +50,17 @@ func appToTable(heading string, app config.App) *table.Model {
 	rows = append(rows, h)
 
 	for _, kb := range app.Keybinds {
-		rows = append(rows, table.NewRow(kb.Comment, kb.Key, app.Prefix))
+		row := table.NewRow(kb.Comment, kb.Key, app.Prefix, heading)
+
+		// config prefix ignore defaults to false
+		// so user can choose to ignore prefix for a specific kb
+		if kb.IgnorePrefix {
+			// row prefix ignore defaults to true
+			// which equates to prefix show defaulting to false
+			// otherwise, all rows will show (empty) prefix regardless
+			row.ShowPrefix = false
+		}
+		rows = append(rows, row)
 	}
 	return table.New(rows)
 }

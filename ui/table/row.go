@@ -14,6 +14,8 @@ type Row struct {
 	MatchedIndex []int
 	Styles       RowStyles
 
+	// only used to show row's corresponding heading during filtering
+	Heading    string
 	IsHeading  bool
 	IsSelected bool
 	IsFiltered bool
@@ -51,12 +53,13 @@ func NewHeading(text string) *Row {
 }
 
 // non-heading row
-func NewRow(text, key, prefix string) *Row {
+func NewRow(text, key, prefix, heading string) *Row {
 	r := &Row{
-		Text:   text,
-		Key:    key,
-		Prefix: prefix,
-		Styles: DefaultRowStyles(),
+		Text:    text,
+		Key:     key,
+		Prefix:  prefix,
+		Styles:  DefaultRowStyles(),
+		Heading: heading,
 	}
 	r.ShowPrefix = r.Prefix != ""
 	return r

@@ -1,14 +1,11 @@
 package list
 
 import (
-	"sort"
-
 	"github.com/kencx/keyb/ui/table"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/sahilm/fuzzy"
 )
 
 type filterState int
@@ -30,8 +27,9 @@ type Model struct {
 	searchBar textinput.Model
 	search    bool
 
-	filterState   filterState
-	filteredTable *table.Model
+	filterState    filterState
+	filteredTable  *table.Model
+	currentHeading string
 
 	cursor  int
 	padding int // vertical padding - necessary to stabilize scrolling
@@ -60,7 +58,7 @@ func New(title string, t *table.Model) Model {
 
 	if t.Empty() {
 		m.table = table.NewEmpty(1)
-		m.table.AppendRow(table.NewRow("No key bindings found", "", ""))
+		m.table.AppendRow(table.NewRow("No key bindings found", "", "", ""))
 		m.table.Styles = m.styles.Table
 		m.filteredTable = table.NewEmpty(m.table.LineCount)
 		return m
@@ -87,6 +85,7 @@ func (m *Model) Reset() {
 	m.filteredTable.Reset()
 	m.filterState = unfiltered
 	m.searchBar.Reset()
+	m.currentHeading = ""
 	m.cursorToBeginning()
 	m.visibleRows()
 }
@@ -114,18 +113,13 @@ func (m *Model) SyncContent(table *table.Model) {
 	for i, row := range table.Rows {
 		if i == m.cursor {
 			row.IsSelected = true
+			m.currentHeading = row.Heading
 		} else {
 			row.IsSelected = false
 		}
 	}
 	table.Render()
 	m.viewport.SetContent(table.String())
-}
-
-func filter(term string, target []string) fuzzy.Matches {
-	matches := fuzzy.Find(term, target)
-	sort.Stable(matches)
-	return matches
 }
 
 // TODO check this

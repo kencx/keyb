@@ -115,11 +115,41 @@ func (t *Model) Align() string {
 	return strings.TrimSuffix(sb.String(), "\n")
 }
 
+func (t *Model) GetHeadings() []Row {
+	var res []Row
+	for _, r := range t.Rows {
+		if r.IsHeading {
+			res = append(res, *r)
+		}
+	}
+	return res
+}
+
+func (t *Model) GetRowsOnly() []Row {
+	var res []Row
+	for _, r := range t.Rows {
+		if !r.IsHeading {
+			res = append(res, *r)
+		}
+	}
+	return res
+}
+
 // Unaligned and unstyled
 func (t *Model) Plain() []string {
 	var res []string
 	for _, r := range t.Rows {
 		res = append(res, r.String())
+	}
+	return res
+}
+
+func (t *Model) PlainWithoutHeading() []string {
+	var res []string
+	for _, r := range t.Rows {
+		if !r.IsHeading {
+			res = append(res, r.String())
+		}
 	}
 	return res
 }

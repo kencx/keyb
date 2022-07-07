@@ -183,10 +183,11 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 		// filter with search input
 		m.searchBar, cmd = m.searchBar.Update(msg)
 		cmds = append(cmds, cmd)
-		matches := filter(m.searchBar.Value(), m.table.Output)
+		matches := filter(m.searchBar.Value(), m.table.Plain())
 
 		// TODO when row matched, return corresponding heading as well
 		// when heading matched, return all rows
+		// heading match only when full match?
 
 		// present new filtered rows
 		m.filteredTable.Reset()
@@ -194,21 +195,14 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 			m.filteredTable.AppendRow(table.EmptyRow())
 
 		} else {
-			// TODO existing styles are disturbed by highlighting:
-			// bolded headings no longer bolded
-			// cursor highlights up till matched rune
-
-			// highlight matched rune indices
-			// var hlMatches []table.Row
-			// for _, match := range matches {
-			// 	hlMatches = append(hlMatches, m.highlight(match))
-			// }
-
-			// As highlighting is ephemeral, the styled strings are added to the
-			// otherwise unstyled filteredTable rows. This ensures all table styles are
-			// applied appropriately later
-			// m.filteredTable.AppendRows(hlMatches...)
-			// m.filteredTable.Align()
+			var hlMatches []*table.Row
+			for _, match := range matches {
+				row := m.table.Rows[match.Index]
+				row.IsFiltered = true
+				row.MatchedIndex = match.MatchedIndexes
+				hlMatches = append(hlMatches, row)
+			}
+			m.filteredTable.AppendRows(hlMatches...)
 		}
 		m.cursorToBeginning()
 	}

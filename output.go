@@ -9,7 +9,7 @@ import (
 
 func OutputBodyToFile(m *ui.Model, path string, strip bool) error {
 
-	output := m.List.String()
+	output := m.List.UnstyledString()
 	if strip {
 		output = stripANSI(output)
 	}
@@ -23,7 +23,7 @@ func OutputBodyToFile(m *ui.Model, path string, strip bool) error {
 
 func OutputBodyToStdout(m *ui.Model, strip bool) error {
 
-	output := m.List.String()
+	output := m.List.UnstyledString()
 	if strip {
 		output = stripANSI(output)
 	}

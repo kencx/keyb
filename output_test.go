@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	testTable = table.New(table.NewHeading("\x1b[1mfoo\x1b[0m"), []table.Row{{Text: "bar"}})
+	testTable = table.New([]*table.Row{table.NewHeading("\x1b[1mfoo\x1b[0m"), {Text: "bar"}})
 	m         = &ui.Model{List: list.New("", testTable)}
 )
 
@@ -29,7 +29,7 @@ func TestOutputBodyToStdout(t *testing.T) {
 	got, _ := ioutil.ReadAll(r)
 	os.Stdout = rescueStdout
 
-	want := "foo\t \nbar\t"
+	want := "foo      \nbar     "
 	if string(got) != want {
 		t.Errorf("got %q, want %q", got, want)
 	}

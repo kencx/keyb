@@ -10,27 +10,22 @@ import (
 
 type Model struct {
 	List list.Model
-	GlobalStyle
+	// GlobalStyle
 }
 
-type GlobalStyle struct {
-	CursorForeground string
-	CursorBackground string
-	Border           string
-	BorderColor      string
-}
+// TODO styling
+// type GlobalStyle struct {
+// 	CursorForeground string
+// 	CursorBackground string
+// 	Border           string
+// 	BorderColor      string
+// }
 
 func NewModel(binds config.Bindings, config *config.Config) *Model {
 	table := bindingsToTable(binds)
 
 	m := Model{
 		List: list.New(config.Title, table),
-		GlobalStyle: GlobalStyle{
-			CursorForeground: config.Cursor_fg,
-			CursorBackground: config.Cursor_bg,
-			Border:           config.Border,
-			BorderColor:      config.Border_color,
-		},
 	}
 	return &m
 }
@@ -45,17 +40,19 @@ func bindingsToTable(bindings config.Bindings) *table.Model {
 			parent.Join(child)
 		}
 	}
-	parent.Align()
 	return parent
 }
 
 func appToTable(heading string, app config.App) *table.Model {
-	var rows []table.Row
-	for _, kb := range app.Keybinds {
-		rows = append(rows, table.NewRow(kb.Comment, kb.Key, ""))
-	}
+	var rows []*table.Row
+
 	h := table.NewHeading(heading)
-	return table.New(h, rows)
+	rows = append(rows, h)
+
+	for _, kb := range app.Keybinds {
+		rows = append(rows, table.NewRow(kb.Comment, kb.Key, app.Prefix))
+	}
+	return table.New(rows)
 }
 
 func (m *Model) Init() tea.Cmd {

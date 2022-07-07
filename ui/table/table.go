@@ -3,55 +3,45 @@ package table
 import (
 	"fmt"
 	"strings"
-	"text/tabwriter"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/juju/ansiterm/tabwriter"
 )
 
 type Model struct {
-	heading      Row
-	rows         []Row
-	Output       []string
-	StyledOutput []string
-	LineCount    int
+	Rows      []*Row
+	Output    []string
+	LineCount int
 	Styles
 }
 
 type Styles struct {
-	BodyStyle    lipgloss.Style
 	HeadingStyle lipgloss.Style
 	RowStyle     lipgloss.Style
 }
 
-func New(heading Row, rows []Row) *Model {
+func New(rows []*Row) *Model {
 	t := &Model{
-		heading: heading,
-		rows:    rows,
-	}
-
-	if heading.String() != "" {
-		t.LineCount += 1
+		Rows: rows,
 	}
 
 	if len(rows) > 0 && rows[0].String() != "" {
 		t.LineCount += len(rows)
 	}
 
-	// generate outputs
-	t.Update()
+	t.Render()
 	return t
 }
 
-func NewWithStyle(heading Row, rows []Row, style Styles) *Model {
-	table := New(heading, rows)
+func NewWithStyle(rows []*Row, style Styles) *Model {
+	table := New(rows)
 	table.Styles = style
 	return table
 }
 
-// New default empty table with empty heading & maximum of n rows.
 func NewEmpty(n int) *Model {
 	return &Model{
-		rows:      make([]Row, 1, max(2, n)),
+		Rows:      make([]*Row, 1, max(2, n)),
 		Styles:    DefaultStyles(),
 		LineCount: 0,
 	}
@@ -59,100 +49,95 @@ func NewEmpty(n int) *Model {
 
 func DefaultStyles() Styles {
 	return Styles{
-		BodyStyle:    lipgloss.NewStyle(),
 		HeadingStyle: lipgloss.NewStyle(),
 		RowStyle:     lipgloss.NewStyle(),
 	}
-}
-
-func (t *Model) String() string {
-	return strings.Join(t.StyledOutput, "\n")
 }
 
 func (t *Model) Empty() bool {
 	return t.LineCount <= 0
 }
 
-func (t *Model) AppendRow(row Row) {
-	t.rows = append(t.rows, row)
+func (t *Model) AppendRow(row *Row) {
+	t.Rows = append(t.Rows, row)
 	t.LineCount += 1
-	t.Update()
-}
-
-func (t *Model) AppendRows(rows ...Row) {
-	t.rows = append(t.rows, rows...)
-	t.LineCount += len(rows)
-	t.Update()
-}
-
-func (t *Model) PrependRow(row Row) {
-	t.rows = append([]Row{row}, t.rows...)
-	t.Update()
-}
-
-func (t *Model) Update() {
-	t.Assemble()
 	t.Render()
 }
 
-// Generates unstyled output
-func (t *Model) Assemble() {
-	var rows []string
-	if t.heading.String() != "" {
-		rows = append(rows, t.heading.String())
-	}
-
-	for _, row := range t.rows {
-		if row.String() != "" {
-			rows = append(rows, row.String())
-		}
-	}
-	t.Output = rows
+func (t *Model) AppendRows(rows ...*Row) {
+	t.Rows = append(t.Rows, rows...)
+	t.LineCount += len(rows)
+	t.Render()
 }
 
-// Generates styled output
-func (t *Model) Render() {
-	var rows []string
-	if t.heading.String() != "" {
-		heading := t.HeadingStyle.Render(t.heading.String())
-		rows = append(rows, heading)
-	}
+func (t *Model) PrependRow(row *Row) {
+	t.Rows = append([]*Row{row}, t.Rows...)
+	t.Render()
+}
 
-	for _, row := range t.rows {
-		if row.String() != "" {
-			line := t.RowStyle.Render(row.String())
-			rows = append(rows, line)
+// Align and style rows
+func (t *Model) Render() {
+	var sb strings.Builder
+	tw := tabwriter.NewWriter(&sb, 8, 4, 4, ' ', 0)
+
+	// don't use Align here to not have 2 for loops
+	for _, row := range t.Rows {
+		if row != nil && row.String() != "" {
+
+			if row.IsHeading {
+				row.Styles.Heading = t.HeadingStyle
+				fmt.Fprintln(tw, row.Render())
+			} else {
+				row.Styles.Normal = t.RowStyle
+				fmt.Fprintln(tw, row.Render())
+			}
 		}
 	}
-	t.StyledOutput = rows
+
+	tw.Flush()
+	s := strings.TrimSuffix(sb.String(), "\n")
+	t.Output = strings.Split(s, "\n")
+}
+
+// TODO The next 2 functions need better names
+// Aligned but unstyled rows
+func (t *Model) Align() string {
+	var sb strings.Builder
+	tw := tabwriter.NewWriter(&sb, 8, 4, 4, ' ', 0)
+
+	for _, row := range t.Rows {
+		if row != nil && row.String() != "" {
+			fmt.Fprintln(tw, row.String())
+		}
+	}
+
+	tw.Flush()
+	return strings.TrimSuffix(sb.String(), "\n")
+}
+
+// Unaligned and unstyled
+func (t *Model) Plain() []string {
+	var res []string
+	for _, r := range t.Rows {
+		res = append(res, r.String())
+	}
+	return res
+}
+
+func (t *Model) String() string {
+	return strings.Join(t.Output, "\n")
 }
 
 func (t *Model) Join(table *Model) {
-	t.rows = append(t.rows, table.rows...)
+	t.Rows = append(t.Rows, table.Rows...)
 	t.Output = append(t.Output, table.Output...)
-	t.StyledOutput = append(t.StyledOutput, table.StyledOutput...)
 	t.LineCount += table.LineCount
 }
 
 func (t *Model) Reset() {
-	t.heading = EmptyRow()
-	t.rows = nil
+	t.Rows = nil
 	t.Output = nil
-	t.StyledOutput = nil
 	t.LineCount = 0
-}
-
-// Only works properly after Render
-// Calling this before Join will not align different sub-tables to each other
-func (t *Model) Align() {
-	var sb strings.Builder
-	tw := tabwriter.NewWriter(&sb, 16, 4, 6, ' ', 0)
-
-	for _, row := range t.StyledOutput {
-		fmt.Fprintln(tw, row)
-	}
-	tw.Flush()
-	t.StyledOutput = strings.Split(sb.String(), "\n")
 }
 
 func max(a, b int) int {

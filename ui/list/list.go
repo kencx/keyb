@@ -2,7 +2,6 @@ package list
 
 import (
 	"sort"
-	"strings"
 
 	"github.com/kencx/keyb/ui/table"
 
@@ -50,7 +49,7 @@ func New(title string, t *table.Model) Model {
 		table:     t,
 		keys:      DefaultKeyMap(),
 		styles:    DefaultStyle(),
-		viewport:  viewport.Model{YOffset: 0},
+		viewport:  viewport.Model{YOffset: 0, MouseWheelDelta: 3},
 		searchBar: textinput.New(),
 		padding:   4,
 		Settings: Settings{
@@ -68,9 +67,9 @@ func New(title string, t *table.Model) Model {
 	}
 
 	m.maxRows = m.table.LineCount
+	m.table.Styles = m.styles.Table
 	m.filteredTable = table.NewEmpty(m.table.LineCount)
 	m.filteredTable.Styles = m.styles.Table
-	m.table.Styles = m.styles.Table
 	return m
 }
 
@@ -95,29 +94,32 @@ func (m *Model) Reset() {
 // Sets items to be shown. All items are shown unless filtered
 func (m *Model) visibleRows() {
 	if !m.filteredTable.Empty() {
-		m.SyncContent(m.filteredTable.StyledOutput)
+		m.SyncContent(m.filteredTable)
 		m.maxRows = m.filteredTable.LineCount
 
 	} else {
-		// TODO for some reason, len(m.table.StyledOutput) != m.table.LineCount here
-		m.SyncContent(m.table.StyledOutput)
+		// TODO for some reason, len(m.table.Output) != m.table.LineCount here
+		m.SyncContent(m.table)
 		m.maxRows = m.table.LineCount
 	}
 }
 
 // Sync content by updating cursor and visible rows
-func (m *Model) SyncContent(rows []string) {
-	if len(rows) == 0 {
+func (m *Model) SyncContent(table *table.Model) {
+	if table.Empty() {
 		m.viewport.SetContent("")
 		return
 	}
 
-	// make a deep copy to not preserve cursor position
-	cpy := make([]string, len(rows))
-	copy(cpy, rows)
-
-	cpy[m.cursor] = m.styles.Cursor.Render(cpy[m.cursor])
-	m.viewport.SetContent(strings.Join(cpy, "\n"))
+	for i, row := range table.Rows {
+		if i == m.cursor {
+			row.IsSelected = true
+		} else {
+			row.IsSelected = false
+		}
+	}
+	table.Render()
+	m.viewport.SetContent(table.String())
 }
 
 func filter(term string, target []string) fuzzy.Matches {
@@ -126,13 +128,13 @@ func filter(term string, target []string) fuzzy.Matches {
 	return matches
 }
 
-// Highlight matched runes
-// func (m *Model) highlight(match fuzzy.Match) table.Row {
-// 	s := lipgloss.StyleRunes(match.Str, match.MatchedIndexes, m.styles.Highlight, lipgloss.NewStyle())
-// }
-
+// TODO check this
 func (m *Model) String() string {
 	return m.table.String()
+}
+
+func (m *Model) UnstyledString() string {
+	return m.table.Align()
 }
 
 func (m *Model) searchMode() bool {

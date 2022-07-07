@@ -16,7 +16,6 @@ type Styles struct {
 
 func DefaultStyle() Styles {
 	table := table.Styles{
-		BodyStyle:    lipgloss.NewStyle(),
 		HeadingStyle: lipgloss.NewStyle().Bold(true).Margin(0, 1),
 		RowStyle:     lipgloss.NewStyle().Margin(0, 2),
 	}

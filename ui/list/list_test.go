@@ -20,7 +20,7 @@ func TestNew(t *testing.T) {
 	t.Run("populated", func(t *testing.T) {
 		tm := New("foo", testTable)
 
-		assertEqual(t, tm.Title, "foo")
+		assertEqual(t, tm.title, "foo")
 		assertEqual(t, tm.table.LineCount, 4)
 		// assertEqual(t, tm.table.String(), "fooTable\t \nfoo\t\nbar\t\nbaz\t")
 		assertEqual(t, tm.filterState, unfiltered)
@@ -30,7 +30,7 @@ func TestNew(t *testing.T) {
 	t.Run("empty", func(t *testing.T) {
 		tm := New("", table.New([]*table.Row{table.EmptyRow(), table.EmptyRow()}))
 
-		assertEqual(t, tm.Title, "")
+		assertEqual(t, tm.title, "")
 		assertEqual(t, tm.table.LineCount, 1)
 		assertEqual(t, tm.filterState, unfiltered)
 		assertEqual(t, tm.filteredTable.LineCount, 0)

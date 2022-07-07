@@ -33,8 +33,8 @@ func TestNew(t *testing.T) {
 
 func TestAppend(t *testing.T) {
 
-	row1 := NewRow("baz", "", "")
-	row2 := NewRow("foobar", "", "")
+	row1 := NewRow("baz", "", "", "")
+	row2 := NewRow("foobar", "", "", "")
 
 	t.Run("appendRow", func(t *testing.T) {
 		tt := New(testRows)

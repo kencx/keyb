@@ -16,11 +16,9 @@ const (
 )
 
 type Model struct {
-	Title  string
 	keys   KeyMap
 	styles Styles
 
-	debug    bool
 	viewport viewport.Model
 	table    *table.Model
 
@@ -34,16 +32,26 @@ type Model struct {
 	cursor  int
 	padding int // vertical padding - necessary to stabilize scrolling
 	maxRows int // max number of rows regardless of filterState
+	Customization
 	Settings
 }
 
 type Settings struct {
-	MouseEnabled bool
+	debug        bool
+	reverse      bool
+	mouseEnabled bool
+}
+
+type Customization struct {
+	title          string
+	prompt         string
+	placeholder    string
+	prefixSep      string
+	columnSepWidth int
 }
 
 func New(title string, t *table.Model) Model {
 	m := Model{
-		Title:     title,
 		table:     t,
 		keys:      DefaultKeyMap(),
 		styles:    DefaultStyle(),
@@ -51,10 +59,15 @@ func New(title string, t *table.Model) Model {
 		searchBar: textinput.New(),
 		padding:   4,
 		Settings: Settings{
-			MouseEnabled: true,
+			mouseEnabled: true,
+		},
+		Customization: Customization{
+			title: title,
 		},
 	}
 	m.debug = true
+	m.searchBar.Prompt = "keys > "
+	m.searchBar.Placeholder = "..."
 
 	if t.Empty() {
 		m.table = table.NewEmpty(1)

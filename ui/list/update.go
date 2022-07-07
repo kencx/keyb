@@ -17,13 +17,16 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.viewport.Width = msg.Width
 		m.viewport.Height = msg.Height - m.padding
-		m.viewport.MouseWheelEnabled = m.MouseEnabled
+		m.viewport.MouseWheelEnabled = m.mouseEnabled
+
+		m.searchBar.Width = m.viewport.Width * 2 / 3
+
 		if m.cursorPastViewBottom() {
 			m.cursor = m.viewport.YOffset + m.viewport.Height - 1
 		}
 
 	case tea.MouseMsg:
-		if !m.MouseEnabled {
+		if !m.mouseEnabled {
 			break
 		}
 		switch msg.Type {

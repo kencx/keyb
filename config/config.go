@@ -37,6 +37,7 @@ func GetConfig(configPath string) (*Config, error) {
 	}
 
 	options := ini.LoadOptions{
+		InsensitiveKeys:         true,
 		SkipUnrecognizableLines: true,
 		AllowBooleanKeys:        true,
 	}

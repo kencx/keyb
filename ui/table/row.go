@@ -7,10 +7,14 @@ import (
 )
 
 type Row struct {
-	Text         string
-	Key          string
-	Prefix       string
-	ShowPrefix   bool
+	Text   string
+	Key    string
+	Prefix string
+	// row prefix ignore defaults to true
+	// which equates to prefix show defaulting to false
+	// otherwise, all rows will show (empty) prefix regardless
+	ShowPrefix bool
+
 	MatchedIndex []int
 	Styles       RowStyles
 

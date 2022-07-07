@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"sort"
 )
 
@@ -24,11 +23,10 @@ type App struct {
 }
 
 type KeyBind struct {
-	Comment      string `yaml:"desc"`
-	Key          string `yaml:"key"`
-	IgnorePrefix bool   `yaml:"ignore_prefix,omitempty"`
-}
+	Comment string `yaml:"desc"`
+	Key     string `yaml:"key"`
 
-func (k KeyBind) String() string {
-	return fmt.Sprintf("%s\t%s", k.Comment, k.Key)
+	// config prefix ignore defaults to false
+	// so user can choose to ignore prefix for a specific kb
+	IgnorePrefix bool `yaml:"ignore_prefix,omitempty"`
 }

@@ -70,6 +70,12 @@ func (m *Model) handleNormal(msg tea.Msg) tea.Cmd {
 			m.filterState = filtering
 			m.searchBar.Focus()
 
+		case key.Matches(msg, m.keys.ClearSearch):
+			m.Reset()
+			m.search = true
+			m.filterState = filtering
+			m.searchBar.Focus()
+
 		case key.Matches(msg, m.keys.Up):
 			m.cursor--
 			if m.cursorPastViewTop() {
@@ -169,6 +175,11 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 		switch {
 		case msg.String() == "ctrl+c":
 			return tea.Quit
+
+		case key.Matches(msg, m.keys.ClearSearch):
+			m.Reset()
+			m.filterState = filtering
+			m.searchBar.Focus()
 
 		case key.Matches(msg, m.keys.Normal):
 			m.search = false

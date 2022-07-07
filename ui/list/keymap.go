@@ -19,8 +19,9 @@ type KeyMap struct {
 
 	CenterCursor key.Binding
 
-	Search key.Binding
-	Normal key.Binding
+	Search      key.Binding
+	ClearSearch key.Binding
+	Normal      key.Binding
 }
 
 func DefaultKeyMap() KeyMap {
@@ -68,6 +69,9 @@ func DefaultKeyMap() KeyMap {
 
 		Search: key.NewBinding(
 			key.WithKeys("/"),
+		),
+		ClearSearch: key.NewBinding(
+			key.WithKeys("alt+d"),
 		),
 		Normal: key.NewBinding(
 			key.WithKeys("esc"),

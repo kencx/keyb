@@ -110,6 +110,7 @@ Refer to `examples/config` for more details.
 | H, M, L     | Go to top, middle, bottom of screen |
 | g, G		  | Go to first, last line |
 | /			  | Enter search mode|
+| alt + d     | Clear current search |
 | Esc		  | Exit search mode |
 | Ctrl + c, q | Quit		     |
 

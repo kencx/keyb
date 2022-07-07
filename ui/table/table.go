@@ -6,6 +6,7 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/juju/ansiterm/tabwriter"
+	"github.com/kencx/keyb/util"
 )
 
 type Model struct {
@@ -41,7 +42,7 @@ func NewWithStyle(rows []*Row, style Styles) *Model {
 
 func NewEmpty(n int) *Model {
 	return &Model{
-		Rows:      make([]*Row, 1, max(2, n)),
+		Rows:      make([]*Row, 1, util.Max(2, n)),
 		Styles:    DefaultStyles(),
 		LineCount: 0,
 	}
@@ -168,11 +169,4 @@ func (t *Model) Reset() {
 	t.Rows = nil
 	t.Output = nil
 	t.LineCount = 0
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }

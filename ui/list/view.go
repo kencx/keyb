@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/kencx/keyb/util"
 )
 
 func (m *Model) View() string {
@@ -17,7 +18,9 @@ func (m *Model) View() string {
 
 	topbar := m.title
 	if m.filterState == filtering {
-		separator := strings.Repeat(" ", m.viewport.Width-m.padding-lipgloss.Width(m.title)-lipgloss.Width(m.currentHeading))
+		separator := strings.Repeat(" ", util.Max(0,
+			m.viewport.Width-m.padding-lipgloss.Width(m.title)-lipgloss.Width(m.currentHeading)),
+		)
 		topbar = lipgloss.JoinHorizontal(lipgloss.Center, m.title, separator, m.currentHeading)
 	}
 

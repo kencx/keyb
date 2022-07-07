@@ -5,13 +5,14 @@ import (
 	"os"
 
 	"github.com/kencx/keyb/ui"
+	"github.com/kencx/keyb/util"
 )
 
 func OutputBodyToFile(m *ui.Model, path string, strip bool) error {
 
 	output := m.List.UnstyledString()
 	if strip {
-		output = stripANSI(output)
+		output = util.StripANSI(output)
 	}
 
 	path = os.ExpandEnv(path)
@@ -25,7 +26,7 @@ func OutputBodyToStdout(m *ui.Model, strip bool) error {
 
 	output := m.List.UnstyledString()
 	if strip {
-		output = stripANSI(output)
+		output = util.StripANSI(output)
 	}
 	_, err := os.Stdout.Write([]byte(output))
 	if err != nil {

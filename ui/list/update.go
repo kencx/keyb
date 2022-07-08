@@ -201,7 +201,7 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 		m.searchBar, cmd = m.searchBar.Update(msg)
 		cmds = append(cmds, cmd)
 		// do not match headings
-		matches := filter(m.searchBar.Value(), m.table.PlainWithoutHeading())
+		matches := filter(m.searchBar.Value(), m.table.GetPlainRowsWithoutHeadings())
 
 		// present new filtered rows
 		m.filteredTable.Reset()
@@ -210,8 +210,8 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 
 		} else {
 			var hlMatches []*table.Row
-			// non-pointers to not propagate filtering changes
-			rows := m.table.GetRowsOnly()
+			// get non-pointers as filtering is ephemeral
+			rows := m.table.GetCopyOfRowsWithoutHeadings()
 
 			for _, match := range matches {
 				row := rows[match.Index]
@@ -229,7 +229,7 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 		m.Reset()
 
 		// remain in filtering state
-		// until explicitly return to Normal mode
+		// until user explicitly returns to Normal mode
 		m.filterState = filtering
 	}
 	return tea.Batch(cmds...)

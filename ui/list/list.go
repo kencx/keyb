@@ -30,7 +30,7 @@ type Model struct {
 	currentHeading string
 
 	cursor  int
-	padding int // vertical padding - necessary to stabilize scrolling
+	padding int
 	maxRows int // max number of rows regardless of filterState
 	Customization
 	Settings
@@ -110,7 +110,7 @@ func (m *Model) visibleRows() {
 		m.maxRows = m.filteredTable.LineCount
 
 	} else {
-		// TODO for some reason, len(m.table.Output) != m.table.LineCount here
+		// TODO check why len(m.table.Output) != m.table.LineCount here
 		m.SyncContent(m.table)
 		m.maxRows = m.table.LineCount
 	}
@@ -135,13 +135,8 @@ func (m *Model) SyncContent(table *table.Model) {
 	m.viewport.SetContent(table.String())
 }
 
-// TODO check this
-func (m *Model) String() string {
-	return m.table.String()
-}
-
 func (m *Model) UnstyledString() string {
-	return m.table.Align()
+	return m.table.GetAlignedRows()
 }
 
 func (m *Model) searchMode() bool {

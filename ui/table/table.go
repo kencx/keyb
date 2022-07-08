@@ -26,8 +26,10 @@ func New(rows []*Row) *Model {
 		Rows: rows,
 	}
 
-	if len(rows) > 0 && rows[0].String() != "" {
-		t.LineCount += len(rows)
+	for _, row := range rows {
+		if row.String() != "" {
+			t.LineCount += 1
+		}
 	}
 
 	t.Render()
@@ -43,15 +45,7 @@ func NewWithStyle(rows []*Row, style Styles) *Model {
 func NewEmpty(n int) *Model {
 	return &Model{
 		Rows:      make([]*Row, 1, util.Max(2, n)),
-		Styles:    DefaultStyles(),
 		LineCount: 0,
-	}
-}
-
-func DefaultStyles() Styles {
-	return Styles{
-		HeadingStyle: lipgloss.NewStyle(),
-		RowStyle:     lipgloss.NewStyle(),
 	}
 }
 
@@ -71,9 +65,16 @@ func (t *Model) AppendRows(rows ...*Row) {
 	t.Render()
 }
 
-func (t *Model) PrependRow(row *Row) {
-	t.Rows = append([]*Row{row}, t.Rows...)
-	t.Render()
+func (t *Model) Join(table *Model) {
+	t.Rows = append(t.Rows, table.Rows...)
+	t.Output = append(t.Output, table.Output...)
+	t.LineCount += table.LineCount
+}
+
+func (t *Model) Reset() {
+	t.Rows = nil
+	t.Output = nil
+	t.LineCount = 0
 }
 
 // Align and style rows
@@ -100,9 +101,13 @@ func (t *Model) Render() {
 	t.Output = strings.Split(s, "\n")
 }
 
-// TODO The next 2 functions need better names
+func (t *Model) String() string {
+	return strings.Join(t.Output, "\n")
+}
+
+// The next 3 functions need better names
 // Aligned but unstyled rows
-func (t *Model) Align() string {
+func (t *Model) GetAlignedRows() string {
 	var sb strings.Builder
 	tw := tabwriter.NewWriter(&sb, 8, 4, 4, ' ', 0)
 
@@ -116,36 +121,7 @@ func (t *Model) Align() string {
 	return strings.TrimSuffix(sb.String(), "\n")
 }
 
-func (t *Model) GetHeadings() []Row {
-	var res []Row
-	for _, r := range t.Rows {
-		if r.IsHeading {
-			res = append(res, *r)
-		}
-	}
-	return res
-}
-
-func (t *Model) GetRowsOnly() []Row {
-	var res []Row
-	for _, r := range t.Rows {
-		if !r.IsHeading {
-			res = append(res, *r)
-		}
-	}
-	return res
-}
-
-// Unaligned and unstyled
-func (t *Model) Plain() []string {
-	var res []string
-	for _, r := range t.Rows {
-		res = append(res, r.String())
-	}
-	return res
-}
-
-func (t *Model) PlainWithoutHeading() []string {
+func (t *Model) GetPlainRowsWithoutHeadings() []string {
 	var res []string
 	for _, r := range t.Rows {
 		if !r.IsHeading {
@@ -155,18 +131,12 @@ func (t *Model) PlainWithoutHeading() []string {
 	return res
 }
 
-func (t *Model) String() string {
-	return strings.Join(t.Output, "\n")
-}
-
-func (t *Model) Join(table *Model) {
-	t.Rows = append(t.Rows, table.Rows...)
-	t.Output = append(t.Output, table.Output...)
-	t.LineCount += table.LineCount
-}
-
-func (t *Model) Reset() {
-	t.Rows = nil
-	t.Output = nil
-	t.LineCount = 0
+func (t *Model) GetCopyOfRowsWithoutHeadings() []Row {
+	var res []Row
+	for _, r := range t.Rows {
+		if !r.IsHeading {
+			res = append(res, *r)
+		}
+	}
+	return res
 }

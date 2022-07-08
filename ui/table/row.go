@@ -10,16 +10,15 @@ type Row struct {
 	Text   string
 	Key    string
 	Prefix string
-	// row prefix ignore defaults to true
-	// which equates to prefix show defaulting to false
-	// otherwise, all rows will show (empty) prefix regardless
+
+	// default false unless prefix defined
 	ShowPrefix bool
+	// only used to show row's corresponding heading during filtering
+	Heading string
 
 	MatchedIndex []int
 	Styles       RowStyles
 
-	// only used to show row's corresponding heading during filtering
-	Heading    string
 	IsHeading  bool
 	IsSelected bool
 	IsFiltered bool
@@ -56,14 +55,13 @@ func NewHeading(text string) *Row {
 	}
 }
 
-// non-heading row
 func NewRow(text, key, prefix, heading string) *Row {
 	r := &Row{
 		Text:    text,
 		Key:     key,
 		Prefix:  prefix,
-		Styles:  DefaultRowStyles(),
 		Heading: heading,
+		Styles:  DefaultRowStyles(),
 	}
 	r.ShowPrefix = r.Prefix != ""
 	return r
@@ -88,7 +86,6 @@ func (r *Row) String() string {
 	return fmt.Sprintf("%s\t%s ; %s", r.Text, r.Prefix, r.Key)
 }
 
-// margins and paddings in stylerunes seem to mess it up
 func (r *Row) Render() string {
 	s := r.Styles
 

@@ -12,6 +12,7 @@ type Model struct {
 	Rows      []*Row
 	Output    []string
 	LineCount int
+	SepWidth  int
 	Styles
 }
 
@@ -79,7 +80,7 @@ func (t *Model) Reset() {
 // Align and style rows
 func (t *Model) Render() {
 	var sb strings.Builder
-	tw := tabwriter.NewWriter(&sb, 8, 4, 4, ' ', 0)
+	tw := tabwriter.NewWriter(&sb, 8, 4, t.SepWidth, ' ', 0)
 
 	// don't use Align here to not have 2 for loops
 	for _, row := range t.Rows {
@@ -108,7 +109,7 @@ func (t *Model) String() string {
 // Aligned but unstyled rows
 func (t *Model) GetAlignedRows() string {
 	var sb strings.Builder
-	tw := tabwriter.NewWriter(&sb, 8, 4, 4, ' ', 0)
+	tw := tabwriter.NewWriter(&sb, 8, 4, t.SepWidth, ' ', 0)
 
 	for _, row := range t.Rows {
 		if row != nil && row.String() != "" {

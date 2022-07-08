@@ -54,32 +54,30 @@ usage: keyb [options] [file]
 Flags:
   -p, --print           Print to stdout
   -e, --export [file]   Export to file
-  -s, --strip           Strip ANSI chars (only for print/export)
   -k, --key [file]      Pass custom hotkeys file
   -c, --config [file]   Pass custom config file
 
   -h, --help            help for keyb
 ```
 
-keyb requires a `yaml` file with a list of hotkeys:
+keyb requires a `yaml` file with a list of hot keys:
 
 ```yaml
-# $XDG_CONFIG_HOME/keyb/keyb.yml
-tmux:
+- name: bspwm
+  keybinds:
+    - name: terminal
+      key: Super + Return
+
+- name: tmux
   prefix: ctrl + a
   keybinds:
-    - desc: split vertical
+    - name: split vertical
       key: "|"
-    - desc: split horizontal
+    - name: split horizontal
       key: "-"
-    - desc: {next, prev} window
+    - name: {next, prev} window
       key: shift + {>, <}
       ignore_prefix: true
-
-bspwm:
-  keybinds:
-    - desc: terminal
-      key: Super + Return
 ```
 
 A `prefix` key can be included for each category. This prefix will be appended
@@ -88,8 +86,8 @@ by including a `ignore_prefix=true` field.
 
 Refer to the defaults provided in `examples` for more details.
 
-Finally, bind `keyb` to a hotkey for quick reference. For
-example, with sxhkd and st:
+`keyb` is best used when binding to a hotkey for quick referencing.
+For example, with sxhkd and st:
 
 ```
 super + slash
@@ -97,9 +95,24 @@ super + slash
 ```
 
 ### Configuration
-Configure your keyb instance in `$XDG_CONFIG_HOME/keyb/config`.
+A config file is generated on the first run of `keyb`.
 
-Refer to `examples/config` for more details.
+The defaults are:
+
+```yml
+defaults:
+  keyb_path: "$HOME/.config/keyb/keyb.yml"
+  debug: false
+  reverse: false
+  mouse: true
+  title: ""
+  prompt: "keys > "
+  placeholder: "search..."
+  prefix_sep: ";"
+  sep_width: 4
+```
+
+Refer to `examples/config.yml` for more details.
 
 | Hotkey                     | Description      |
 |--------------------------- | ---------------- |
@@ -115,16 +128,11 @@ Refer to `examples/config` for more details.
 
 ## fzf, rofi
 
-keyb also supports the export of a formatted output for use with other programs
-like fzf:
+keyb also supports printing to stdout for use with other tools:
+
 ```bash
 $ keyb -p | fzf
-```
-
-For rofi, the output must be stripped of ansi formatting first:
-```bash
-$ keyb -e output.txt -s
-$ cat output.txt | rofi -dmenu
+$ keyb -p | rofi -dmenu
 ```
 
 ## Acknowledgements

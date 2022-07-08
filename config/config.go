@@ -26,9 +26,9 @@ type Config struct {
 
 type Defaults struct {
 	KeybPath    string `yaml:"keyb_path"`
-	Vim         bool
 	Debug       bool
 	Reverse     bool
+	Mouse       bool
 	Title       string
 	Prompt      string
 	Placeholder string

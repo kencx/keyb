@@ -9,6 +9,10 @@ import (
 
 func (m *Model) View() string {
 
+	if m.table.Empty() {
+		m.viewport.SetContent("\nNo key bindings found")
+	}
+
 	header := m.title
 	if m.filterState == filtering {
 		separator := strings.Repeat(" ", max(0,

@@ -26,11 +26,17 @@ type Model struct {
 func NewModel(a Apps, config *config.Config) *Model {
 	table := createParentTable(a)
 	return &Model{
-		List: list.New(config.Title, table),
+		List: list.New(table, config),
 	}
 }
 
 func createParentTable(a Apps) *table.Model {
+
+	if len(a) <= 0 {
+		t := table.NewEmpty(1)
+		return t
+	}
+
 	sort.Slice(a, func(i, j int) bool {
 		return a[i].Name < a[j].Name
 	})

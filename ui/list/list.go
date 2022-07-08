@@ -1,6 +1,7 @@
 package list
 
 import (
+	"github.com/kencx/keyb/config"
 	"github.com/kencx/keyb/ui/table"
 
 	"github.com/charmbracelet/bubbles/textinput"
@@ -29,63 +30,56 @@ type Model struct {
 	filteredTable  *table.Model
 	currentHeading string
 
+	title   string
 	cursor  int
 	padding int
 	maxRows int // max number of rows regardless of filterState
-	Customization
 	Settings
 }
 
 type Settings struct {
 	debug        bool
-	reverse      bool
 	mouseEnabled bool
 }
 
-type Customization struct {
-	title          string
-	prompt         string
-	placeholder    string
-	prefixSep      string
-	columnSepWidth int
-}
-
-func New(title string, t *table.Model) Model {
+func New(t *table.Model, config *config.Config) Model {
 	m := Model{
-		table:     t,
-		keys:      DefaultKeyMap(),
-		styles:    DefaultStyle(),
-		viewport:  viewport.Model{YOffset: 0, MouseWheelDelta: 3},
-		searchBar: textinput.New(),
-		padding:   4,
+		table:         t,
+		maxRows:       t.LineCount,
+		filteredTable: table.NewEmpty(t.LineCount),
+		keys:          DefaultKeyMap(),
+		styles:        DefaultStyle(),
+		viewport:      viewport.Model{YOffset: 0, MouseWheelDelta: 3},
+		searchBar:     textinput.New(),
+		padding:       4,
 		Settings: Settings{
-			mouseEnabled: true,
-		},
-		Customization: Customization{
-			title: title,
+			debug:        config.Debug,
+			mouseEnabled: config.Mouse,
 		},
 	}
-	m.debug = true
-	m.searchBar.Prompt = "keys > "
-	m.searchBar.Placeholder = "..."
+	m.SetCustomization(config)
 
-	if t.Empty() {
-		m.table = table.NewEmpty(1)
-		m.table.AppendRow(table.NewRow("No key bindings found", "", "", ""))
-		m.table.Styles = m.styles.Table
-		m.filteredTable = table.NewEmpty(m.table.LineCount)
-		return m
-	}
-
-	m.maxRows = m.table.LineCount
 	m.table.Styles = m.styles.Table
-	m.filteredTable = table.NewEmpty(m.table.LineCount)
 	m.filteredTable.Styles = m.styles.Table
 	return m
 }
 
 func (m *Model) Init() tea.Cmd {
 	return nil
+}
+
+func (m *Model) SetCustomization(c *config.Config) {
+	m.title = c.Title
+	m.searchBar.Prompt = c.Prompt
+	m.searchBar.Placeholder = c.Placeholder
+	m.table.SepWidth = c.SepWidth
+
+	if !m.table.Empty() {
+		for _, row := range m.table.Rows {
+			row.PrefixSep = c.PrefixSep
+			row.Reversed = c.Reverse
+		}
+	}
 }
 
 func (m *Model) Resize(width, height int) {

@@ -200,8 +200,12 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 		// filter with search input
 		m.searchBar, cmd = m.searchBar.Update(msg)
 		cmds = append(cmds, cmd)
-		// do not match headings
-		matches := filter(m.searchBar.Value(), m.table.GetPlainRowsWithoutHeadings())
+
+		var matches fuzzy.Matches
+		if !m.table.Empty() {
+			// do not match headings
+			matches = filter(m.searchBar.Value(), m.table.GetPlainRowsWithoutHeadings())
+		}
 
 		// present new filtered rows
 		m.filteredTable.Reset()

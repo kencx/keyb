@@ -7,9 +7,10 @@ import (
 )
 
 type Row struct {
-	Text   string
-	Key    string
-	Prefix string
+	Text      string
+	Key       string
+	Prefix    string
+	PrefixSep string
 
 	// default false unless prefix defined
 	ShowPrefix bool
@@ -22,6 +23,7 @@ type Row struct {
 	IsHeading  bool
 	IsSelected bool
 	IsFiltered bool
+	Reversed   bool
 }
 
 type RowStyles struct {
@@ -80,10 +82,25 @@ func (r *Row) String() string {
 		return fmt.Sprintf("%s\t ", r.Text)
 	}
 
+	if r.Reversed {
+		return r.ReverseString()
+	}
+
 	if !r.ShowPrefix {
 		return fmt.Sprintf("%s\t%s", r.Text, r.Key)
 	}
-	return fmt.Sprintf("%s\t%s ; %s", r.Text, r.Prefix, r.Key)
+
+	key := fmt.Sprintf("%s %s %s", r.Prefix, r.PrefixSep, r.Key)
+	return fmt.Sprintf("%s\t%s", r.Text, key)
+}
+
+func (r *Row) ReverseString() string {
+	if !r.ShowPrefix {
+		return fmt.Sprintf("%s\t%s", r.Key, r.Text)
+	}
+
+	key := fmt.Sprintf("%s %s %s", r.Prefix, r.PrefixSep, r.Key)
+	return fmt.Sprintf("%s\t%s", key, r.Text)
 }
 
 func (r *Row) Render() string {

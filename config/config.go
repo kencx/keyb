@@ -7,110 +7,86 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"runtime"
 
-	"gopkg.in/ini.v1"
 	"gopkg.in/yaml.v2"
 )
 
 var ConfigFs string
 
 const (
-	parentDir  = "keyb"
-	configFile = "config"
+	keybDir        = "keyb"
+	configFileName = "config.yml"
+	keybFileName   = "keyb.yml"
 )
 
 type Config struct {
-	Title    string
-	Vim      bool
-	KeybPath string
+	Defaults     `yaml:"defaults"`
+	ColourScheme `yaml:"color"`
+}
 
+type Defaults struct {
+	KeybPath    string `yaml:"keyb_path"`
+	Vim         bool
+	Debug       bool
+	Reverse     bool
+	Title       string
+	Prompt      string
+	Placeholder string
+	PrefixSep   string `yaml:"prefix_sep"`
+	SepWidth    int    `yaml:"sep_width"`
+	Margin      int
+	Padding     int
+	BorderStyle string `yaml:"border_style"`
+}
+
+type ColourScheme struct {
 	Cursor_fg    string
 	Cursor_bg    string
-	Border       string
+	Filter_fg    string
+	Filter_bg    string
 	Border_color string
 }
 
-func GetConfig(configPath string) (*Config, error) {
-	if configPath == "" {
+func Parse(path string) (*Config, error) {
+	if path == "" {
 		return nil, fmt.Errorf("no config path given")
 	}
 
-	options := ini.LoadOptions{
-		InsensitiveKeys:         true,
-		SkipUnrecognizableLines: true,
-		AllowBooleanKeys:        true,
-	}
-	config, err := ini.LoadSources(options, os.ExpandEnv(configPath))
+	file, err := ioutil.ReadFile(os.ExpandEnv(path))
 	if err != nil {
-		return nil, fmt.Errorf("failed to load config path: %w", err)
+		return nil, fmt.Errorf("failed to read config file: %w", err)
 	}
 
-	cfgSection := config.Section("")
-
-	// parse boolean
-	vim, err := cfgSection.Key("VIM").Bool()
-	if err != nil {
-		return nil, fmt.Errorf("error: %w", err)
+	var c Config
+	if err = yaml.Unmarshal(file, &c); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal config file: %w", err)
 	}
-
-	cfg := &Config{
-		Title:    cfgSection.Key("TITLE").String(),
-		Vim:      vim,
-		KeybPath: cfgSection.Key("KEYB_PATH").String(),
-
-		Cursor_fg:    cfgSection.Key("CURSOR_FG").String(),
-		Cursor_bg:    cfgSection.Key("CURSOR_BG").String(),
-		Border:       cfgSection.Key("BORDER").String(),
-		Border_color: cfgSection.Key("BORDER_COLOR").String(),
-	}
-	return cfg, nil
-}
-
-func GetBindings(keybPath string) (Bindings, error) {
-
-	var b Bindings
-
-	file, err := ioutil.ReadFile(os.ExpandEnv(keybPath))
-	if err != nil {
-		return nil, fmt.Errorf("failed to read keyb file: %w", err)
-	}
-
-	if err := yaml.Unmarshal(file, &b); err != nil {
-		return nil, fmt.Errorf("failed to unmarshall keyb file: %w", err)
-	}
-	return b, nil
+	return &c, nil
 }
 
 func getBaseDir() (string, error) {
 	var err error
-	var path string
 
-	switch runtime.GOOS {
-	case "windows":
-		path = os.Getenv("APPDATA")
-	case "linux":
-		path = os.Getenv("XDG_CONFIG_HOME")
-		if path == "" {
-			path = filepath.Join(os.Getenv("HOME"), ".config")
-		}
-	default:
-		err = fmt.Errorf("unsupported platform")
-	}
-
+	path := os.Getenv("XDG_CONFIG_HOME")
 	if path == "" {
-		return "", fmt.Errorf("base config directory not found")
+		path, err = os.UserConfigDir()
+		if err != nil {
+			return "", fmt.Errorf("base config directory not found: %v", err)
+		}
 	}
 	return path, err
 }
 
 func createConfigDir() (string, error) {
-
 	baseDir, err := getBaseDir()
 	if err != nil {
 		return "", err
 	}
-	configPath := filepath.Join(baseDir, parentDir)
+
+	if baseDir == "" {
+		return "", fmt.Errorf("base config directory not found")
+	}
+	configPath := filepath.Join(baseDir, keybDir)
 
 	_, err = os.Stat(configPath)
 	if err != nil {
@@ -128,19 +104,18 @@ func createConfigDir() (string, error) {
 }
 
 func CreateConfigFile() error {
-
 	basePath, err := createConfigDir()
 	if err != nil {
 		return err
 	}
 
-	fullPath := filepath.Join(basePath, configFile)
+	fullPath := filepath.Join(basePath, configFileName)
 
 	_, err = os.Stat(fullPath)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			if err := os.WriteFile(fullPath, []byte(ConfigFs), 0744); err != nil {
-				return fmt.Errorf("failed to write config file: %w", err)
+				return fmt.Errorf("failed to create config file: %w", err)
 			}
 		} else {
 			return fmt.Errorf("failed to determine file structure: %w", err)

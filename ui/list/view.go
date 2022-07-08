@@ -5,14 +5,13 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/kencx/keyb/util"
 )
 
 func (m *Model) View() string {
 
 	header := m.title
 	if m.filterState == filtering {
-		separator := strings.Repeat(" ", util.Max(0,
+		separator := strings.Repeat(" ", max(0,
 			m.viewport.Width-m.padding-lipgloss.Width(m.title)-lipgloss.Width(m.currentHeading)),
 		)
 		header = lipgloss.JoinHorizontal(lipgloss.Center, m.title, separator, m.currentHeading)
@@ -34,4 +33,11 @@ func (m *Model) View() string {
 
 	style := lipgloss.NewStyle().Margin(0, 1)
 	return style.Render(view)
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }

@@ -25,11 +25,10 @@ keyb does **not** support:
 
 ## Motivation
 
-When I first started using tmux, vim and bspwm, there were too many hotkeys and
-key combinations to remember. It was very annoying to have to constantly look up
-the specific hotkey I wanted and I resorted to writing them down on paper - a
-physical cheatsheet. Thus came the idea of building a digital hotkey
-cheatsheet.
+When I started out using tmux and bspwm, I couldn't remember all the hotkeys and
+resorted to writing them down on paper, creating a physical cheatsheet. Then, I
+thought: maybe there's a tool that does this. I didn't find one I liked so I
+built `keyb`.
 
 With `keyb`, I can list:
 
@@ -37,8 +36,8 @@ With `keyb`, I can list:
 - Custom key combinations that I defined for my own workflow
 - Hotkeys for tools that I'm new to
 
-This concept is not novel - awesomeWM provides a helpful cheatsheet for its
-defined hotkeys.
+This idea is not novel - awesomeWM provides a helpful (but non configurable)
+cheatsheet for its defined hotkeys.
 
 ## Install
 keyb is still a work in progress. Use it at your own risk.
@@ -75,7 +74,7 @@ tmux:
       key: "-"
     - desc: {next, prev} window
       key: shift + {>, <}
-      ignore_prefix = true
+      ignore_prefix: true
 
 bspwm:
   keybinds:
@@ -102,17 +101,17 @@ Configure your keyb instance in `$XDG_CONFIG_HOME/keyb/config`.
 
 Refer to `examples/config` for more details.
 
-| Hotkey      | Description      |
-|------------ | ------------     |
-| j, k / Up, Down | Move cursor      |
-| Ctrl + u, d | Move half window |
-| Ctrl + b, f | Move full window |
-| H, M, L     | Go to top, middle, bottom of screen |
-| g, G		  | Go to first, last line |
-| /			  | Enter search mode|
-| alt + d     | Clear current search |
-| Esc		  | Exit search mode |
-| Ctrl + c, q | Quit		     |
+| Hotkey                     | Description      |
+|--------------------------- | ---------------- |
+| <kbd>j, k / Up, Down</kbd> | Move cursor      |
+| <kbd>Ctrl + u, d</kbd>     | Move half window |
+| <kbd>Ctrl + b, f</kbd>     | Move full window |
+| <kbd>H, M, L</kbd>         | Go to top, middle, bottom of screen |
+| <kbd>g, G</kbd>            | Go to first, last line |
+| <kbd>/</kbd>               | Enter search mode|
+| <kbd>alt + d</kbd>         | Clear current search |
+| <kbd>Esc</kbd>             | Exit search mode |
+| <kbd>Ctrl + c, q</kbd>     | Quit		        |
 
 ## fzf, rofi
 
@@ -128,7 +127,16 @@ $ keyb -e output.txt -s
 $ cat output.txt | rofi -dmenu
 ```
 
-## Inspiration
+## Acknowledgements
+`keyb` is built with:
+
+- [bubbletea](github.com/charmbracelet/bubbletea)
+- [lipgloss](github.com/charmbracelet/lipgloss)
+- [fuzzy](github.com/sahilm/fuzzy)
+- [ansiterm](github.com/juju/ansiterm)
+
+Alternatives that I found:
+
 - [awesomeWM](https://github.com/awesomeWM/awesome)
 - [showkeys](https://github.com/adamharmansky/showkeys)
 

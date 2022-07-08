@@ -5,14 +5,16 @@ import (
 	"os"
 	"testing"
 
+	"github.com/kencx/keyb/config"
 	"github.com/kencx/keyb/ui"
 	"github.com/kencx/keyb/ui/list"
 	"github.com/kencx/keyb/ui/table"
 )
 
 var (
-	testTable = table.New([]*table.Row{table.NewHeading("foo"), {Text: "bar"}})
-	m         = &ui.Model{List: list.New("", testTable)}
+	testTable  = table.New([]*table.Row{table.NewHeading("foo"), {Text: "bar"}})
+	testConfig = &config.Config{}
+	m          = &ui.Model{List: list.New(testTable, testConfig)}
 )
 
 func TestToStdout(t *testing.T) {

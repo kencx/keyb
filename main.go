@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "embed"
 	"flag"
 	"fmt"
 	"log"
@@ -25,9 +24,6 @@ const help = `usage: keyb [options] [file]
     -h, --help	    help for keyb
 `
 
-//go:embed examples/config.yml
-var configFs string
-
 // TODO support diff OS
 var (
 	defaultConfig = path.Join(os.Getenv("HOME"), ".config/keyb/config.yml")
@@ -35,8 +31,6 @@ var (
 )
 
 func main() {
-	config.ConfigFs = configFs
-
 	log.SetPrefix("keyb: ")
 	log.SetFlags(log.Lshortfile)
 

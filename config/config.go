@@ -1,7 +1,6 @@
 package config
 
 import (
-	_ "embed"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -11,8 +10,6 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var ConfigFs string
-
 const (
 	keybDir        = "keyb"
 	configFileName = "config.yml"
@@ -20,11 +17,11 @@ const (
 )
 
 type Config struct {
-	Defaults `yaml:"defaults"`
-	Colour   `yaml:"color"`
+	Settings `yaml:"settings"`
+	Color    `yaml:"color"`
 }
 
-type Defaults struct {
+type Settings struct {
 	KeybPath    string `yaml:"keyb_path"`
 	Debug       bool
 	Reverse     bool
@@ -36,10 +33,10 @@ type Defaults struct {
 	SepWidth    int    `yaml:"sep_width"`
 	Margin      int
 	Padding     int
-	BorderStyle string `yaml:"border_style"`
+	BorderStyle string `yaml:"border"`
 }
 
-type Colour struct {
+type Color struct {
 	PromptColor string `yaml:"prompt"`
 	CursorFg    string `yaml:"cursor_fg"`
 	CursorBg    string `yaml:"cursor_bg"`
@@ -48,7 +45,6 @@ type Colour struct {
 	BorderColor string `yaml:"border_color"`
 }
 
-// TODO combine set config with defaults
 func Parse(path string) (*Config, error) {
 	if path == "" {
 		return nil, fmt.Errorf("no config path given")
@@ -59,11 +55,34 @@ func Parse(path string) (*Config, error) {
 		return nil, fmt.Errorf("failed to read config file: %w", err)
 	}
 
-	var c Config
+	c := getDefaults()
 	if err = yaml.Unmarshal(file, &c); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal config file: %w", err)
 	}
-	return &c, nil
+	return c, nil
+}
+
+func getDefaults() *Config {
+	return &Config{
+		Settings: Settings{
+			// TODO set OS-agnostic default
+			KeybPath:    "",
+			Debug:       false,
+			Reverse:     false,
+			Mouse:       true,
+			Title:       "",
+			Prompt:      "keys > ",
+			Placeholder: "...",
+			PrefixSep:   ";",
+			SepWidth:    4,
+			Margin:      0,
+			Padding:     1,
+			BorderStyle: "hidden",
+		},
+		Color: Color{
+			FilterFg: "",
+		},
+	}
 }
 
 func getBaseDir() (string, error) {
@@ -116,7 +135,11 @@ func CreateConfigFile() error {
 	_, err = os.Stat(fullPath)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			if err := os.WriteFile(fullPath, []byte(ConfigFs), 0744); err != nil {
+			data, err := yaml.Marshal(getDefaults())
+			if err != nil {
+				return fmt.Errorf("failed to generate default config: %w", err)
+			}
+			if err := os.WriteFile(fullPath, data, 0644); err != nil {
 				return fmt.Errorf("failed to create config file: %w", err)
 			}
 		} else {

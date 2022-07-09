@@ -26,8 +26,7 @@ func (m *Model) View() string {
 	style := m.border.
 		Margin(m.margin).
 		Padding(m.padding).
-		// border should occupy entire width
-		Width(m.viewport.Width - m.margin)
+		Width(m.viewport.Width)
 	return style.Render(view)
 }
 

@@ -73,9 +73,9 @@ func (m *Model) configure(c *config.Config) {
 	m.debug = c.Debug
 	// TODO customize keymap
 	m.keys = DefaultKeyMap()
+
 	m.margin = c.Margin
 	m.padding = c.Padding
-
 	m.scrollOffset += (m.margin * 2) + (m.padding * 2)
 
 	var b lipgloss.Border
@@ -93,6 +93,7 @@ func (m *Model) configure(c *config.Config) {
 	}
 	m.border = lipgloss.NewStyle().BorderStyle(b).BorderForeground(lipgloss.Color(c.BorderColor))
 
+	// row specific config
 	if !m.table.Empty() {
 		cursor := lipgloss.NewStyle().Bold(true).
 			Foreground(lipgloss.Color(c.CursorFg)).
@@ -159,8 +160,7 @@ func (m *Model) SyncContent(table *table.Model) {
 			row.IsSelected = false
 		}
 	}
-	table.Render()
-	m.viewport.SetContent(table.String())
+	m.viewport.SetContent(table.Render())
 	m.maxRows = table.LineCount
 }
 

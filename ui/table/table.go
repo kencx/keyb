@@ -5,13 +5,14 @@ import (
 	"strings"
 
 	"github.com/juju/ansiterm/tabwriter"
+	"github.com/muesli/reflow/truncate"
 )
 
 type Model struct {
 	Rows      []*Row
-	Output    []string
 	LineCount int
 	SepWidth  int
+	MaxWidth  int
 }
 
 func New(rows []*Row) *Model {
@@ -24,8 +25,6 @@ func New(rows []*Row) *Model {
 			t.LineCount += 1
 		}
 	}
-
-	t.Render()
 	return t
 }
 
@@ -43,46 +42,43 @@ func (t *Model) Empty() bool {
 func (t *Model) AppendRow(row *Row) {
 	t.Rows = append(t.Rows, row)
 	t.LineCount += 1
-	t.Render()
 }
 
 func (t *Model) AppendRows(rows ...*Row) {
 	t.Rows = append(t.Rows, rows...)
 	t.LineCount += len(rows)
-	t.Render()
 }
 
 func (t *Model) Join(table *Model) {
 	t.Rows = append(t.Rows, table.Rows...)
-	t.Output = append(t.Output, table.Output...)
 	t.LineCount += table.LineCount
 }
 
 func (t *Model) Reset() {
 	t.Rows = nil
-	t.Output = nil
 	t.LineCount = 0
 }
 
 // Align and style rows
-func (t *Model) Render() {
+func (t *Model) Render() string {
 	var sb strings.Builder
 	tw := tabwriter.NewWriter(&sb, 8, 4, t.SepWidth, ' ', 0)
 
-	// don't use Align here to not have 2 for loops
 	for _, row := range t.Rows {
 		if row != nil && row.String() != "" {
 			fmt.Fprintln(tw, row.Render())
 		}
 	}
-
 	tw.Flush()
-	s := strings.TrimSuffix(sb.String(), "\n")
-	t.Output = strings.Split(s, "\n")
-}
 
-func (t *Model) String() string {
-	return strings.Join(t.Output, "\n")
+	sl := strings.Split(strings.TrimSuffix(sb.String(), "\n"), "\n")
+	sb.Reset()
+
+	// Unable to truncate while aligning due to nature of tabwriter
+	for _, row := range sl {
+		fmt.Fprintln(&sb, truncate.StringWithTail(row, uint(t.MaxWidth), "..."))
+	}
+	return sb.String()
 }
 
 // The next 3 functions need better names

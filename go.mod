@@ -7,6 +7,7 @@ require (
 	github.com/charmbracelet/bubbletea v0.21.0
 	github.com/charmbracelet/lipgloss v0.5.0
 	github.com/juju/ansiterm v0.0.0-20210929141451-8b71cc96ebdc
+	github.com/muesli/reflow v0.3.0
 	github.com/sahilm/fuzzy v0.1.0
 	gopkg.in/yaml.v2 v2.4.0
 )
@@ -20,7 +21,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/muesli/ansi v0.0.0-20211031195517-c9f0611b6c70 // indirect
 	github.com/muesli/cancelreader v0.2.0 // indirect
-	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.11.1-0.20220212125758-44cd13922739 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect

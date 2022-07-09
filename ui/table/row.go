@@ -34,26 +34,10 @@ type RowStyles struct {
 	Filtered        lipgloss.Style
 }
 
-func DefaultRowStyles() RowStyles {
-	return RowStyles{
-		Selected: lipgloss.NewStyle().
-			Background(lipgloss.Color("#448448")).
-			Foreground(lipgloss.Color("#edb")).
-			Margin(0, 2),
-		SelectedHeading: lipgloss.NewStyle().
-			Background(lipgloss.Color("#448448")).
-			Foreground(lipgloss.Color("#edb")).
-			Margin(0, 1).
-			Bold(true),
-		Filtered: lipgloss.NewStyle().Foreground(lipgloss.Color("#FFA066")),
-	}
-}
-
 func NewHeading(text string) *Row {
 	return &Row{
 		Text:      text,
 		IsHeading: true,
-		Styles:    DefaultRowStyles(),
 	}
 }
 
@@ -63,7 +47,6 @@ func NewRow(text, key, prefix, heading string) *Row {
 		Key:     key,
 		Prefix:  prefix,
 		Heading: heading,
-		Styles:  DefaultRowStyles(),
 	}
 	r.ShowPrefix = r.Prefix != ""
 	return r

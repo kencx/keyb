@@ -7,6 +7,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 type filterState int
@@ -17,8 +18,8 @@ const (
 )
 
 type Model struct {
-	keys   KeyMap
-	styles Styles
+	keys KeyMap
+	// styles Styles
 
 	viewport viewport.Model
 	table    *table.Model
@@ -31,15 +32,14 @@ type Model struct {
 	currentHeading string
 
 	title   string
+	debug   bool
 	cursor  int
-	padding int
 	maxRows int // max number of rows regardless of filterState
-	Settings
-}
 
-type Settings struct {
-	debug        bool
-	mouseEnabled bool
+	margin       int
+	padding      int
+	scrollOffset int
+	border       lipgloss.Style
 }
 
 func New(t *table.Model, config *config.Config) Model {
@@ -47,44 +47,82 @@ func New(t *table.Model, config *config.Config) Model {
 		table:         t,
 		maxRows:       t.LineCount,
 		filteredTable: table.NewEmpty(t.LineCount),
-		keys:          DefaultKeyMap(),
-		styles:        DefaultStyle(),
-		viewport:      viewport.Model{YOffset: 0, MouseWheelDelta: 3},
-		searchBar:     textinput.New(),
-		padding:       4,
-		Settings: Settings{
-			debug:        config.Debug,
-			mouseEnabled: config.Mouse,
+		scrollOffset:  6,
+		viewport: viewport.Model{
+			YOffset:         0,
+			MouseWheelDelta: 3,
 		},
+		searchBar: textinput.New(),
 	}
-	m.SetCustomization(config)
-
-	m.table.Styles = m.styles.Table
-	m.filteredTable.Styles = m.styles.Table
+	m.configure(config)
 	return m
+}
+
+func (m *Model) configure(c *config.Config) {
+
+	m.searchBar.Prompt = c.Prompt
+	m.searchBar.PromptStyle = lipgloss.NewStyle().
+		Foreground(lipgloss.Color(c.PromptColor))
+	m.searchBar.Placeholder = c.Placeholder
+
+	m.viewport.MouseWheelEnabled = c.Mouse
+	m.table.SepWidth = c.SepWidth
+	m.filteredTable.SepWidth = c.SepWidth
+
+	m.title = c.Title
+	m.debug = c.Debug
+	// TODO customize keymap
+	m.keys = DefaultKeyMap()
+	m.margin = c.Margin
+	m.padding = c.Padding
+
+	m.scrollOffset += (m.margin * 2) + (m.padding * 2)
+
+	var b lipgloss.Border
+	switch c.BorderStyle {
+	case "normal":
+		b = lipgloss.NormalBorder()
+	case "rounded":
+		b = lipgloss.RoundedBorder()
+	case "double":
+		b = lipgloss.DoubleBorder()
+	case "thick":
+		b = lipgloss.ThickBorder()
+	default:
+		b = lipgloss.HiddenBorder()
+	}
+	m.border = lipgloss.NewStyle().BorderStyle(b).BorderForeground(lipgloss.Color(c.BorderColor))
+
+	if !m.table.Empty() {
+		cursor := lipgloss.NewStyle().Bold(true).
+			Foreground(lipgloss.Color(c.CursorFg)).
+			Background(lipgloss.Color(c.CursorBg))
+
+		s := table.RowStyles{
+			Normal:          lipgloss.NewStyle().Margin(0, 2),
+			Heading:         lipgloss.NewStyle().Margin(0, 1).Bold(true),
+			Selected:        cursor.Copy().Margin(0, 2),
+			SelectedHeading: cursor.Copy().Margin(0, 1).Bold(true),
+			Filtered: lipgloss.NewStyle().
+				Foreground(lipgloss.Color(c.FilterFg)).
+				Background(lipgloss.Color(c.FilterBg)),
+		}
+
+		for _, row := range m.table.Rows {
+			row.PrefixSep = c.PrefixSep
+			row.Reversed = c.Reverse
+			row.Styles = s
+		}
+	}
 }
 
 func (m *Model) Init() tea.Cmd {
 	return nil
 }
 
-func (m *Model) SetCustomization(c *config.Config) {
-	m.title = c.Title
-	m.searchBar.Prompt = c.Prompt
-	m.searchBar.Placeholder = c.Placeholder
-	m.table.SepWidth = c.SepWidth
-
-	if !m.table.Empty() {
-		for _, row := range m.table.Rows {
-			row.PrefixSep = c.PrefixSep
-			row.Reversed = c.Reverse
-		}
-	}
-}
-
 func (m *Model) Resize(width, height int) {
 	m.viewport.Width = width
-	m.viewport.Height = height - m.padding
+	m.viewport.Height = height - m.scrollOffset
 }
 
 // Resets list to unfiltered state
@@ -101,12 +139,8 @@ func (m *Model) Reset() {
 func (m *Model) visibleRows() {
 	if !m.filteredTable.Empty() {
 		m.SyncContent(m.filteredTable)
-		m.maxRows = m.filteredTable.LineCount
-
 	} else {
-		// TODO check why len(m.table.Output) != m.table.LineCount here
 		m.SyncContent(m.table)
-		m.maxRows = m.table.LineCount
 	}
 }
 
@@ -127,6 +161,7 @@ func (m *Model) SyncContent(table *table.Model) {
 	}
 	table.Render()
 	m.viewport.SetContent(table.String())
+	m.maxRows = table.LineCount
 }
 
 func (m *Model) UnstyledString() string {

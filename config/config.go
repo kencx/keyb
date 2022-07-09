@@ -20,8 +20,8 @@ const (
 )
 
 type Config struct {
-	Defaults     `yaml:"defaults"`
-	ColourScheme `yaml:"color"`
+	Defaults `yaml:"defaults"`
+	Colour   `yaml:"color"`
 }
 
 type Defaults struct {
@@ -39,14 +39,16 @@ type Defaults struct {
 	BorderStyle string `yaml:"border_style"`
 }
 
-type ColourScheme struct {
-	Cursor_fg    string
-	Cursor_bg    string
-	Filter_fg    string
-	Filter_bg    string
-	Border_color string
+type Colour struct {
+	PromptColor string `yaml:"prompt"`
+	CursorFg    string `yaml:"cursor_fg"`
+	CursorBg    string `yaml:"cursor_bg"`
+	FilterFg    string `yaml:"filter_fg"`
+	FilterBg    string `yaml:"filter_bg"`
+	BorderColor string `yaml:"border_color"`
 }
 
+// TODO combine set config with defaults
 func Parse(path string) (*Config, error) {
 	if path == "" {
 		return nil, fmt.Errorf("no config path given")

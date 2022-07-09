@@ -11,7 +11,6 @@ var (
 		{Text: "foo", Key: "bar"},
 		{Text: "baz", Key: "foo"},
 	}
-	want = []string{testRows[0].Render(), testRows[1].Render(), testRows[2].Render()}
 )
 
 func TestNew(t *testing.T) {

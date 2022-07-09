@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
 	"github.com/juju/ansiterm/tabwriter"
 )
 
@@ -13,12 +12,6 @@ type Model struct {
 	Output    []string
 	LineCount int
 	SepWidth  int
-	Styles
-}
-
-type Styles struct {
-	HeadingStyle lipgloss.Style
-	RowStyle     lipgloss.Style
 }
 
 func New(rows []*Row) *Model {
@@ -34,12 +27,6 @@ func New(rows []*Row) *Model {
 
 	t.Render()
 	return t
-}
-
-func NewWithStyle(rows []*Row, style Styles) *Model {
-	table := New(rows)
-	table.Styles = style
-	return table
 }
 
 func NewEmpty(n int) *Model {
@@ -85,14 +72,7 @@ func (t *Model) Render() {
 	// don't use Align here to not have 2 for loops
 	for _, row := range t.Rows {
 		if row != nil && row.String() != "" {
-
-			if row.IsHeading {
-				row.Styles.Heading = t.HeadingStyle
-				fmt.Fprintln(tw, row.Render())
-			} else {
-				row.Styles.Normal = t.RowStyle
-				fmt.Fprintln(tw, row.Render())
-			}
+			fmt.Fprintln(tw, row.Render())
 		}
 	}
 

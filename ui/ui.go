@@ -12,16 +12,7 @@ import (
 
 type Model struct {
 	List list.Model
-	// GlobalStyle
 }
-
-// TODO styling
-// type GlobalStyle struct {
-// 	CursorForeground string
-// 	CursorBackground string
-// 	Border           string
-// 	BorderColor      string
-// }
 
 func NewModel(a Apps, config *config.Config) *Model {
 	table := createParentTable(a)

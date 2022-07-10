@@ -12,7 +12,7 @@ type Model struct {
 	Rows      []*Row
 	LineCount int
 	SepWidth  int
-	MaxWidth  int
+	MaxWidth  int // prevents line wrapping
 }
 
 func New(rows []*Row) *Model {
@@ -76,7 +76,11 @@ func (t *Model) Render() string {
 
 	// Unable to truncate while aligning due to nature of tabwriter
 	for _, row := range sl {
-		fmt.Fprintln(&sb, truncate.StringWithTail(row, uint(t.MaxWidth), "..."))
+		if t.MaxWidth > 0 {
+			fmt.Fprintln(&sb, truncate.StringWithTail(row, uint(t.MaxWidth), "..."))
+		} else {
+			fmt.Fprintln(&sb, row)
+		}
 	}
 	return sb.String()
 }

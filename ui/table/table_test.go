@@ -1,7 +1,6 @@
 package table
 
 import (
-	"reflect"
 	"testing"
 )
 
@@ -26,7 +25,7 @@ func TestNew(t *testing.T) {
 		assertEqual(t, len(tt.Rows), 1)
 		assertEqual(t, cap(tt.Rows), 5)
 		assertEqual(t, tt.LineCount, 0)
-		assertSliceEqual(t, tt.Output, []string(nil))
+		assertEqual(t, tt.Render(), "")
 	})
 }
 
@@ -67,17 +66,11 @@ func TestReset(t *testing.T) {
 	tt.Reset()
 
 	assertEqual(t, tt.LineCount, 0)
-	assertSliceEqual(t, tt.Output, nil)
+	assertEqual(t, tt.Render(), "")
 }
 
 func assertEqual[T comparable](t *testing.T, got, want T) {
 	if got != want {
-		t.Errorf("got %#v, want %#v", got, want)
-	}
-}
-
-func assertSliceEqual[T comparable](t *testing.T, got, want []T) {
-	if !reflect.DeepEqual(got, want) {
 		t.Errorf("got %#v, want %#v", got, want)
 	}
 }

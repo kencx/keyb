@@ -18,9 +18,7 @@ const (
 )
 
 type Model struct {
-	keys KeyMap
-	// styles Styles
-
+	keys     KeyMap
 	viewport viewport.Model
 	table    *table.Model
 

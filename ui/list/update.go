@@ -16,11 +16,10 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 
-		// TODO tweaking margin and padding values may still
-		// cause some issues with border exceeding max width
-
-		// to play nice with borders and truncation
-		m.viewport.Width = msg.Width - max(2, m.padding*2-m.margin*2)
+		// to play nice with borders and truncation,
+		// high margin and padding (>10) values still
+		// cause issues with border exceeding max width
+		m.viewport.Width = msg.Width - (m.padding*2 + m.margin*2)
 		m.viewport.Height = msg.Height - m.scrollOffset
 
 		m.table.MaxWidth = m.viewport.Width - m.padding*2

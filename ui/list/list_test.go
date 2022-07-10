@@ -15,16 +15,17 @@ var (
 		{Text: "baz"},
 	}
 	testTable  = table.New(testRows)
-	testConfig = &config.Config{Defaults: config.Defaults{
-		Title:       "foo",
-		Debug:       true,
-		Reverse:     true,
-		Mouse:       true,
-		Prompt:      "prompt",
-		Placeholder: "placeholder",
-		PrefixSep:   "$",
-		SepWidth:    4,
-	}}
+	testConfig = &config.Config{
+		Settings: config.Settings{
+			Title:       "foo",
+			Debug:       true,
+			Reverse:     true,
+			Mouse:       true,
+			Prompt:      "prompt",
+			Placeholder: "placeholder",
+			PrefixSep:   "$",
+			SepWidth:    4,
+		}}
 )
 
 func TestNew(t *testing.T) {
@@ -38,7 +39,7 @@ func TestNew(t *testing.T) {
 		assertEqual(t, tm.title, "foo")
 		assertEqual(t, tm.debug, true)
 		assertEqual(t, tm.table.Rows[0].Reversed, true)
-		assertEqual(t, tm.mouseEnabled, true)
+		assertEqual(t, tm.viewport.MouseWheelEnabled, true)
 		assertEqual(t, tm.searchBar.Prompt, "prompt")
 		assertEqual(t, tm.searchBar.Placeholder, "placeholder")
 		assertEqual(t, tm.table.Rows[0].PrefixSep, "$")
@@ -65,7 +66,7 @@ func TestReset(t *testing.T) {
 
 	tm.Reset()
 
-	assertEqual(t, tm.filteredTable.String(), "")
+	assertEqual(t, tm.filteredTable.Render(), "")
 	assertEqual(t, tm.searchBar.Value(), "")
 	assertEqual(t, tm.filterState, unfiltered)
 	assertEqual(t, tm.cursor, 0)

@@ -12,12 +12,10 @@ func (m *Model) View() string {
 		m.viewport.SetContent("\nNo key bindings found")
 	}
 
-	header := m.title
 	counter := formCounter(m)
 
 	view := lipgloss.JoinVertical(
 		lipgloss.Left,
-		header,
 		m.searchBar.View(),
 		counter,
 		m.viewport.View(),

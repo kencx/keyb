@@ -71,15 +71,17 @@ func (t *Model) Render() string {
 	}
 	tw.Flush()
 
-	sl := strings.Split(strings.TrimSuffix(sb.String(), "\n"), "\n")
-	sb.Reset()
+	if sb.String() != "" {
+		sl := strings.Split(strings.TrimSuffix(sb.String(), "\n"), "\n")
+		sb.Reset()
 
-	// Unable to truncate while aligning due to nature of tabwriter
-	for _, row := range sl {
-		if t.MaxWidth > 0 {
-			fmt.Fprintln(&sb, truncate.StringWithTail(row, uint(t.MaxWidth), "..."))
-		} else {
-			fmt.Fprintln(&sb, row)
+		// Unable to truncate while aligning due to nature of tabwriter
+		for _, row := range sl {
+			if t.MaxWidth > 0 {
+				fmt.Fprintln(&sb, truncate.StringWithTail(row, uint(t.MaxWidth), "..."))
+			} else {
+				fmt.Fprintln(&sb, row)
+			}
 		}
 	}
 	return sb.String()

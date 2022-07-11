@@ -45,7 +45,8 @@ func New(t *table.Model, config *config.Config) Model {
 		table:         t,
 		maxRows:       t.LineCount,
 		filteredTable: table.NewEmpty(t.LineCount),
-		scrollOffset:  6,
+		cursor:        0,
+		scrollOffset:  5,
 		viewport: viewport.Model{
 			YOffset:         0,
 			MouseWheelDelta: 3,

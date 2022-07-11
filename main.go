@@ -109,8 +109,6 @@ func start(m *ui.Model) error {
 
 	p := tea.NewProgram(m)
 	p.EnableMouseCellMotion()
-	p.EnterAltScreen()
-	defer p.ExitAltScreen()
 
 	if err := p.Start(); err != nil {
 		return fmt.Errorf("failed to start: %w", err)

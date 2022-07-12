@@ -1,7 +1,9 @@
 *.json
 *.toml
 *.ini
-
 *.gitcommit
-test.yml
+
+testdata/keyb*
 keyb
+
+dist/

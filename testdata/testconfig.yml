@@ -1,0 +1,20 @@
+settings:
+  keyb_path: "./custom.yml"
+  debug: true
+  reverse: true
+  mouse: false
+  title: ""
+  prompt: 'keys > '
+  placeholder: '...'
+  prefix_sep: ;
+  sep_width: 4
+  margin: 1
+  padding: 1
+  border: normal
+color:
+  prompt: ""
+  cursor_fg: ""
+  cursor_bg: ""
+  filter_fg: "#FFA066"
+  filter_bg: ""
+  border_color: ""

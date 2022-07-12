@@ -79,26 +79,32 @@ func main() {
 	}
 }
 
-func parseFiles(keyb, configPath string) (ui.Apps, *config.Config, error) {
-	if err := config.CreateConfigFile(); err != nil {
-		return nil, nil, fmt.Errorf("no config file found: %w", err)
-	}
-
-	cfg, err := config.Parse(configPath)
+func parseFiles(kPath, cPath string) (ui.Apps, *config.Config, error) {
+	baseDir, err := config.GetBaseDir()
 	if err != nil {
 		return nil, nil, err
 	}
 
-	defaultKeyb := cfg.KeybPath
-	if defaultKeyb == "" && keyb == "" {
-		return nil, nil, fmt.Errorf("no keyb file found")
-	}
-	if keyb != "" {
-		// overwrite default path with flag
-		defaultKeyb = keyb
+	if err := config.CreateConfigFile(baseDir); err != nil {
+		return nil, nil, fmt.Errorf("no config file found: %w", err)
 	}
 
-	keys, err := ui.ParseApps(defaultKeyb)
+	cfg, err := config.Parse(cPath)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// priority: flag > file > default
+	finalKPath := defaultKeyb
+	fileKPath := cfg.KeybPath
+
+	if kPath != "" {
+		finalKPath = kPath
+	} else if fileKPath != "" {
+		finalKPath = fileKPath
+	}
+
+	keys, err := ui.ParseApps(finalKPath)
 	if err != nil {
 		return nil, nil, err
 	}

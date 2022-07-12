@@ -1,0 +1,4 @@
+- name: test
+  keybinds:
+  - name: foo
+    key: bar

@@ -7,26 +7,24 @@ import (
 	"path/filepath"
 	"reflect"
 	"testing"
-
-	"gopkg.in/yaml.v2"
 )
 
 var (
-	parentDir = "../testdata"
-	testDir   = "keyb"
-	fileName  = "config.yml"
+	parentDir      = "../testdata"
+	testConfigDir  = "keyb"
+	testConfigFile = "config.yml"
 )
 
 func TestCreateConfigDir(t *testing.T) {
 
-	want := filepath.Join(parentDir, testDir)
+	want := filepath.Join(parentDir, testConfigDir)
 	got, err := GetorCreateConfigDir(parentDir)
 	if err != nil {
 		t.Fatalf("unexpected err: %v", err)
 	}
 
 	t.Cleanup(func() {
-		os.RemoveAll(path.Join(parentDir, testDir))
+		os.RemoveAll(path.Join(parentDir, testConfigDir))
 	})
 
 	if got != want {
@@ -38,8 +36,8 @@ func TestCreateConfigDir(t *testing.T) {
 		t.Fatalf("unexpected err: %v", err)
 	}
 
-	if info.Name() != testDir {
-		t.Errorf("got %v, want %v", info.Name(), testDir)
+	if info.Name() != testConfigDir {
+		t.Errorf("got %v, want %v", info.Name(), testConfigDir)
 	}
 
 	if !info.IsDir() {
@@ -48,54 +46,6 @@ func TestCreateConfigDir(t *testing.T) {
 
 	if fmt.Sprintf("%#o", info.Mode().Perm()) != "0744" {
 		t.Errorf("got %v, want %v", info.Mode().Perm(), "0744")
-	}
-}
-
-func TestCreateConfigFile(t *testing.T) {
-	want := path.Join(parentDir, testDir, fileName)
-	err := CreateConfigFile(parentDir)
-	if err != nil {
-		t.Fatalf("unexpected err: %v", err)
-	}
-
-	t.Cleanup(func() {
-		os.RemoveAll(path.Join(parentDir, testDir))
-	})
-
-	data, err := os.ReadFile(want)
-	if err != nil {
-		t.Fatalf("unexpected err: %v", err)
-	}
-
-	defaultConfig, err := generateDefaultConfig()
-	if err != nil {
-		t.Fatalf("unexpected err: %v", err)
-	}
-	var c Config
-	err = yaml.Unmarshal(data, &c)
-	if err != nil {
-		t.Fatalf("unexpected err: %v", err)
-	}
-
-	if reflect.DeepEqual(c, defaultConfig) {
-		t.Errorf("got %v, want %v", c, defaultConfig)
-	}
-
-	info, err := os.Stat(want)
-	if err != nil {
-		t.Fatalf("unexpected err: %v", err)
-	}
-
-	if info.Name() != fileName {
-		t.Errorf("got %v, want %v", info.Name(), fileName)
-	}
-
-	if info.IsDir() {
-		t.Errorf("%v is a directory", info.Name())
-	}
-
-	if fmt.Sprintf("%#o", info.Mode().Perm()) != "0644" {
-		t.Errorf("got %v, want %v", info.Mode().Perm(), "0644")
 	}
 }
 
@@ -119,7 +69,7 @@ func TestParse(t *testing.T) {
 			FilterFg: "#FFA066",
 		},
 	}
-	got, err := Parse(path.Join(parentDir, "testconfig.yml"))
+	got, err := ParseConfig(path.Join(parentDir, "testconfig.yml"))
 	if err != nil {
 		t.Fatalf("unexpected err: %v", err)
 	}

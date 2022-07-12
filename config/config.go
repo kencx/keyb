@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
 	"path/filepath"
 
 	"gopkg.in/yaml.v2"
@@ -45,7 +44,69 @@ type Color struct {
 	BorderColor string `yaml:"border_color"`
 }
 
-func Parse(path string) (*Config, error) {
+func Parse(flagKPath, cfgPath string) (Apps, *Config, error) {
+	if err := CreateDefaultConfigFile(); err != nil {
+		return nil, nil, fmt.Errorf("no config file found: %w", err)
+	}
+
+	cfg, err := ParseConfig(cfgPath)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// priority: flag > file
+	var kPath string
+	if flagKPath != "" {
+		kPath = flagKPath
+	}
+
+	// set default path and create if absent
+	if kPath == "" {
+		kPath = cfg.KeybPath
+		if !fileExists(kPath) {
+			if err := writeDefaultKeybFile(); err != nil {
+				return nil, nil, err
+			}
+		}
+	}
+
+	keys, err := ParseApps(kPath)
+	if err != nil {
+		return nil, nil, err
+	}
+	return keys, cfg, nil
+}
+
+// Create default config file if does not exist
+func CreateDefaultConfigFile() error {
+	baseDir, err := GetBaseDir()
+	if err != nil {
+		return err
+	}
+
+	configDir, err := GetorCreateConfigDir(baseDir)
+	if err != nil {
+		return err
+	}
+
+	fullPath := filepath.Join(configDir, configFileName)
+	if !fileExists(fullPath) {
+		defaultConfig, err := generateDefaultConfig()
+		if err != nil {
+			return err
+		}
+		data, err := yaml.Marshal(defaultConfig)
+		if err != nil {
+			return fmt.Errorf("failed to marshal default config: %w", err)
+		}
+		if err := os.WriteFile(fullPath, data, 0644); err != nil {
+			return fmt.Errorf("failed to create config file: %w", err)
+		}
+	}
+	return nil
+}
+
+func ParseConfig(path string) (*Config, error) {
 	if path == "" {
 		return nil, fmt.Errorf("no config path given")
 	}
@@ -70,43 +131,12 @@ func Parse(path string) (*Config, error) {
 	return c, nil
 }
 
-func CreateConfigFile(baseDir string) error {
-	configDir, err := GetorCreateConfigDir(baseDir)
-	if err != nil {
-		return err
-	}
-
-	fullPath := filepath.Join(configDir, configFileName)
-
-	if !fileExists(fullPath) {
-		defaultConfig, err := generateDefaultConfig()
-		if err != nil {
-			return err
-		}
-		data, err := yaml.Marshal(defaultConfig)
-		if err != nil {
-			return fmt.Errorf("failed to marshal default config: %w", err)
-		}
-		if err := os.WriteFile(fullPath, data, 0644); err != nil {
-			return fmt.Errorf("failed to create config file: %w", err)
-		}
-	}
-	return nil
-}
-
 func generateDefaultConfig() (*Config, error) {
-	baseDir, err := GetBaseDir()
+	keybPath, err := getDefaultKeybFilePath()
 	if err != nil {
 		return nil, err
 	}
 
-	configDir, err := GetorCreateConfigDir(baseDir)
-	if err != nil {
-		return nil, err
-	}
-
-	// OS-agnostic default path
-	keybPath := path.Join(configDir, keybFileName)
 	return &Config{
 		Settings: Settings{
 			KeybPath:    keybPath,

@@ -13,7 +13,8 @@ import (
 	"github.com/kencx/keyb/ui"
 )
 
-const help = `usage: keyb [options] [file]
+const (
+	help = `usage: keyb [options] [file]
 
   Flags:
     -p, --print	    Print to stdout
@@ -40,6 +41,12 @@ func main() {
 		keybFile   string
 		configFile string
 	)
+
+	baseDir, err := config.GetBaseDir()
+	if err != nil {
+		log.Fatalf("os not supported: %v", err)
+	}
+	defaultConfig := path.Join(baseDir, "keyb", "config.yml")
 
 	flag.BoolVar(&stdout, "p", false, "print to stdout")
 	flag.BoolVar(&stdout, "print", false, "print to stdout")
@@ -77,38 +84,6 @@ func main() {
 	if err := start(m); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func parseFiles(kPath, cPath string) (ui.Apps, *config.Config, error) {
-	baseDir, err := config.GetBaseDir()
-	if err != nil {
-		return nil, nil, err
-	}
-
-	if err := config.CreateConfigFile(baseDir); err != nil {
-		return nil, nil, fmt.Errorf("no config file found: %w", err)
-	}
-
-	cfg, err := config.Parse(cPath)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	// priority: flag > file > default
-	finalKPath := defaultKeyb
-	fileKPath := cfg.KeybPath
-
-	if kPath != "" {
-		finalKPath = kPath
-	} else if fileKPath != "" {
-		finalKPath = fileKPath
-	}
-
-	keys, err := ui.ParseApps(finalKPath)
-	if err != nil {
-		return nil, nil, err
-	}
-	return keys, cfg, nil
 }
 
 func start(m *ui.Model) error {

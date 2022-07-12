@@ -1,60 +1,62 @@
----
-bspwm:
+# bspwm/sxhkd
+# source: https://github.com/baskerville/bspwm/blob/master/examples/sxhkdrc
+
+- name: bspwm
   keybinds:
-    - desc: terminal
+    - name: terminal
       key: super + Return
-    - desc: program launcher
+    - name: program launcher
       key: super + space
-    - desc: reload sxhkd
+    - name: reload sxhkd
       key: super + Escape
-    - desc: quit/escape bspwm
+    - name: quit/escape bspwm
       key: super + alt + {q,r}
 
-    - desc: toggle tiled and monocle layout
+    - name: toggle tiled and monocle layout
       key: super + m
-    - desc: swap current node and biggest window
+    - name: swap current node and biggest window
       key: super + g
-    - desc: send newest node to newest preselection
+    - name: send newest node to newest preselection
       key: super + y
 
-    - desc: set tiled state
+    - name: set tiled state
       key: super + t
-    - desc: set pseudo tiled state
+    - name: set pseudo tiled state
       key: super + shift + t
-    - desc: set floating state
+    - name: set floating state
       key: super + s
-    - desc: set fullscreen state
+    - name: set fullscreen state
       key: super + f
-    - desc: set node to {marked, locked, sticky, private}
+    - name: set node to {marked, locked, sticky, private}
       key: super + ctrl + {m, x, y, z}
 
-    - desc: focus node in direction
+    - name: focus node in direction
       key: super + h,j,k,l
-    - desc: focus {parent, brother, first, second} node
+    - name: focus {parent, brother, first, second} node
       key: super + p, b, comma, period
-    - desc: focus {next, prev} window in current desktop
+    - name: focus {next, prev} window in current desktop
       key: super + {_, shift +} c
-    - desc: focus {next, prev} desktop
+    - name: focus {next, prev} desktop
       key: super + bracket{left, right}
-    - desc: focus last node/desktop
+    - name: focus last node/desktop
       key: super + {grave, tab}
-    - desc: focus {older, newer} node in history
+    - name: focus {older, newer} node in history
       key: super + {o, i}
-    - desc: focus or send to desktop
+    - name: focus or send to desktop
       key: super + {_, shift +} 1-9,0
 
-    - desc: preselect direction
+    - name: preselect direction
       key: super + ctrl + {h,j,k,l}
-    - desc: preselect ratio
+    - name: preselect ratio
       key: super + ctrl + {1-9}
-    - desc: cancel preselection for focused node
+    - name: cancel preselection for focused node
       key: super + ctrl + space
-    - desc: cancel preselection for focused desktop
+    - name: cancel preselection for focused desktop
       key: super + ctrl + shift + space
 
-    - desc: expand window
+    - name: expand window
       key: super + alt + {h,j,k,l}
-    - desc: contract window
+    - name: contract window
       key: super + alt + shift + {h,j,k,l}
-    - desc: move floating window
+    - name: move floating window
       key: super + {Left,Down,Up,Right}

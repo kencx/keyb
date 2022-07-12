@@ -14,14 +14,14 @@ type Model struct {
 	List list.Model
 }
 
-func NewModel(a Apps, config *config.Config) *Model {
+func NewModel(a config.Apps, config *config.Config) *Model {
 	table := createParentTable(a)
 	return &Model{
 		List: list.New(table, config),
 	}
 }
 
-func createParentTable(a Apps) *table.Model {
+func createParentTable(a config.Apps) *table.Model {
 
 	if len(a) <= 0 {
 		t := table.NewEmpty(1)
@@ -43,7 +43,7 @@ func createParentTable(a Apps) *table.Model {
 	return parent
 }
 
-func appToTable(heading string, app App) *table.Model {
+func appToTable(heading string, app config.App) *table.Model {
 	var rows []*table.Row
 
 	h := table.NewHeading(heading)

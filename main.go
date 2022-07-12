@@ -21,14 +21,13 @@ const (
     -e, --export    Export to file
     -k, --key       Key bindings at custom path
     -c, --config    Config file at custom path
-
+    -v, --version   Version info
     -h, --help	    help for keyb
 `
+)
 
-// TODO support diff OS
 var (
-	defaultConfig = path.Join(os.Getenv("HOME"), ".config/keyb/config.yml")
-	defaultKeyb   = path.Join(os.Getenv("HOME"), ".config/keyb/keyb.yml")
+	version = "v0.1.0"
 )
 
 func main() {
@@ -48,6 +47,8 @@ func main() {
 	}
 	defaultConfig := path.Join(baseDir, "keyb", "config.yml")
 
+	shortVersion := flag.Bool("v", false, "version information")
+	longVersion := flag.Bool("version", false, "version information")
 	flag.BoolVar(&stdout, "p", false, "print to stdout")
 	flag.BoolVar(&stdout, "print", false, "print to stdout")
 	flag.StringVar(&exportFile, "e", "", "export to file")
@@ -60,7 +61,12 @@ func main() {
 	flag.Usage = func() { os.Stdout.Write([]byte(help)) }
 	flag.Parse()
 
-	keys, config, err := parseFiles(keybFile, configFile)
+	if *shortVersion || *longVersion {
+		fmt.Println(version)
+		os.Exit(0)
+	}
+
+	keys, config, err := config.Parse(keybFile, configFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -73,7 +79,6 @@ func main() {
 		}
 		os.Exit(0)
 	}
-
 	if exportFile != "" {
 		if err := output.ToFile(m, exportFile); err != nil {
 			log.Fatal(err)

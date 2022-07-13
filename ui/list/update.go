@@ -2,6 +2,7 @@ package list
 
 import (
 	"sort"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
@@ -204,29 +205,11 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 		m.searchBar, cmd = m.searchBar.Update(msg)
 		cmds = append(cmds, cmd)
 
-		var matches fuzzy.Matches
-		if !m.table.Empty() {
-			// do not match headings
-			matches = filter(m.searchBar.Value(), m.table.GetPlainRowsWithoutHeadings())
-		}
-
-		// present new filtered rows
-		m.filteredTable.Reset()
-		if len(matches) == 0 {
-			m.filteredTable.AppendRow(table.EmptyRow())
-
+		prefix := "h:"
+		if strings.HasPrefix(m.searchBar.Value(), prefix) {
+			matchHeadings(m, prefix)
 		} else {
-			var hlMatches []*table.Row
-			// get non-pointers as filtering is ephemeral
-			rows := m.table.GetCopyOfRowsWithoutHeadings()
-
-			for _, match := range matches {
-				row := rows[match.Index]
-				row.IsFiltered = true
-				row.MatchedIndex = match.MatchedIndexes
-				hlMatches = append(hlMatches, &row)
-			}
-			m.filteredTable.AppendRows(hlMatches...)
+			matchRows(m)
 		}
 		m.cursorToBeginning()
 	}
@@ -246,4 +229,59 @@ func filter(term string, target []string) fuzzy.Matches {
 	matches := fuzzy.Find(term, target)
 	sort.Stable(matches)
 	return matches
+}
+
+func matchHeadings(m *Model, prefix string) {
+	var matches fuzzy.Matches
+	value := strings.TrimSpace(strings.TrimPrefix(m.searchBar.Value(), prefix))
+	if !m.table.Empty() {
+		matches = filter(value, m.table.GetPlainHeadings())
+	}
+
+	// present new filtered rows
+	m.filteredTable.Reset()
+	if len(matches) == 0 {
+		m.filteredTable.AppendRow(table.EmptyRow())
+
+	} else {
+		var hlMatches []*table.Row
+		// get non-pointers as filtering is ephemeral
+		headings := m.table.GetCopyOfHeadings()
+
+		for _, match := range matches {
+			heading := headings[match.Index]
+			heading.IsFiltered = true
+			heading.MatchedIndex = match.MatchedIndexes
+
+			hlMatches = append(hlMatches, &heading)
+			hlMatches = append(hlMatches, m.table.GetAllRowsofHeading(heading.Text)...)
+		}
+		m.filteredTable.AppendRows(hlMatches...)
+	}
+}
+
+func matchRows(m *Model) {
+	var matches fuzzy.Matches
+	if !m.table.Empty() {
+		matches = filter(m.searchBar.Value(), m.table.GetPlainRowsWithoutHeadings())
+	}
+
+	// present new filtered rows
+	m.filteredTable.Reset()
+	if len(matches) == 0 {
+		m.filteredTable.AppendRow(table.EmptyRow())
+
+	} else {
+		var hlMatches []*table.Row
+		// get non-pointers as filtering is ephemeral
+		rows := m.table.GetCopyOfRowsWithoutHeadings()
+
+		for _, match := range matches {
+			row := rows[match.Index]
+			row.IsFiltered = true
+			row.MatchedIndex = match.MatchedIndexes
+			hlMatches = append(hlMatches, &row)
+		}
+		m.filteredTable.AppendRows(hlMatches...)
+	}
 }

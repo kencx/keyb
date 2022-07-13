@@ -7,9 +7,9 @@
 <p align="center">Create and view your own custom hotkey cheatsheet in the terminal</p>
 
 ### Features
-- Lightweight
+- Lightweight and quick
 - Fully customizable
-- Fuzzy search
+- Fuzzy filtering
 - Vim key bindings
 - Export to stdout for fzf, rofi support
 
@@ -97,6 +97,17 @@ Prefixes are useful for applications with a common leading hotkey like tmux.
 
 Refer to the defaults provided in `examples` for more details.
 
+### Search
+
+- Enter search mode with `/` to perform fuzzy filtering on all rows
+- Exit search mode again with `Esc`
+- `Alt + d` clears the current filter
+
+To perform filtering on section headings only, prefix the
+search with `h:`. This will return all matching section headings with their
+respective rows.
+
+
 ### Configuration
 A config file is generated on the first run of `keyb`.
 
@@ -139,9 +150,10 @@ Both ANSI and hex color codes are supported.
 | <kbd>H, M, L</kbd>         | Go to top, middle, bottom of screen |
 | <kbd>g, G</kbd>            | Go to first, last line |
 | <kbd>/</kbd>               | Enter search mode|
-| <kbd>alt + d</kbd>         | Clear current search |
+| <kbd>Alt + d</kbd>         | Clear current search |
 | <kbd>Esc</kbd>             | Exit search mode |
 | <kbd>Ctrl + c, q</kbd>     | Quit		        |
+
 
 ## Similar Tools
 

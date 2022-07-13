@@ -87,7 +87,7 @@ func (t *Model) Render() string {
 	return sb.String()
 }
 
-// The next 3 functions need better names
+// Helper functions for retrieving specific rows in a table
 // Aligned but unstyled rows
 func (t *Model) GetAlignedRows() string {
 	var sb strings.Builder
@@ -103,6 +103,16 @@ func (t *Model) GetAlignedRows() string {
 	return strings.TrimSuffix(sb.String(), "\n")
 }
 
+func (t *Model) GetPlainHeadings() []string {
+	var res []string
+	for _, r := range t.Rows {
+		if r.IsHeading {
+			res = append(res, r.String())
+		}
+	}
+	return res
+}
+
 func (t *Model) GetPlainRowsWithoutHeadings() []string {
 	var res []string
 	for _, r := range t.Rows {
@@ -113,11 +123,31 @@ func (t *Model) GetPlainRowsWithoutHeadings() []string {
 	return res
 }
 
+func (t *Model) GetCopyOfHeadings() []Row {
+	var res []Row
+	for _, r := range t.Rows {
+		if r.IsHeading {
+			res = append(res, *r)
+		}
+	}
+	return res
+}
+
 func (t *Model) GetCopyOfRowsWithoutHeadings() []Row {
 	var res []Row
 	for _, r := range t.Rows {
 		if !r.IsHeading {
 			res = append(res, *r)
+		}
+	}
+	return res
+}
+
+func (t *Model) GetAllRowsofHeading(heading string) []*Row {
+	var res []*Row
+	for _, r := range t.Rows {
+		if !r.IsHeading && r.Heading == heading {
+			res = append(res, r)
 		}
 	}
 	return res

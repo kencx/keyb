@@ -10,9 +10,8 @@ import (
 )
 
 var (
-	parentDir      = "../testdata"
-	testConfigDir  = "keyb"
-	testConfigFile = "config.yml"
+	parentDir     = "../testdata"
+	testConfigDir = "keyb"
 )
 
 func TestCreateConfigDir(t *testing.T) {

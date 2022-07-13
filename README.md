@@ -84,18 +84,17 @@ Prefixes are useful for applications with a common leading hotkey like tmux.
       key: Super + Return
 
 - name: tmux
-  prefix: ctrl + a
+  prefix: ctrl + b
   keybinds:
-    - name: split vertical
-      key: "|"
-    - name: split horizontal
-      key: "-"
-    - name: {next, prev} window
-      key: shift + {>, <}
+    - name: Create new window
+      key: c
+    - name: Prev, next window
+      key: Shift + {←, →}
       ignore_prefix: true
 ```
 
-Refer to the defaults provided in `examples` for more details.
+Refer to the defaults provided in `examples` for more details. Multiline fields
+are not supported at the moment.
 
 ### Search
 
@@ -158,7 +157,7 @@ Both ANSI and hex color codes are supported.
 ## Similar Tools
 
 - [showkeys](https://github.com/adamharmansky/showkeys) offers a keybinding popup similar to awesomewm
-- [cheat](https://github.com/cheat/cheat) is a CLI tool to view cheatsheets for
+- [cheat](https://github.com/cheat/cheat) is a CLI alternative to view cheatsheets for
   commands and hotkeys for just about any topic
 - Refer to [shortcut-pages](https://github.com/mt-empty/shortcut-pages), [cheat/cheatsheets](https://github.com/cheat/cheatsheets) for more cheatsheets
 

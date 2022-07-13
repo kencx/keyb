@@ -1,0 +1,27 @@
+project_name: keyb
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - "arm64"
+      - "amd64"
+      - "386"
+    ldflags:
+      - "-s -w -X main.version={{ .Tag }}"
+archives:
+  - name_template: "{{ .ProjectName }}-v{{ .Version }}-{{ .Os }}-{{ .Arch }}"
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+checksum:
+  name_template: 'checksums.txt'
+changelog:
+  skip: true

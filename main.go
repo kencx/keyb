@@ -26,9 +26,7 @@ const (
 `
 )
 
-var (
-	version = "v0.1.0"
-)
+var version string
 
 func main() {
 	log.SetPrefix("keyb: ")

@@ -1,6 +1,6 @@
 binary = keyb
 version = $(shell git describe --tags)
-ldflags = -ldflags "-s -w"
+ldflags = -ldflags "-s -w -X main.version=${version}"
 
 .PHONY: help test clean snapshot build
 
@@ -18,6 +18,11 @@ test:
 clean:
 	if [ -f ${binary} ]; then rm keyb; fi
 	go clean
+	rm -rf dist
+
+## snapshot: generate unversioned snapshot release
+snapshot:
+	goreleaser release --snapshot
 
 ## build: build binary
 build:

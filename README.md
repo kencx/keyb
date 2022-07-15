@@ -1,7 +1,7 @@
 # keyb
 
 <p align="center">
-	<img width="660" src="https://github.com/kencx/keyb/blob/master/assets/keyb.gif?raw=true">
+	<img width="660" src="https://github.com/kencx/keyb/blob/master/assets/show.gif?raw=true">
 </p>
 
 <p align="center">Create and view your own custom hotkey cheatsheet in the terminal</p>
@@ -24,21 +24,34 @@ keyb does **not** support:
 I had trouble remembering the various hotkeys that I sometimes use. It got
 annoying to look them up so I resorted to writing them down on a paper
 cheatsheet. Then, I thought: maybe there's a tool that does this better. I
-didn't find one I liked so I built `keyb`.
+didn't find one I liked so I built keyb.
 
-With `keyb`, I can list:
+With keyb, I can list:
 
 - Hotkeys that I occasionally forget or am new to
 - Custom key combinations that I defined for my own workflow
 - Short commands that I sometimes use
 
-It is best used as a popup cheatsheet binded to a hotkey.
+It is best used as a popup cheatsheet.
 
 ## Install
-keyb is still a work in progress. Use it at your own risk.
+keyb supports Linux, MacOS and Windows.
+
+### Compiled Binary
+Download a compiled binary from the [releases](https://github.com/kencx/keyb/releases) page.
+
+### Install with Go
 
 ```bash
-$ go get -u github.com/kencx/keyb
+$ go install github.com/kencx/keyb@latest
+```
+
+### Build from source
+
+```bash
+$ git clone https://github.com/kencx/keyb
+$ cd keyb
+$ make build
 ```
 
 ## Usage
@@ -63,6 +76,16 @@ keyb supports printing to stdout for use with other tools:
 $ keyb -p | fzf
 $ keyb -p | rofi -dmenu
 ```
+
+### Search
+
+- Enter search mode with `/` to perform fuzzy filtering on all rows
+- Exit search mode again with `Esc`
+- `Alt + d` clears the current filter
+
+To perform filtering on section headings only, prefix the
+search with `h:`. This will return all matching section headings with their
+respective rows.
 
 ### keyb File
 
@@ -95,17 +118,6 @@ Prefixes are useful for applications with a common leading hotkey like tmux.
 
 Refer to the defaults provided in `examples` for more details. Multiline fields
 are not supported at the moment.
-
-### Search
-
-- Enter search mode with `/` to perform fuzzy filtering on all rows
-- Exit search mode again with `Esc`
-- `Alt + d` clears the current filter
-
-To perform filtering on section headings only, prefix the
-search with `h:`. This will return all matching section headings with their
-respective rows.
-
 
 ### Configuration
 A config file is generated on the first run of `keyb`.
@@ -153,6 +165,11 @@ Both ANSI and hex color codes are supported.
 | <kbd>Esc</kbd>             | Exit search mode |
 | <kbd>Ctrl + c, q</kbd>     | Quit		        |
 
+## Screenshots
+
+<p align="center">
+	<img width="660" src="https://github.com/kencx/keyb/blob/master/assets/keyb.jpg?raw=true">
+</p>
 
 ## Similar Tools
 

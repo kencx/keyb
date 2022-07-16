@@ -38,6 +38,7 @@ type Model struct {
 	padding      int
 	scrollOffset int
 	border       lipgloss.Style
+	counterStyle lipgloss.Style
 }
 
 func New(t *table.Model, config *config.Config) Model {
@@ -51,7 +52,8 @@ func New(t *table.Model, config *config.Config) Model {
 			YOffset:         0,
 			MouseWheelDelta: 3,
 		},
-		searchBar: textinput.New(),
+		searchBar:    textinput.New(),
+		counterStyle: lipgloss.NewStyle().Faint(true).Margin(0, 1),
 	}
 	m.configure(config)
 	return m
@@ -91,6 +93,10 @@ func (m *Model) configure(c *config.Config) {
 		b = lipgloss.HiddenBorder()
 	}
 	m.border = lipgloss.NewStyle().BorderStyle(b).BorderForeground(lipgloss.Color(c.BorderColor))
+
+	if c.CounterFg != "" || c.CounterBg != "" {
+		m.counterStyle = lipgloss.NewStyle().Foreground(lipgloss.Color(c.CounterFg)).Background(lipgloss.Color(c.CounterBg)).Margin(0, 1)
+	}
 
 	// row specific config
 	if !m.table.Empty() {

@@ -149,6 +149,8 @@ Both ANSI and hex color codes are supported.
 | `cursor_bg`    | Cursor background |
 | `filter_fg`    | Filter matching text foreground |
 | `filter_bg`    | Filter matching text background |
+| `counter_fg`   | Counter foreground |
+| `counter_bg`   | Counter background |
 | `border_color` | Border color |
 
 #### Hotkeys

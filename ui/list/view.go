@@ -41,7 +41,7 @@ func formCounter(m *Model) string {
 		counter = fmt.Sprintf("%s\tLine: %d YOffset: %d Height: %d",
 			counter, m.cursor, m.viewport.YOffset, m.viewport.Height)
 	}
-	return lipgloss.NewStyle().Faint(true).Margin(0, 1).Render(counter)
+	return m.counterStyle.Render(counter)
 }
 
 func max(a, b int) int {

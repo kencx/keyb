@@ -41,6 +41,8 @@ type Color struct {
 	CursorBg    string `yaml:"cursor_bg"`
 	FilterFg    string `yaml:"filter_fg"`
 	FilterBg    string `yaml:"filter_bg"`
+	CounterFg   string `yaml:"counter_fg"`
+	CounterBg   string `yaml:"counter_bg"`
 	BorderColor string `yaml:"border_color"`
 }
 

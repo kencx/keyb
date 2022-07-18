@@ -142,16 +142,18 @@ By default, the following options are included:
 #### Color
 Both ANSI and hex color codes are supported.
 
-| Color Option | Description |
-| ------------ | ----------- |
-| `prompt`       | Prompt text color |
-| `cursor_fg`    | Cursor foreground |
-| `cursor_bg`    | Cursor background |
-| `filter_fg`    | Filter matching text foreground |
-| `filter_bg`    | Filter matching text background |
-| `counter_fg`   | Counter foreground |
-| `counter_bg`   | Counter background |
-| `border_color` | Border color |
+| Color Option     | Default    | Description |
+| ---------------- | ---------- | ----------- |
+| `prompt`         | -          | Prompt text color |
+| `cursor_fg`      | -          | Cursor foreground |
+| `cursor_bg`      | -          | Cursor background |
+| `filter_fg`      | `"#FFA066"`| Filter matching text foreground |
+| `filter_bg`      | -          | Filter matching text background |
+| `counter_fg`     | -          | Counter foreground |
+| `counter_bg`     | -          | Counter background |
+| `placeholder_fg` | -          | Placeholder foreground |
+| `placeholder_bg` | -          | Placeholder background |
+| `border_color`   | -          | Border color |
 
 #### Hotkeys
 

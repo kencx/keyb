@@ -36,14 +36,16 @@ type Settings struct {
 }
 
 type Color struct {
-	PromptColor string `yaml:"prompt"`
-	CursorFg    string `yaml:"cursor_fg"`
-	CursorBg    string `yaml:"cursor_bg"`
-	FilterFg    string `yaml:"filter_fg"`
-	FilterBg    string `yaml:"filter_bg"`
-	CounterFg   string `yaml:"counter_fg"`
-	CounterBg   string `yaml:"counter_bg"`
-	BorderColor string `yaml:"border_color"`
+	PromptColor   string `yaml:"prompt"`
+	CursorFg      string `yaml:"cursor_fg"`
+	CursorBg      string `yaml:"cursor_bg"`
+	FilterFg      string `yaml:"filter_fg"`
+	FilterBg      string `yaml:"filter_bg"`
+	CounterFg     string `yaml:"counter_fg"`
+	CounterBg     string `yaml:"counter_bg"`
+	PlaceholderFg string `yaml:"placeholder_fg"`
+	PlaceholderBg string `yaml:"placeholder_bg"`
+	BorderColor   string `yaml:"border_color"`
 }
 
 func Parse(flagKPath, cfgPath string) (Apps, *Config, error) {

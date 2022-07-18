@@ -66,6 +66,16 @@ func (m *Model) configure(c *config.Config) {
 		Foreground(lipgloss.Color(c.PromptColor))
 	m.searchBar.Placeholder = c.Placeholder
 
+	if c.PlaceholderFg != "" || c.PlaceholderBg != "" {
+		m.searchBar.PlaceholderStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color(c.PlaceholderFg)).
+			Background(lipgloss.Color(c.PlaceholderBg))
+	}
+
+	if c.CounterFg != "" || c.CounterBg != "" {
+		m.counterStyle = lipgloss.NewStyle().Foreground(lipgloss.Color(c.CounterFg)).Background(lipgloss.Color(c.CounterBg)).Margin(0, 1)
+	}
+
 	m.viewport.MouseWheelEnabled = c.Mouse
 	m.table.SepWidth = c.SepWidth
 	m.filteredTable.SepWidth = c.SepWidth
@@ -93,10 +103,6 @@ func (m *Model) configure(c *config.Config) {
 		b = lipgloss.HiddenBorder()
 	}
 	m.border = lipgloss.NewStyle().BorderStyle(b).BorderForeground(lipgloss.Color(c.BorderColor))
-
-	if c.CounterFg != "" || c.CounterBg != "" {
-		m.counterStyle = lipgloss.NewStyle().Foreground(lipgloss.Color(c.CounterFg)).Background(lipgloss.Color(c.CounterBg)).Margin(0, 1)
-	}
 
 	// row specific config
 	if !m.table.Empty() {

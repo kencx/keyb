@@ -169,6 +169,20 @@ Both ANSI and hex color codes are supported.
 | <kbd>Esc</kbd>             | Exit search mode |
 | <kbd>Ctrl + c, q</kbd>     | Quit		        |
 
+## Roadmap
+
+- [ ] Ability to customize keyb hotkeys
+- [ ] Export to additional file formats (`json, toml, conf/ini` etc.)
+- [ ] `-a, --add` flag to quickly add a single hotkey entry from the CLI
+- [ ] Automatic parsing from online cheatsheet repos (eg. `cheat/cheatsheets`)
+
+## Contributing
+
+keyb requires Go 1.18.
+
+Bug reports, feature requests and PRs for the above roadmap or for default
+keymaps in `examples/` are very welcome.
+
 ## Screenshots
 
 <p align="center">

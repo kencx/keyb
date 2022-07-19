@@ -1,6 +1,11 @@
 package list
 
-import "github.com/charmbracelet/bubbles/key"
+import (
+	"strings"
+
+	"github.com/charmbracelet/bubbles/key"
+	"github.com/kencx/keyb/config"
+)
 
 type KeyMap struct {
 	Quit key.Binding
@@ -24,57 +29,37 @@ type KeyMap struct {
 	Normal      key.Binding
 }
 
-func DefaultKeyMap() KeyMap {
+func CreateKeyMap(keys config.Keys) KeyMap {
 	return KeyMap{
-		Quit: key.NewBinding(
-			key.WithKeys("q", "ctrl+c"),
-		),
-		Up: key.NewBinding(
-			key.WithKeys("up", "k"),
-		),
-		Down: key.NewBinding(
-			key.WithKeys("down", "j"),
-		),
-		HalfUp: key.NewBinding(
-			key.WithKeys("ctrl+u"),
-		),
-		HalfDown: key.NewBinding(
-			key.WithKeys("ctrl+d"),
-		),
-		FullUp: key.NewBinding(
-			key.WithKeys("ctrl+b"),
-		),
-		FullDown: key.NewBinding(
-			key.WithKeys("ctrl+f"),
-		),
-		GoToFirstLine: key.NewBinding(
-			key.WithKeys("g"),
-		),
-		GoToLastLine: key.NewBinding(
-			key.WithKeys("G"),
-		),
-		GoToTop: key.NewBinding(
-			key.WithKeys("H"),
-		),
-		GoToMiddle: key.NewBinding(
-			key.WithKeys("M"),
-		),
-		GoToBottom: key.NewBinding(
-			key.WithKeys("L"),
-		),
+		Quit:          SetKey(keys.Quit),
+		Up:            SetKey(keys.Up),
+		Down:          SetKey(keys.Down),
+		HalfUp:        SetKey(keys.HalfUp),
+		HalfDown:      SetKey(keys.HalfDown),
+		FullUp:        SetKey(keys.FullUp),
+		FullDown:      SetKey(keys.FullDown),
+		GoToFirstLine: SetKey(keys.GoToFirstLine),
+		GoToLastLine:  SetKey(keys.GoToLastLine),
+		GoToTop:       SetKey(keys.GoToTop),
+		GoToMiddle:    SetKey(keys.GoToMiddle),
+		GoToBottom:    SetKey(keys.GoToBottom),
 
-		CenterCursor: key.NewBinding(
-			key.WithKeys("Z"),
-		),
-
-		Search: key.NewBinding(
-			key.WithKeys("/"),
-		),
-		ClearSearch: key.NewBinding(
-			key.WithKeys("alt+d"),
-		),
-		Normal: key.NewBinding(
-			key.WithKeys("esc"),
-		),
+		Search:      SetKey(keys.Search),
+		ClearSearch: SetKey(keys.ClearSearch),
+		Normal:      SetKey(keys.Normal),
 	}
+}
+
+func SetKey(s string) key.Binding {
+	return key.NewBinding(
+		key.WithKeys(splitAndTrim(s, ",")...),
+	)
+}
+
+func splitAndTrim(s, sep string) []string {
+	sl := strings.Split(s, sep)
+	for i := range sl {
+		sl[i] = strings.TrimSpace(sl[i])
+	}
+	return sl
 }

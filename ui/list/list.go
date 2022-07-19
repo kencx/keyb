@@ -82,8 +82,7 @@ func (m *Model) configure(c *config.Config) {
 
 	m.title = c.Title
 	m.debug = c.Debug
-	// TODO customize keymap
-	m.keys = DefaultKeyMap()
+	m.keys = CreateKeyMap(c.Keys)
 
 	m.margin = c.Margin
 	m.padding = c.Padding

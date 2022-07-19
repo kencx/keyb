@@ -18,6 +18,7 @@ const (
 type Config struct {
 	Settings `yaml:"settings"`
 	Color    `yaml:"color"`
+	Keys     `yaml:"keys"`
 }
 
 type Settings struct {
@@ -46,6 +47,24 @@ type Color struct {
 	PlaceholderFg string `yaml:"placeholder_fg"`
 	PlaceholderBg string `yaml:"placeholder_bg"`
 	BorderColor   string `yaml:"border_color"`
+}
+
+type Keys struct {
+	Quit          string
+	Up            string
+	Down          string
+	HalfUp        string `yaml:"half_up"`
+	HalfDown      string `yaml:"half_down"`
+	FullUp        string `yaml:"full_up"`
+	FullDown      string `yaml:"full_bottom"`
+	GoToFirstLine string `yaml:"first_line"`
+	GoToLastLine  string `yaml:"last_line"`
+	GoToTop       string `yaml:"top"`
+	GoToMiddle    string `yaml:"middle"`
+	GoToBottom    string `yaml:"bottom"`
+	Search        string
+	ClearSearch   string `yaml:"clear_search"`
+	Normal        string
 }
 
 func Parse(flagKPath, cfgPath string) (Apps, *Config, error) {
@@ -158,6 +177,23 @@ func generateDefaultConfig() (*Config, error) {
 		},
 		Color: Color{
 			FilterFg: "#FFA066",
+		},
+		Keys: Keys{
+			Quit:          "q, ctrl+c",
+			Up:            "k, up",
+			Down:          "j, down",
+			HalfUp:        "ctrl+u",
+			HalfDown:      "ctrl+d",
+			FullUp:        "ctrl+b",
+			FullDown:      "ctrl+f",
+			GoToFirstLine: "g",
+			GoToLastLine:  "G",
+			GoToTop:       "H",
+			GoToMiddle:    "M",
+			GoToBottom:    "L",
+			Search:        "/",
+			ClearSearch:   "alt+d",
+			Normal:        "esc",
 		},
 	}, nil
 }

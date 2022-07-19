@@ -67,6 +67,23 @@ func TestParse(t *testing.T) {
 		Color: Color{
 			FilterFg: "#FFA066",
 		},
+		Keys: Keys{
+			Quit:          "q, ctrl+c",
+			Up:            "k, up",
+			Down:          "j, down",
+			HalfUp:        "ctrl+u",
+			HalfDown:      "ctrl+d",
+			FullUp:        "ctrl+b",
+			FullDown:      "ctrl+f",
+			GoToFirstLine: "g",
+			GoToLastLine:  "G",
+			GoToTop:       "H",
+			GoToMiddle:    "M",
+			GoToBottom:    "L",
+			Search:        "/",
+			ClearSearch:   "alt+d",
+			Normal:        "esc",
+		},
 	}
 	got, err := ParseConfig(path.Join(parentDir, "testconfig.yml"))
 	if err != nil {

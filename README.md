@@ -156,22 +156,23 @@ Both ANSI and hex color codes are supported.
 | `border_color`   | -          | Border color |
 
 #### Hotkeys
+Multiple keys may be set for a single binding, separated by commas.
 
-| Hotkey                     | Description      |
-|--------------------------- | ---------------- |
-| <kbd>j, k / Up, Down</kbd> | Move cursor      |
-| <kbd>Ctrl + u, d</kbd>     | Move half window |
-| <kbd>Ctrl + b, f</kbd>     | Move full window |
-| <kbd>H, M, L</kbd>         | Go to top, middle, bottom of screen |
-| <kbd>g, G</kbd>            | Go to first, last line |
-| <kbd>/</kbd>               | Enter search mode|
-| <kbd>Alt + d</kbd>         | Clear current search |
-| <kbd>Esc</kbd>             | Exit search mode |
-| <kbd>Ctrl + c, q</kbd>     | Quit		        |
+| Hotkey                  | Default                    | Description      |
+| ----------------------- | -------------------------- | ---------------- |
+| `up`, `down`            | <kbd>j, k / Up, Down</kbd> | Move cursor      |
+| `half_up, half_down`    | <kbd>Ctrl + u, d</kbd>     | Move half window |
+| `full_up, full_down`    | <kbd>Ctrl + b, f</kbd>     | Move full window |
+| `top, middle, bottom`   | <kbd>H, M, L</kbd>         | Go to top, middle, bottom of screen |
+| `first_line, last_line` | <kbd>g, G</kbd>            | Go to first, last line |
+| `search`                | <kbd>/</kbd>               | Enter search mode      |
+| `clear_search`          | <kbd>Alt + d</kbd>         | Clear current search (remains in search mode)  |
+| `normal`                | <kbd>Esc</kbd>             | Exit search mode |
+| `quit`                  | <kbd>Ctrl + c, q</kbd>     | Quit		      |
 
 ## Roadmap
 
-- [ ] Ability to customize keyb hotkeys
+- [x] Ability to customize keyb hotkeys
 - [ ] Export to additional file formats (`json, toml, conf/ini` etc.)
 - [ ] `-a, --add` flag to quickly add a single hotkey entry from the CLI
 - [ ] Automatic parsing from online cheatsheet repos (eg. `cheat/cheatsheets`)

@@ -1,0 +1,25 @@
+# https://github.com/mfgbhatti
+# https://mfgbhatti.com
+# Copied from cut --help
+- name: cut
+  keybinds:
+    - name: "To cut out the third field of text or stdoutput that is delimited by a #:"
+      key: "cut -d# -f3"
+    - name: "select only these bytes"
+      key: "cut -b, --bytes=LIST <file>"
+    - name: "select only these characters"
+      key: "cut -c, --characters=LIST <file>"
+    - name: "use DELIM instead of TAB for field delimiter"
+      key: "cut -d, --delimiter=DELIM <file>"
+    - name: "select only these fields;  also print any line that contains no delimiter character, unless the -s option is specified"
+      key: "cut -f, --fields=LIST <file>"
+    - name: "(ignored)"
+      key: "cut -n <file>"
+    - name: "complement the set of selected bytes, characters or fields"
+      key: "cut --complement <file>"
+    - name: "do not print lines not containing delimiters"
+      key: "cut -s, --only-delimited <file>"
+    - name: "use STRING as the output delimiter the default is to use the input delimiter"
+      key: "cut --output-delimiter=STRING <file>"
+    - name: "line delimiter is NUL, not newline"
+      key: "cut -z, --zero-terminated <file>"

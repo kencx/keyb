@@ -1,0 +1,6 @@
+
+# https://github.com/cheat/cheatsheets
+- name: ansible
+  keybinds:
+    - name: "To run a command on multiple instances at once - using `servers` group from `inventory.yml`"
+      key: "ansible -u ansible -i inventory.yml servers -m shell -a ls /var"

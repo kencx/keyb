@@ -1,0 +1,8 @@
+
+# https://github.com/cheat/cheatsheets
+- name: alias 
+  keybinds:
+    - name: "To show a list of your current shell aliases:"
+      key: "alias"
+    - name: "To alias `ls -l` to `ll`:"
+      key: "alias ll='ls -l'"

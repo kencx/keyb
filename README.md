@@ -6,6 +6,11 @@
 
 <p align="center">Create and view your own custom hotkey cheatsheet in the terminal</p>
 
+<p align="center">
+	<img src="https://goreportcard.com/badge/github.com/kencx/keyb">
+	<img src="https://github.com/kencx/keyb/actions/workflows/test.yml/badge.svg?branch=master">
+</p>
+
 ### Features
 - Lightweight and quick
 - Fully customizable
@@ -96,16 +101,18 @@ Hotkeys are classified into sections with a name and (optional) prefix field.
 When displayed, sections are sorted by alphabetical order while the keys
 themselves are arranged in their defined order.
 
-The prefix is a key combination that will be prepended to every hotkey in the
-section. A key can choose to opt out by including a `ignore_prefix: true` field.
-Prefixes are useful for applications with a common leading hotkey like tmux.
-
 ```yaml
 - name: bspwm
   keybinds:
     - name: terminal
       key: Super + Return
+```
 
+The prefix is a key combination that will be prepended to every hotkey in the
+section. A key can choose to opt out by including a `ignore_prefix: true` field.
+Prefixes are useful for applications with a common leading hotkey like tmux.
+
+```yaml
 - name: tmux
   prefix: ctrl + b
   keybinds:
@@ -116,13 +123,14 @@ Prefixes are useful for applications with a common leading hotkey like tmux.
       ignore_prefix: true
 ```
 
-Refer to the defaults provided in `examples` for more details. Multiline fields
-are not supported at the moment.
+Refer to the `examples` for more examples.
+
+>Multiline fields are not supported at the moment.
 
 ### Configuration
-A config file is generated on the first run of `keyb`.
+keyb is customized with a `config.yml` file that is automatically generated.
 
-By default, the following options are included:
+By default, the following options are included.
 
 | Option      | Default                       | Description |
 | ----------- | ----------------------------- | ----------- |
@@ -166,7 +174,7 @@ Multiple keys may be set for a single binding, separated by commas.
 | `top, middle, bottom`   | <kbd>H, M, L</kbd>         | Go to top, middle, bottom of screen |
 | `first_line, last_line` | <kbd>g, G</kbd>            | Go to first, last line |
 | `search`                | <kbd>/</kbd>               | Enter search mode      |
-| `clear_search`          | <kbd>Alt + d</kbd>         | Clear current search (remains in search mode)  |
+| `clear_search`          | <kbd>Alt + d</kbd>         | Clear current search (remains in search mode) |
 | `normal`                | <kbd>Esc</kbd>             | Exit search mode |
 | `quit`                  | <kbd>Ctrl + c, q</kbd>     | Quit		      |
 
@@ -181,8 +189,9 @@ Multiple keys may be set for a single binding, separated by commas.
 
 keyb requires Go 1.18.
 
-Bug reports, feature requests and PRs for the above roadmap or for default
-keymaps in `examples/` are very welcome.
+Bug reports, feature requests and PRs are very welcome.
+
+More examples for default keymaps in `examples/` are also welcome.
 
 ## Screenshots
 

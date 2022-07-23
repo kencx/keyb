@@ -139,6 +139,7 @@ By default, the following options are included.
 | `debug`       | `false`                  | Debug mode |
 | `mouse`       | `true`                   | Mouse enabled |
 | `reverse`     | `false`                  | Swap the name and key columns |
+| `search_mode` | `false`                  | Start in search mode |
 | `sort_keys`   | `false`                  | Sort keys alphabetically |
 | `title`       | `""`                     | Title text |
 | `prompt`      | `"keys > "`              | Search bar prompt text |

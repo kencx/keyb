@@ -22,8 +22,9 @@ type Model struct {
 	viewport viewport.Model
 	table    *table.Model
 
-	searchBar textinput.Model
-	search    bool
+	searchBar         textinput.Model
+	search            bool
+	startInSearchMode bool
 
 	filterState    filterState
 	filteredTable  *table.Model
@@ -57,6 +58,11 @@ func New(t *table.Model, config *config.Config) Model {
 		counterStyle: lipgloss.NewStyle().Faint(true).Margin(0, 1),
 	}
 	m.configure(config)
+
+	if m.startInSearchMode {
+		m.startSearch()
+	}
+
 	return m
 }
 
@@ -80,6 +86,8 @@ func (m *Model) configure(c *config.Config) {
 	m.viewport.MouseWheelEnabled = c.Mouse
 	m.table.SepWidth = c.SepWidth
 	m.filteredTable.SepWidth = c.SepWidth
+
+	m.startInSearchMode = c.SearchMode
 
 	m.title = c.Title
 	m.debug = c.Debug
@@ -182,6 +190,12 @@ func (m *Model) UnstyledString() string {
 
 func (m *Model) searchMode() bool {
 	return m.search && m.searchBar.Focused()
+}
+
+func (m *Model) startSearch() {
+	m.search = true
+	m.filterState = filtering
+	m.searchBar.Focus()
 }
 
 func (m *Model) cursorToBeginning() {

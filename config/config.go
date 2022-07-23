@@ -26,6 +26,7 @@ type Settings struct {
 	Debug          bool
 	Reverse        bool
 	Mouse          bool
+	SearchMode     bool `yaml:"search_mode"`
 	SortKeys       bool `yaml:"sort_keys"`
 	Title          string
 	Prompt         string
@@ -168,6 +169,7 @@ func generateDefaultConfig() (*Config, error) {
 			Debug:          false,
 			Reverse:        false,
 			Mouse:          true,
+			SearchMode:     false,
 			SortKeys:       false,
 			Title:          "",
 			Prompt:         "keys > ",

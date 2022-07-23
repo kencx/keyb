@@ -3,6 +3,7 @@ settings:
   debug: true
   reverse: true
   mouse: false
+  search_mode: false
   sort_keys: true
   title: ""
   prompt: 'keys > '

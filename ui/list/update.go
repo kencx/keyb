@@ -76,15 +76,11 @@ func (m *Model) handleNormal(msg tea.Msg) tea.Cmd {
 			return tea.Quit
 
 		case key.Matches(msg, m.keys.Search):
-			m.search = true
-			m.filterState = filtering
-			m.searchBar.Focus()
+			m.startSearch()
 
 		case key.Matches(msg, m.keys.ClearSearch):
 			m.Reset()
-			m.search = true
-			m.filterState = filtering
-			m.searchBar.Focus()
+			m.startSearch()
 
 		case key.Matches(msg, m.keys.Up):
 			m.cursor--
@@ -188,8 +184,7 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 
 		case key.Matches(msg, m.keys.ClearSearch):
 			m.Reset()
-			m.filterState = filtering
-			m.searchBar.Focus()
+			m.startSearch()
 
 		case key.Matches(msg, m.keys.Normal):
 			m.search = false

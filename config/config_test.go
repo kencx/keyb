@@ -55,6 +55,7 @@ func TestParse(t *testing.T) {
 			Debug:          true,
 			Reverse:        true,
 			Mouse:          false,
+			SearchMode:     false,
 			SortKeys:       true,
 			Title:          "",
 			Prompt:         "keys > ",

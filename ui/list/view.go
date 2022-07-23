@@ -14,12 +14,23 @@ func (m *Model) View() string {
 
 	counter := formCounter(m)
 
-	view := lipgloss.JoinVertical(
-		lipgloss.Left,
-		m.searchBar.View(),
-		counter,
-		m.viewport.View(),
-	)
+	var view string
+
+	if m.promptLocation == "bottom" {
+		view = lipgloss.JoinVertical(
+			lipgloss.Left,
+			m.viewport.View(),
+			counter,
+			m.searchBar.View(),
+		)
+	} else {
+		view = lipgloss.JoinVertical(
+			lipgloss.Left,
+			m.searchBar.View(),
+			counter,
+			m.viewport.View(),
+		)
+	}
 
 	style := m.border.
 		Margin(m.margin).

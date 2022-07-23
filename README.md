@@ -142,6 +142,7 @@ By default, the following options are included.
 | `sort_keys`   | `false`                  | Sort keys alphabetically |
 | `title`       | `""`                     | Title text |
 | `prompt`      | `"keys > "`              | Search bar prompt text |
+| `prompt_location` | `"top"`                | Location of search bar: `top, bottom` |
 | `placeholder` | `"..."`                  | Search bar placeholder text |
 | `prefix_sep`  | `";"`                    | Separator symbol between prefix and key |
 | `sep_width`   | `4`                      | Separation width between columns |

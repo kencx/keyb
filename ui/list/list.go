@@ -34,11 +34,12 @@ type Model struct {
 	cursor  int
 	maxRows int // max number of rows regardless of filterState
 
-	margin       int
-	padding      int
-	scrollOffset int
-	border       lipgloss.Style
-	counterStyle lipgloss.Style
+	margin         int
+	padding        int
+	scrollOffset   int
+	border         lipgloss.Style
+	counterStyle   lipgloss.Style
+	promptLocation string
 }
 
 func New(t *table.Model, config *config.Config) Model {
@@ -83,6 +84,7 @@ func (m *Model) configure(c *config.Config) {
 	m.title = c.Title
 	m.debug = c.Debug
 	m.keys = CreateKeyMap(c.Keys)
+	m.promptLocation = c.PromptLocation
 
 	m.margin = c.Margin
 	m.padding = c.Padding

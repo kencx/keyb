@@ -6,6 +6,7 @@ settings:
   sort_keys: true
   title: ""
   prompt: 'keys > '
+  prompt_location: "bottom"
   placeholder: '...'
   prefix_sep: ;
   sep_width: 4

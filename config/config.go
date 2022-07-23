@@ -22,19 +22,20 @@ type Config struct {
 }
 
 type Settings struct {
-	KeybPath    string `yaml:"keyb_path"`
-	Debug       bool
-	Reverse     bool
-	Mouse       bool
-	SortKeys    bool `yaml:"sort_keys"`
-	Title       string
-	Prompt      string
-	Placeholder string
-	PrefixSep   string `yaml:"prefix_sep"`
-	SepWidth    int    `yaml:"sep_width"`
-	Margin      int
-	Padding     int
-	BorderStyle string `yaml:"border"`
+	KeybPath       string `yaml:"keyb_path"`
+	Debug          bool
+	Reverse        bool
+	Mouse          bool
+	SortKeys       bool `yaml:"sort_keys"`
+	Title          string
+	Prompt         string
+	PromptLocation string `yaml:"prompt_location"`
+	Placeholder    string
+	PrefixSep      string `yaml:"prefix_sep"`
+	SepWidth       int    `yaml:"sep_width"`
+	Margin         int
+	Padding        int
+	BorderStyle    string `yaml:"border"`
 }
 
 type Color struct {
@@ -163,19 +164,20 @@ func generateDefaultConfig() (*Config, error) {
 
 	return &Config{
 		Settings: Settings{
-			KeybPath:    keybPath,
-			Debug:       false,
-			Reverse:     false,
-			Mouse:       true,
-			SortKeys:    false,
-			Title:       "",
-			Prompt:      "keys > ",
-			Placeholder: "...",
-			PrefixSep:   ";",
-			SepWidth:    4,
-			Margin:      0,
-			Padding:     1,
-			BorderStyle: "hidden",
+			KeybPath:       keybPath,
+			Debug:          false,
+			Reverse:        false,
+			Mouse:          true,
+			SortKeys:       false,
+			Title:          "",
+			Prompt:         "keys > ",
+			PromptLocation: "top",
+			Placeholder:    "...",
+			PrefixSep:      ";",
+			SepWidth:       4,
+			Margin:         0,
+			Padding:        1,
+			BorderStyle:    "hidden",
 		},
 		Color: Color{
 			FilterFg: "#FFA066",

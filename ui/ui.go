@@ -2,6 +2,7 @@ package ui
 
 import (
 	"sort"
+	"strings"
 
 	"github.com/kencx/keyb/config"
 	"github.com/kencx/keyb/ui/list"
@@ -15,13 +16,14 @@ type Model struct {
 }
 
 func NewModel(a config.Apps, config *config.Config) *Model {
-	table := createParentTable(a)
+
+	table := createParentTable(a, config.SortKeys)
 	return &Model{
 		List: list.New(table, config),
 	}
 }
 
-func createParentTable(a config.Apps) *table.Model {
+func createParentTable(a config.Apps, sortKeys bool) *table.Model {
 
 	if len(a) <= 0 {
 		t := table.NewEmpty(1)
@@ -32,22 +34,28 @@ func createParentTable(a config.Apps) *table.Model {
 		return a[i].Name < a[j].Name
 	})
 
-	parent := appToTable(a[0].Name, a[0])
+	parent := appToTable(a[0].Name, a[0], sortKeys)
 
 	if len(a) > 1 {
 		for _, k := range a[1:] {
-			child := appToTable(k.Name, k)
+			child := appToTable(k.Name, k, sortKeys)
 			parent.Join(child)
 		}
 	}
 	return parent
 }
 
-func appToTable(heading string, app config.App) *table.Model {
+func appToTable(heading string, app config.App, sortKeys bool) *table.Model {
 	var rows []*table.Row
 
 	h := table.NewHeading(heading)
 	rows = append(rows, h)
+
+	if sortKeys {
+		sort.Slice(app.Keybinds, func(i, j int) bool {
+			return strings.ToLower(app.Keybinds[i].Name) < strings.ToLower(app.Keybinds[j].Name)
+		})
+	}
 
 	// convert Keybind to Row
 	for _, kb := range app.Keybinds {

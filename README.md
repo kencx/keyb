@@ -95,7 +95,7 @@ respective rows.
 ### keyb File
 
 keyb requires a `yaml` file with a list of hotkeys to work. A default file is
-generated at `$XDG_CONFIG_HOME/keyb/keyb.yml` if no other file is specified.
+generated in your system's config directory if no other file is specified.
 
 Hotkeys are classified into sections with a name and (optional) prefix field.
 When displayed, sections are sorted by alphabetical order while the keys
@@ -128,24 +128,32 @@ Refer to the `examples` for more examples.
 >Multiline fields are not supported at the moment.
 
 ### Configuration
-keyb is customized with a `config.yml` file that is automatically generated.
+keyb is customized with a `config.yml` file that is automatically generated in
+the system's config directory.
 
 By default, the following options are included.
 
-| Option      | Default                       | Description |
-| ----------- | ----------------------------- | ----------- |
-| `keyb_path` | `"$XDG_CONFIG_HOME/keyb/keyb.yml"` | keyb file path |
-| `debug`       | `false`     | Debug mode |
-| `mouse`       | `true`      | Mouse enabled |
-| `reverse`     | `false`     | Swap the name and key columns |
-| `title`       | `""`        | Title text |
-| `prompt`      | `"keys > "` | Prompt text |
-| `placeholder` | `"..."`     | Placeholder text |
-| `prefix_sep`  | `";"`       | Separator symbol between prefix and key |
-| `sep_width`   | `4`         | Separation width between columns |
-| `margin`      | `0`         | Space between window and border |
-| `padding`     | `1`         | Space between border and text |
-| `border`      | `"hidden"`  | Border style: `normal, rounded, double, thick, hidden`|
+| Option        | Default                  | Description |
+| ------------- | ------------------------ | ----------- |
+| `keyb_path`   | OS-dependent (see below) | keyb file path |
+| `debug`       | `false`                  | Debug mode |
+| `mouse`       | `true`                   | Mouse enabled |
+| `reverse`     | `false`                  | Swap the name and key columns |
+| `sort_keys`   | `false`                  | Sort keys alphabetically |
+| `title`       | `""`                     | Title text |
+| `prompt`      | `"keys > "`              | Search bar prompt text |
+| `placeholder` | `"..."`                  | Search bar placeholder text |
+| `prefix_sep`  | `";"`                    | Separator symbol between prefix and key |
+| `sep_width`   | `4`                      | Separation width between columns |
+| `margin`      | `0`                      | Space between window and border |
+| `padding`     | `1`                      | Space between border and text |
+| `border`      | `"hidden"`               | Border style: `normal, rounded, double, thick, hidden`|
+
+>OS-specific keyb directory path:
+>
+>- Unix: `$XDG_CONFIG_HOME/keyb/keyb.yml`,
+>- MacOS or Darwin: `$HOME/Library/Application Support/keyb/keyb.yml`,
+>- Windows: `%Appdata%\keyb\keyb.yml`
 
 #### Color
 Both ANSI and hex color codes are supported.

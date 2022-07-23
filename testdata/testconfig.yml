@@ -3,6 +3,7 @@ settings:
   debug: true
   reverse: true
   mouse: false
+  sort_keys: true
   title: ""
   prompt: 'keys > '
   placeholder: '...'
@@ -18,3 +19,19 @@ color:
   filter_fg: "#FFA066"
   filter_bg: ""
   border_color: ""
+keys:
+  quit: q, ctrl+c
+  up: k, up
+  down: j, down
+  half_up: ctrl+u
+  half_down: ctrl+d
+  full_up: ctrl+b
+  full_bottom: ctrl+f
+  first_line: g
+  last_line: G
+  top: H
+  middle: M
+  bottom: L
+  search: /
+  clear_search: alt+d
+  normal: esc

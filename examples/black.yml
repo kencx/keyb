@@ -1,0 +1,9 @@
+# https://github.com/cheat/cheatsheets
+- name: black
+  keybinds:
+    - name: "Formats the python code of the specified file or directory"
+      key: "black <path>"
+    - name: "Checks if the code is already well-formatted"
+      key: "black --check <path>"
+    - name: "Show the changes that would be applied to the code"
+      key: "black --diff <path>"

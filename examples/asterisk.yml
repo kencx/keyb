@@ -1,0 +1,16 @@
+
+# https://github.com/cheat/cheatsheets
+- name: ascii art
+  keybinds:
+    - name: "To connect to a running Asterisk session"
+      key: "asterisk -rvvv"
+    - name: "To issue a command to Asterisk from the shell"
+      key: "asterisk -rx <command>"
+    - name: "To originate an echo call from a SIP trunk on an Asterisk server, to a specified number"
+      key: "asterisk -rx channel originate SIP/<trunk>/<number> application echo"
+    - name: "To print out the details of SIP accounts"
+      key: "asterisk -rx sip show peers"
+    - name: "To print out the passwords of SIP accounts"
+      key: "asterisk -rx sip show users"
+    - name: "To print out the current active channels"
+      key: "asterisk -rx core show channels"

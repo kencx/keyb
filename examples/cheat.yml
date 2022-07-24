@@ -1,0 +1,13 @@
+# https://github.com/cheat/cheatsheets
+- name: cheat
+  keybinds:
+    - name: "To see example usage of a program"
+      key: "cheat <command>"
+    - name: "To edit a cheatsheet"
+      key: "cheat -e <command>"
+    - name: "To list available cheatsheets"
+      key: "cheat -l"
+    - name: "To search available cheatsheets"
+      key: "cheat -s <command>"
+    - name: "To get the current `cheat' version"
+      key: "cheat -v"

@@ -1,0 +1,11 @@
+# https://github.com/cheat/cheatsheets
+- name: dpkg
+  keybinds:
+    - name: "To install or upgrade a package"
+      key: "dpkg -i <deb-file>"
+    - name: "To remove a package (including configuration files)"
+      key: "dpkg -P <deb-file>"
+    - name: "To list all installed packages with versions and details"
+      key: "dpkg -l"
+    - name: "To determine whether a Debian package is installed"
+      key: "dpkg -s <deb-file> | grep Status"

@@ -1,0 +1,14 @@
+
+# https://github.com/cheat/cheatsheets
+- name: aptitude
+  keybinds:
+    - name: "To find packages matching <phrase>"
+      key: "aptitude search <phrase>"
+    - name: "To display package records for the named package(s)"
+      key: "aptitude show <package>..."
+    - name: "To install package(s)"
+      key: "aptitude install <package>..."
+    - name: "To remove package(s)"
+      key: "aptitude remove <package>..."
+    - name: "To remove unnecessary package"
+      key: "aptitude autoclean"

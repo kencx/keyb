@@ -1,0 +1,12 @@
+
+# https://github.com/cheat/cheatsheets
+- name: ag
+  keybinds:
+    - name: "To exclude a directory from a search:"
+      key: "ag <phrase> --ignore-dir=<dir>"
+    - name: "To exclude a file from a search:"
+      key: "ag <phrase> --ignore=<file>"
+    - name: "To force colorization:"
+      key: "ag <phrase> --color | less -R"
+    - name: "To search for <phrase> in files whose names match <pattern>:"
+      key: "ag <phrase> -G <pattern>"

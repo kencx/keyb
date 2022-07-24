@@ -1,0 +1,7 @@
+# https://github.com/cheat/cheatsheets
+- name: csplit
+  keybinds:
+    - name : "To split a file based on a pattern"
+      key: "csplit <file> '/PATTERN/'"
+    - name : "To use prefix/suffix to improve output file names"
+      key: "csplit -f 'prefix-' -b '%d.extension' <file> '/PATTERN/' '{*}'"

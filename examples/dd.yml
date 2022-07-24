@@ -1,0 +1,31 @@
+# https://github.com/cheat/cheatsheets
+# https://github.com/mfgbhatti
+# https://mfgbhatti.com
+- name: dd
+  keybinds:
+    - name: "Backup disk partition with dd"
+      key: "dd if=/dev/sda1 of=~/localdisk_sda1.img"
+    - name: "Backup disk partition with dd and compress"
+      key: "dd if=/dev/sda1 | gzip -c > ~/localdisk_sda1.img.gz"
+    - name: "Restore disk partition with dd"
+      key: "dd if=~/localdisk_sda1.img of=/dev/sda1"
+    - name: "Restore disk partition with dd  with decompression"
+      key: "gunzip -c ~/localdisk_sda1.img.gz | dd of=/dev/sda1"
+    - name: "Every iteration, we read 512 Bytes."
+      key: "dd if=/dev/urandom of=/tmp/test.txt count=2 bs=512"
+    - name: "Create a fixed size file with dd. Use horhand sizes such as K, M and G with bs"
+      key: "dd if=/dev/zero of=/root/test bs=1024 count=1"
+    - name: "Convert text to lower case with dd and conv"
+      key: "dd if=filetoconvert.txt of=convertedfile.txt conv=lcase"
+    - name: "Watch the progress of 'dd'"
+      key: "dd if=/dev/zero of=/dev/null bs=4KB &; export dd_pid=`pgrep '^dd'`; while [[ -d /proc/$dd_pid ]]; do kill -USR1 $dd_pid && sleep 1 && clear; done"
+    - name: "Watch the progress of 'dd' with `pv` and `dialog` (apt-get install pv dialog)"
+      key: (pv -n /dev/zero | dd of=/dev/null bs=128M conv=notrunc,noerror) 2>&1 | dialog --gauge "Running dd command (cloning), please wait..." 10 70 0
+    - name: "Watch the progress of 'dd' with `pv` and `zenity` (apt-get install pv zenity)"
+      key: (pv -n /dev/zero | dd of=/dev/null bs=128M conv=notrunc,noerror) 2>&1 | zenity --title 'Running dd command (cloning), please wait...' --progress
+    - name: "Watch the progress of 'dd' with the built-in `progress` functionality"
+      key: "dd if=/dev/zero of=/dev/null bs=128M status=progress"
+    - name: "DD with graphical return"
+      key: "dcfldd if=/dev/zero of=/dev/null bs=500K"
+    - name: "Create a 1MB file with zero allocated blocks:"
+      key: "dd if=/dev/zero of=foo1 seek=1 bs=1M count=0"

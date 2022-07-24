@@ -1,0 +1,13 @@
+# https://github.com/cheat/cheatsheets
+- name: cat
+  keybinds:
+    - name: "Go to the given directory"
+      key: "cd path/to/directory"
+    - name: "Go to home directory of current user"
+      key: "cd"
+    - name: "Go up to the parent of the current directory"
+      key: "cd .."
+    - name: "Go to the previously chosen directory"
+      key: "cd -"
+    - name: "Go to a physical dir instead of default -L"
+      key: "cd -P path/to/dir"

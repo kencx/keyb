@@ -1,0 +1,8 @@
+
+# https://github.com/cheat/cheatsheets
+- name: ab 
+  keybinds:
+    - name: "To send 100 requests with a concurency of 50 requests to a URL:"
+      key: "ab -n 100 -c 50 <url>"
+    - name: "To send requests for 30 seconds with a concurency of 50 requests to a URL:"
+      key: "ab -t 30 -c 50 <url>"

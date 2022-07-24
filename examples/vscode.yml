@@ -92,7 +92,6 @@
     - name: "Toggle Use of Tab Key for Setting Focus"
       key: "[Ctrl] [M]"
 
-
 - name: vscode (rich language editing)
   keybinds:
     - name: "Trigger Suggest"

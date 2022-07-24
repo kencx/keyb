@@ -1,7 +1,7 @@
 # keyb
 
 <p align="center">
-	<img width="660" src="https://github.com/kencx/keyb/blob/master/assets/show.gif?raw=true">
+	<img width="660" src="https://github.com/kencx/keyb/blob/master/assets/compressed.gif?raw=true">
 </p>
 
 <p align="center">Create and view your own custom hotkey cheatsheet in the terminal</p>

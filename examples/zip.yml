@@ -1,0 +1,13 @@
+# https://github.com/cheat/cheatsheets
+- name: zip
+  keybinds:
+    - name: "To create zip file"
+      key: "zip archive.zip file1 directory/"
+    - name: "To create zip file from directory"
+      key: "zip -r archive.zip directory/"
+    - name: "To create zip file with password"
+      key: "zip -P password archive.zip file1"
+    - name: "To join a split zip file (.zip, .z01, .z02, etc)"
+      key: "zip -FF splitZipfile.zip --out joined.zip"
+    - name: "To list, test and extract zip archives, see unzip"
+      key: "cheat unzip"

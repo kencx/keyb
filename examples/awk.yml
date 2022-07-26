@@ -1,0 +1,15 @@
+# https://github.com/cheat/cheatsheets
+- name: awk
+  keybinds:
+    - name: "To sum integers from a file or stdin, one integer per line:"
+      key: printf '1\n2\n3\n' | awk '{ sum += $1} END {print sum}'
+    - name: "To use a specific character as separator to sum integers from a file or stdin:"
+      key: printf '1:2:3' | awk -F \":\" '{print $1+$2+$3}'
+    - name: "To print a multiplication table:"
+      key: seq 9 | sed 'H;g' | awk -v RS='' '{for(i=1;i<=NF;i++)printf(\"%dx%d=%d%s\", i, NR, i*NR, i==NR?\"\n\":\"\t\")}'
+    - name: "To specify an output separator character:"
+      key: printf '1 2 3' | awk 'BEGIN {OFS=\":\"}; {print $1,$2,$3}'
+    - name: "To execute commands only on rows that satisfy a certain condtion"
+      key: printf \"george jetson\nolive oyl\nbeetle bailey\" | awk '$2==\"bailey\"{print $0}'
+    - name: "To execute commands only on matching rows using regex"
+      key: printf \"george jetson\nolive oyl\nbeetle bailey\" | awk '/ley$/{print $0}'

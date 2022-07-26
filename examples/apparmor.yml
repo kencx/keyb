@@ -1,0 +1,16 @@
+
+# https://github.com/cheat/cheatsheets
+- name: apparmor
+  keybinds:
+    - name: "To activate a profile"
+      key: "sudo aa-enforce usr.bin.firefox"
+    - name: "To activate a profile"
+      key: "export _PROFILE_='usr.bin.firefox' sudo $(rm /etc/apparmor.d/disable/$_PROFILE_ ; cat /etc/apparmor.d/$_PROFILE_ | apparmor_parser -a )"
+    - name: "To disable a profile"
+      key: "sudo aa-disable usr.bin.firefox"
+    - name: "To disable a profile"
+      key: export _PROFILE_='usr.bin.firefox' sudo $(ln -s /etc/apparmor.d/$_PROFILE_ /etc/apparmor.d/disable/ && apparmor_parser -R /etc/apparmor.d/$_PROFILE_)
+    - name: "To list profiles loaded"
+      key: "sudo aa-status"
+    - name: "List of available profiles /etc/apparmor.d/"
+      key: "sudo apparmor_status"

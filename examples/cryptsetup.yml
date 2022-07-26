@@ -1,0 +1,9 @@
+# https://github.com/cheat/cheatsheets
+- name: cryptsetup
+  keybinds:
+- name : "To open an encrypted partition /dev/sdb1 (reachable at /dev/mapper/backup)"
+  key: "cryptsetup open --type luks /dev/sdb1 backup"
+- name : "To open an encrypted partition /dev/sdb1 using a keyfile (reachable at /dev/mapper/hdd)"
+  key: "cryptsetup open --type luks --key-file hdd.key /dev/sdb1 hdd"
+- name : "To close luks container at /dev/mapper/hdd"
+  key: "cryptsetup close hdd"

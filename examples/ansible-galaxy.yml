@@ -1,0 +1,16 @@
+
+# https://github.com/cheat/cheatsheets
+- name: ansible-galaxy
+  keybinds:
+    - name: "To install a role:"
+      key: "ansible-galaxy install <user>.<role>"
+    - name: "To remove a role:"
+      key: "ansible-galaxy remove <user>.<role>"
+    - name: "To list installed roles:"
+      key: "ansible-galaxy list"
+    - name: "To search for a given role:"
+      key: "ansible-galaxy search <role>"
+    - name: "To create a new role:"
+      key: "ansible-galaxy init <role>"
+    - name: "To get the information for the role # or a collection if you replace `role` with `collection`:"
+      key: "ansible-galaxy role info <user>.<role>"

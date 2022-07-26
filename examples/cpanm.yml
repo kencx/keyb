@@ -1,0 +1,25 @@
+
+# https://github.com/cheat/cheatsheets
+- name: cpanm
+## see https://github.com/miyagawa/cpanminus
+  keybinds:
+    - name: "install Some::Module"
+      key: "cpanm <Some::Module>"
+    - name: "install from CPAN distribution path, like AUTHOR/Some-Module-1.00.tar.gz"
+      key: "cpanm <cpan-repo-path>"
+    - name: "install from URL"
+      key: "cpanm <URL-to-distro-file>"
+    - name: "install from a local file"
+      key: "cpanm <path-to-distro-file>"
+    - name: "Configure interactively"
+      key: "cpanm --interactive <Some::Module>"
+    - name: "install from local directory"
+      key: "cpanm ."
+    - name: "install all the deps for the current directory"
+      key: "cpanm --installdeps ."
+    - name: "install Some::Module and all non-core deps into extlib"
+      key: "cpanm -L extlib <Some::Module>"
+    - name: "use the fast-syncing mirror"
+      key: "cpanm --mirror <mirror-url> <Some::Module>"
+    - name: "use only the HTTPS mirror"
+      key: "cpanm --from https://some.mirror.host/ <Some::Module>"

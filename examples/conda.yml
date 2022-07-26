@@ -1,0 +1,17 @@
+# https://github.com/cheat/cheatsheets
+- name: conda
+  keybinds:
+    - name: "To list environments"
+      key: "conda env list"
+    - name: "To initialise an environment"
+      key: "conda create --name 'ENVNAME'"
+    - name: "To initialise an environment with python "
+      key: "conda create --name 'ENVNAME' python=3.10"
+    - name: "To install from requirements.txt"
+      key: "conda install --file requirements.txt"
+    - name: "To activate a virtual environment"
+      key: "conda activate 'ENVNAME'"
+    - name: "To remove and environment"
+      key: "conda env remove --name 'ENVNAME'"
+    - name: "To remove and environment"
+      key: "conda env remove --prefix /path/to/env"

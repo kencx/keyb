@@ -1,0 +1,9 @@
+# https://github.com/cheat/cheatsheets
+- name: dhclient
+  keybinds:
+    - name: "To release the current IP address"
+      key: "dhclient -r"
+    - name: "To obtain a new IP address"
+      key: "dhclient"
+    - name: "To obtain a new IP address for a specific interface"
+      key: "dhclient <interface>"

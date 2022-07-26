@@ -1,0 +1,17 @@
+# https://github.com/cheat/cheatsheets
+- name: cups
+  keybinds:
+    - name : "To manage printers through CUPS"
+      key: "http://localhost:631 (in web browser)"
+    - name : "To print a file"
+      key: "lp <file>"
+    - name : "To display the print queue"
+      key: "lpq"
+    - name : "Remove a print job from the queue"
+      key: "lprm 545 OR lprm -"
+    - name : "To print log location"
+      key: "/var/log/cups"
+    - name : "To reject new jobs"
+      key: "cupsreject <printer-name>"
+    - name : "To accept new jobs"
+      key: "cupsaccept <printer-name>"

@@ -1,0 +1,10 @@
+
+# https://github.com/cheat/cheatsheets
+- name: aria2c
+  keybinds:
+    - name: "To download a file The url can be a http(s), ftp, .torrent file or even a magnet link"
+      key: "aria2c <url>"
+    - name: "To prevent downloading the .torrent file"
+      key: "aria2c --follow-torrent=mem <url>"
+    - name: "Download 1 file at a time continuing (-c) to the directory specified (-d) reading urls from the file (-i)"
+      key: "aria2c -j 1 -c -d ~/Downloads -i /path/to/file"

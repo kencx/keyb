@@ -1,6 +1,6 @@
 
 # https://github.com/cheat/cheatsheets
-- name: awk 
+- name: awk
   keybinds:
     - name: "use entire devices rather than partitions"
       key: "zpool create $pool raidz1 $device $device $device [...]"
@@ -36,8 +36,6 @@
       key: "zpool set <property>=<value> $pool"
     - name: "Dump the entire pool (commands) history"
       key: "zpool history $pool"
-    - name: "More..."
-      key: "man zpool"
     - name: "Create a new file system"
       key: "zfs create $pool/${fs_vol}"
     - name: "Create a new volume block device"
@@ -56,8 +54,6 @@
       key: "zfs receive -F $pool/${fs_vol}"
     - name: "Incremental backup"
       key: "zfs send -p -R -i $pool/${fs_vol}@${snapshot-previous} $pool/${fs_vol}@$snapshot"
-    - name: "... on destination:"
-      key: "zfs receive -F $pool/${fs_vol}"
     - name: "Query file system / volume configuration (properties)"
       key: "zfs get all $pool/${fs_vol}"
     - name: "Change file system / volume configuration (property)"

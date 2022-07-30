@@ -1,6 +1,6 @@
 
 # https://github.com/cheat/cheatsheets
-- name: ansible-vault 
+- name: ansible-vault
   keybinds:
-    - name: "To enncrypt string using keyfile `backup_encryption_key`"
+    - name: "To encrypt string using keyfile `backup_encryption_key`"
       key: "ansible-vault encrypt_string 'SupersecretPa$$phrase' --name 'backup_encryption_key'"

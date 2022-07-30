@@ -2,117 +2,117 @@
 # https://github.com/cheat/cheatsheets
 - name: ansi
   keybinds:
-    - name: "Text Reset"
-      key: "Color_Off='\e[0m'"       
-    - name: "Black"
-      key: "Black='\e[0;30m'"        
-    - name: "Red"
-      key: "Red='\e[0;31m'"          
-    - name: "Green"
-      key: "Green='\e[0;32m'"        
-    - name: "Yellow"
-      key: "Yellow='\e[0;33m'"       
-    - name: "Blue"
-      key: "Blue='\e[0;34m'"         
-    - name: "Purple"
-      key: "Purple='\e[0;35m'"       
-    - name: "Cyan"
-      key: "Cyan='\e[0;36m'"         
-    - name: "White"
-      key: "White='\e[0;37m'"        
-    - name: "Bold Black"
-      key: "BBlack='\e[1;30m'"        
-    - name: "Bold Red"
-      key: "BRed='\e[1;31m'"          
-    - name: "Bold Green"
-      key: "BGreen='\e[1;32m'"        
-    - name: "Bold Yellow"
-      key: "BYellow='\e[1;33m'"       
-    - name: "Bold Blue"
-      key: "BBlue='\e[1;34m'"         
-    - name: "Bold Purple"
-      key: "BPurple='\e[1;35m'"       
-    - name: "Bold Cyan"
-      key: "BCyan='\e[1;36m'"         
-    - name: "Bold White"
-      key: "BWhite='\e[1;37m'"        
-    - name: "Underline Black"
-      key: "UBlack='\e[4;30m'"        
-    - name: "Underline Red"
-      key: "URed='\e[4;31m'"          
-    - name: "Underline Green"
-      key: "UGreen='\e[4;32m'"        
-    - name: "Underline Yellow"
-      key: "UYellow='\e[4;33m'"       
-    - name: "Underline Blue"
-      key: "UBlue='\e[4;34m'"         
-    - name: "Underline Purple"
-      key: "UPurple='\e[4;35m'"       
-    - name: "Underline Cyan"
-      key: "UCyan='\e[4;36m'"         
-    - name: "Underline White"
-      key: "UWhite='\e[4;37m'"        
-    - name: "Background Black"
-      key: "On_Black='\e[40m'"        
-    - name: "Background Red"
-      key: "On_Red='\e[41m'"          
-    - name: "Background Green"
-      key: "On_Green='\e[42m'"        
-    - name: "Background Yellow"
-      key: "On_Yellow='\e[43m'"       
-    - name: "Background Blue"
-      key: "On_Blue='\e[44m'"         
-    - name: "Background Purple"
-      key: "On_Purple='\e[45m'"       
-    - name: "Background Cyan"
-      key: "On_Cyan='\e[46m'"         
-    - name: "Background White"
-      key: "On_White='\e[47m'"        
-    - name: "High Intensity Black"
-      key: "IBlack='\e[0;90m'"        
-    - name: "High Intensity Red"
-      key: "IRed='\e[0;91m'"          
-    - name: "High Intensity Green"
-      key: "IGreen='\e[0;92m'"        
-    - name: "High Intensity Yellow"
-      key: "IYellow='\e[0;93m'"       
-    - name: "High Intensity Blue"
-      key: "IBlue='\e[0;94m'"         
-    - name: "High Intensity Purple"
-      key: "IPurple='\e[0;95m'"       
-    - name: "High Intensity Cyan"
-      key: "ICyan='\e[0;96m'"         
-    - name: "High Intensity White"
-      key: "IWhite='\e[0;97m'"        
-    - name: "Bold High Intensity Black"
-      key: "BIBlack='\e[1;90m'"       
-    - name: "Bold High Intensity Red"
-      key: "BIRed='\e[1;91m'"         
-    - name: "Bold High Intensity Green"
-      key: "BIGreen='\e[1;92m'"       
-    - name: "Bold High Intensity Yellow"
-      key: "BIYellow='\e[1;93m'"      
-    - name: "Bold High Intensity Blue"
-      key: "BIBlue='\e[1;94m'"        
-    - name: "Bold High Intensity Purple"
-      key: "BIPurple='\e[1;95m'"      
-    - name: "Bold High Intensity Cyan"
-      key: "BICyan='\e[1;96m'"        
-    - name: "Bold High Intensity White"
-      key: "BIWhite='\e[1;97m'"       
-    - name: "High Intensity backgrounds Black"
-      key: "On_IBlack='\e[0;100m'"    
-    - name: "High Intensity backgrounds Red"
-      key: "On_IRed='\e[0;101m'"      
-    - name: "High Intensity backgrounds Green"
-      key: "On_IGreen='\e[0;102m'"    
-    - name: "High Intensity backgrounds Yellow"
-      key: "On_IYellow='\e[0;103m'"   
-    - name: "High Intensity backgrounds Blue"
-      key: "On_IBlue='\e[0;104m'"     
-    - name: "High Intensity backgrounds Purple"
-      key: "On_IPurple='\e[0;105m'"   
-    - name: "High Intensity backgrounds Cyan"
-      key: "On_ICyan='\e[0;106m'"     
-    - name: "High Intensity backgrounds White"
-      key: "On_IWhite='\e[0;107m'"
+    - name: 'Text Reset'
+      key: '\e[0m'
+    - name: 'Black'
+      key: '\e[0;30m'
+    - name: 'Red'
+      key: '\e[0;31m'
+    - name: 'Green'
+      key: '\e[0;32m'
+    - name: 'Yellow'
+      key: '\e[0;33m'
+    - name: 'Blue'
+      key: '\e[0;34m'
+    - name: 'Purple'
+      key: '\e[0;35m'
+    - name: 'Cyan'
+      key: '\e[0;36m'
+    - name: 'White'
+      key: '\e[0;37m'
+    - name: 'Bold Black'
+      key: '\e[1;30m'
+    - name: 'Bold Red'
+      key: '\e[1;31m'
+    - name: 'Bold Green'
+      key: '\e[1;32m'
+    - name: 'Bold Yellow'
+      key: '\e[1;33m'
+    - name: 'Bold Blue'
+      key: '\e[1;34m'
+    - name: 'Bold Purple'
+      key: '\e[1;35m'
+    - name: 'Bold Cyan'
+      key: '\e[1;36m'
+    - name: 'Bold White'
+      key: '\e[1;37m'
+    - name: 'Underline Black'
+      key: '\e[4;30m'
+    - name: 'Underline Red'
+      key: '\e[4;31m'
+    - name: 'Underline Green'
+      key: '\e[4;32m'
+    - name: 'Underline Yellow'
+      key: '\e[4;33m'
+    - name: 'Underline Blue'
+      key: '\e[4;34m'
+    - name: 'Underline Purple'
+      key: '\e[4;35m'
+    - name: 'Underline Cyan'
+      key: '\e[4;36m'
+    - name: 'Underline White'
+      key: '\e[4;37m'
+    - name: 'Background Black'
+      key: '\e[40m'
+    - name: 'Background Red'
+      key: '\e[41m'
+    - name: 'Background Green'
+      key: '\e[42m'
+    - name: 'Background Yellow'
+      key: '\e[43m'
+    - name: 'Background Blue'
+      key: '\e[44m'
+    - name: 'Background Purple'
+      key: '\e[45m'
+    - name: 'Background Cyan'
+      key: '\e[46m'
+    - name: 'Background White'
+      key: '\e[47m'
+    - name: 'High Intensity Black'
+      key: '\e[0;90m'
+    - name: 'High Intensity Red'
+      key: '\e[0;91m'
+    - name: 'High Intensity Green'
+      key: '\e[0;92m'
+    - name: 'High Intensity Yellow'
+      key: '\e[0;93m'
+    - name: 'High Intensity Blue'
+      key: '\e[0;94m'
+    - name: 'High Intensity Purple'
+      key: '\e[0;95m'
+    - name: 'High Intensity Cyan'
+      key: '\e[0;96m'
+    - name: 'High Intensity White'
+      key: '\e[0;97m'
+    - name: 'Bold High Intensity Black'
+      key: '\e[1;90m'
+    - name: 'Bold High Intensity Red'
+      key: '\e[1;91m'
+    - name: 'Bold High Intensity Green'
+      key: '\e[1;92m'
+    - name: 'Bold High Intensity Yellow'
+      key: '\e[1;93m'
+    - name: 'Bold High Intensity Blue'
+      key: '\e[1;94m'
+    - name: 'Bold High Intensity Purple'
+      key: '\e[1;95m'
+    - name: 'Bold High Intensity Cyan'
+      key: '\e[1;96m'
+    - name: 'Bold High Intensity White'
+      key: '\e[1;97m'
+    - name: 'High Intensity backgrounds Black'
+      key: '\e[0;100m'
+    - name: 'High Intensity backgrounds Red'
+      key: '\e[0;101m'
+    - name: 'High Intensity backgrounds Green'
+      key: '\e[0;102m'
+    - name: 'High Intensity backgrounds Yellow'
+      key: '\e[0;103m'
+    - name: 'High Intensity backgrounds Blue'
+      key: '\e[0;104m'
+    - name: 'High Intensity backgrounds Purple'
+      key: '\e[0;105m'
+    - name: 'High Intensity backgrounds Cyan'
+      key: '\e[0;106m'
+    - name: 'High Intensity backgrounds White'
+      key: '\e[0;107m'

@@ -23,5 +23,5 @@
       key: ZEROCONF='+zeroconf' make -j4 CXX='distcc g++'
     - name: "Run make with 4 thread (a cross network) in static configuration (2 ip) for gcc, Replace CXX by CC and g++ by gcc"
       key: DISTCC_HOSTS='127.0.0.1 192.168.1.69' make -j4 CXX='distcc g++'
-    - name: "Show hosts aviables"
+    - name: "Show hosts"
       key: ZEROCONF='+zeroconf' distcc --show-hosts

@@ -12,5 +12,5 @@
       key: "ansible-galaxy search <role>"
     - name: "To create a new role:"
       key: "ansible-galaxy init <role>"
-    - name: "To get the information for the role # or a collection if you replace `role` with `collection`:"
-      key: "ansible-galaxy role info <user>.<role>"
+    - name: "To get information for role # or a collection"
+      key: "ansible-galaxy role info <user>.<role/collection>"

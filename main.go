@@ -14,15 +14,26 @@ import (
 )
 
 const (
-	help = `usage: keyb [options] [file]
+	help = `usage: keyb [options] <command>
 
-  Flags:
+  Options:
     -p, --print	    Print to stdout
     -e, --export    Export to file
     -k, --key       Key bindings at custom path
     -c, --config    Config file at custom path
     -v, --version   Version info
-    -h, --help	    help for keyb
+    -h, --help	    Show help
+
+  Commands:
+    a, add          Add keybind to keyb file
+`
+
+	addHelp = `usage: keyb [-k file] add [app; name; key]
+
+  Options:
+    -k, --key      Key bindings file at custom path
+    -b, --binding  Key binding
+    -p, --prefix   Ignore prefix
 `
 )
 
@@ -37,6 +48,9 @@ func main() {
 		exportFile string
 		keybFile   string
 		configFile string
+
+		addBind   string
+		addPrefix bool
 	)
 
 	baseDir, err := config.GetBaseDir()
@@ -47,14 +61,24 @@ func main() {
 
 	shortVersion := flag.Bool("v", false, "version information")
 	longVersion := flag.Bool("version", false, "version information")
+
 	flag.BoolVar(&stdout, "p", false, "print to stdout")
 	flag.BoolVar(&stdout, "print", false, "print to stdout")
+
 	flag.StringVar(&exportFile, "e", "", "export to file")
 	flag.StringVar(&exportFile, "export", "", "export to file")
+
 	flag.StringVar(&keybFile, "k", "", "keybindings file")
 	flag.StringVar(&keybFile, "key", "", "keybindings file")
+
 	flag.StringVar(&configFile, "c", defaultConfig, "config file")
 	flag.StringVar(&configFile, "config", defaultConfig, "config file")
+
+	addCmd := flag.NewFlagSet("add", flag.ExitOnError)
+	addCmd.StringVar(&addBind, "b", "", "keybind")
+	addCmd.StringVar(&addBind, "binding", "", "keybind")
+	addCmd.BoolVar(&addPrefix, "p", false, "prefix")
+	addCmd.BoolVar(&addPrefix, "prefix", false, "prefix")
 
 	flag.Usage = func() { os.Stdout.Write([]byte(help)) }
 	flag.Parse()
@@ -64,12 +88,38 @@ func main() {
 		os.Exit(0)
 	}
 
-	keys, config, err := config.Parse(keybFile, configFile)
+	keys, cfg, err := config.Parse(keybFile, configFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	m := ui.NewModel(keys, config)
+	args := flag.Args()
+	if len(args) > 1 {
+		switch args[0] {
+		case "add", "a":
+			addCmd.Usage = func() { os.Stdout.Write([]byte(addHelp)) }
+			addCmd.Parse(args[1:])
+
+			var addFile string
+			if keybFile != "" {
+				// use flag -k path
+				addFile = keybFile
+			} else {
+				// use default path in config
+				addFile = cfg.KeybPath
+			}
+			if err := config.AddEntry(addFile, addBind, addPrefix); err != nil {
+				log.Fatal(err)
+			}
+			fmt.Printf("%s added to %s", addBind, addFile)
+			os.Exit(0)
+		default:
+			fmt.Print(help)
+			os.Exit(1)
+		}
+	}
+
+	m := ui.NewModel(keys, cfg)
 
 	if stdout {
 		if err := output.ToStdout(m); err != nil {

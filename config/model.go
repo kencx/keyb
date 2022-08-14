@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -87,14 +88,33 @@ func generateDefaultKeyb(path string) Apps {
 	}}
 }
 
-func AddEntry(path, appName, kbName, kbKey string, kbIgnorePrefix bool) error {
+func AddEntry(path, binding string, kbIgnorePrefix bool) error {
 
 	// load existing struct from filepath
 	apps, err := ParseApps(path)
 	if err != nil {
 		return err
 	}
-	apps.addOrUpdate(appName, kbName, kbKey, kbIgnorePrefix)
+
+	if binding == "" {
+		return fmt.Errorf("binding must be given in format [app; name; keybind]")
+	}
+
+	s := strings.Split(binding, ";")
+	if len(s) < 3 {
+		return fmt.Errorf("binding must be given in format [app; name; keybind]")
+	}
+	input := struct {
+		AppName string
+		Name    string
+		Key     string
+	}{
+		AppName: strings.Trim(s[0], " "),
+		Name:    strings.Trim(s[1], " "),
+		Key:     strings.Trim(s[2], " "),
+	}
+
+	apps.addOrUpdate(input.AppName, input.Name, input.Key, kbIgnorePrefix)
 
 	// rewrite file
 	data, err := yaml.Marshal(apps)
@@ -102,6 +122,7 @@ func AddEntry(path, appName, kbName, kbKey string, kbIgnorePrefix bool) error {
 		return fmt.Errorf("failed to marshal entry: %w", err)
 	}
 
+	path = os.ExpandEnv(path)
 	if err := os.WriteFile(path, data, 0644); err != nil {
 		return fmt.Errorf("failed to write keyb file: %w", err)
 	}
@@ -109,7 +130,7 @@ func AddEntry(path, appName, kbName, kbKey string, kbIgnorePrefix bool) error {
 	return nil
 }
 
-func (apps Apps) addOrUpdate(appName string, name, key string, ignorePrefix bool) Apps {
+func (apps *Apps) addOrUpdate(appName string, name, key string, ignorePrefix bool) {
 	newKeyBind := KeyBind{
 		Name:         name,
 		Key:          key,
@@ -121,16 +142,16 @@ func (apps Apps) addOrUpdate(appName string, name, key string, ignorePrefix bool
 			Name:     appName,
 			Keybinds: []KeyBind{newKeyBind},
 		}
-		apps = append(apps, &a)
+		*apps = append(*apps, &a)
 
 	} else {
-		for _, app := range apps {
+		for _, app := range *apps {
 			if appName == app.Name {
 				app.Keybinds = append(app.Keybinds, newKeyBind)
 			}
 		}
 	}
-	return apps
+	// return apps
 }
 
 func (apps Apps) exist(appName string) bool {

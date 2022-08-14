@@ -72,10 +72,10 @@ func TestAddOrUpdate(t *testing.T) {
 				Key:  "addBar",
 			}},
 		}}
-		got := apps.addOrUpdate("test", "addFoo", "addBar", false)
+		apps.addOrUpdate("test", "addFoo", "addBar", false)
 
-		if !reflect.DeepEqual(got, want) {
-			t.Errorf("got %v, want %v", got, want)
+		if !reflect.DeepEqual(apps, want) {
+			t.Errorf("got %v, want %v", apps, want)
 		}
 	})
 
@@ -102,10 +102,10 @@ func TestAddOrUpdate(t *testing.T) {
 				}},
 			},
 		}
-		got := apps.addOrUpdate("new", "addFoo", "addBar", false)
+		apps.addOrUpdate("new", "addFoo", "addBar", false)
 
-		if !reflect.DeepEqual(got, want) {
-			t.Errorf("got %v, want %v", got, want)
+		if !reflect.DeepEqual(apps, want) {
+			t.Errorf("got %v, want %v", apps, want)
 		}
 	})
 }

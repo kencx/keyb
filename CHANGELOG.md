@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 [v0.2.0]: https://github.com/kencx/keyb/compare/v0.1.0...v0.2.0
+[v0.3.0]: https://github.com/kencx/keyb/compare/v0.2.0...v0.3.0
+
+## [v0.3.0]
+### Added
+- Add "add" subcommand to quick add keybinds [50b66d7](https://github.com/kencx/keyb/commit/50b66d7a78c4a08a9cb5ad5bd02d909b7b27ae53), [b9167474](https://github.com/kencx/keyb/commit/b9167474c9c5d12ed8ea0ca9630489fa7266bebe)
 
 ## [v0.2.0]
 ### Added

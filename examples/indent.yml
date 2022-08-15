@@ -1,0 +1,5 @@
+# https://github.com/cheat/cheatsheets
+- name: indent
+  keybinds:
+  - name: "no tabs, 3 spaces per indent, wrap lines at 120 characters the style of Kernighan and Ritchie (K&R)"
+    key: "indent -i3 -kr -nut -l120"

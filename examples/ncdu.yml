@@ -1,0 +1,11 @@
+# https://github.com/cheat/cheatsheets
+- name: ncdu
+  keybinds:
+  - name: "To save results to <file>:"
+    key: "ncdu -o <file>"
+  - name: "To read from <file>:"
+    key: "ncdu -f <file>"
+  - name: "To save results to a compressed file:"
+    key: "ncdu -o- | gzip > <file>"
+  - name: "To read from a compressed file:"
+    key: "zcat <file> | ncdu -f-"

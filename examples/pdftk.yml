@@ -1,0 +1,11 @@
+# https://github.com/cheat/cheatsheets
+- name: pdftk
+  keybinds:
+  - name: "To concatenate all pdf files into one:"
+    key: "pdftk *.pdf cat output all.pdf"
+  - name: "To concatenate specific pdf files into one:"
+    key: "pdftk 1.pdf 2.pdf 3.pdf cat output 123.pdf"
+  - name: "To concatenate pages 1 to 5 of first.pdf with page 3 of second.pdf:"
+    key: "pdftk A=fist.pdf B=second.pdf cat A1-5 B3 output new.pdf"
+  - name: "To extract pages 2 to 3 from a file:"
+    key: "pdftk file.pdf cat 2-3 output file_with_page_2_and_3.pdf"

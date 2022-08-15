@@ -1,0 +1,7 @@
+# https://github.com/cheat/cheatsheets
+- name: kill
+  keybinds:
+  - name: "To kill a process gracefully:"
+    key: "kill -15 <pid>"
+  - name: "To kill a process forcefully:"
+    key: "kill -9 <pid>"

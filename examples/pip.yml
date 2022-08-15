@@ -1,0 +1,23 @@
+# https://github.com/cheat/cheatsheets
+- name: pip
+  keybinds:
+  - name: "To search for a package:"
+    key: "pip search <package>"
+  - name: "To install packages:"
+    key: "pip install <package>..."
+  - name: "To install a package in user space:"
+    key: "pip install --user <package>"
+  - name: "To upgrade a package:"
+    key: "pip install --upgrade <package>"
+  - name: "To output and install packages in a requirement file:"
+    key: "pip install -r requirements.txt"
+  - name: "To show details of a package:"
+    key: "pip show <package>"
+  - name: "To list outdated packages:"
+    key: "pip list --outdated"
+  - name: "To upgrade all outdated packages:"
+    key: "pip freeze --local | grep -v '^-e' | cut -d = -f 1 | xargs -n1 pip install -U"
+  - name: "To upgrade outdated packages on latest version of pip:"
+    key: "pip list --outdated --format=freeze | cut -d = -f 1 | xargs -n1 pip install -U"
+  - name: "To install specific version of a package:"
+    key: "pip install -I SomePackage1==1.1.0 'SomePackage2>=1.0.4'"

@@ -1,0 +1,7 @@
+# https://github.com/cheat/cheatsheets
+- name: nft
+  keybinds:
+  - name: "List applies nft rules:"
+    key: "nft list ruleset"
+  - name: "Load a ruleset file:"
+    key: "nft -f filename"

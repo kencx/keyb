@@ -1,0 +1,23 @@
+# https://github.com/cheat/cheatsheets
+- name: virtualenv
+  keybinds:
+  - name: "To create a new environment:"
+    key: "virtualenv /path/to/project/env_name"
+  - name: "To create a new environment and inherit already installed Python libraries:"
+    key: "virtualenv --system-site-package /path/to/project/env_name"
+  - name: "To create a new environment with a given Python interpreter:"
+    key: "virtualenv /path/to/project/env_name -p /usr/bin/python/3.4"
+  - name: "To activate an environnment:"
+    key: "source /path/to/project/env_name/bin/activate"
+  - name: "To quit an environment:"
+    key: "deactivate"
+  - name: "To Virtualenvwrapper (wrapper for virtualenv) installation:"
+    key: "pip install --user virtualenvwrapper"
+  - name: "To create a new environmment (with virtualenvwrapper)"
+    key: "mkvirtualenv env_name"
+  - name: "To activate environmment (with virtualenvwrapper)"
+    key: "workon env_name"
+  - name: "To quit environmment (with virtualenvwrapper)"
+    key: "deactivate"
+  - name: "To delete environmment (with virtualenvwrapper)"
+    key: "rmvirtualenv env_name"

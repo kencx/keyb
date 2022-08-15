@@ -1,0 +1,17 @@
+# https://github.com/cheat/cheatsheets
+- name: youtube-dl
+  keybinds:
+  - name: "To download a video in 720p MP4:"
+    key: "youtube-dl -f 22 example.com/watch?v=id"
+  - name: "To download a video in 720p MP4 or WebM or FLV:"
+    key: "youtube-dl -f 22/45/120"
+  - name: "To list all available formats of a video:"
+    key: "youtube-dl -F example.com/watch?v=id"
+  - name: "To download a video to /$uploader/$date/$title.$ext:"
+    key: "youtube-dl -o '%(uploader)s/%(date)s/%(title)s.%(ext)s' example.com/watch?v=id"
+  - name: "To download a video playlist starting from a certain video:"
+    key: "youtube-dl --playlist-start 5 example.com/watch?v=id&list=listid"
+  - name: "To simulate a download with youtube-dl:"
+    key: "youtube-dl -s example.com/watch?v=id"
+  - name: "To download audio in mp3 format with best quality available"
+    key: "youtube-dl --extract-audio --audio-format mp3 --audio-quality 0 example.com/watch?v=id"

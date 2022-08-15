@@ -1,0 +1,17 @@
+# https://github.com/cheat/cheatsheets
+- name: uname
+  keybinds:
+  - name: "To print all system information:"
+    key: "uname -a"
+  - name: "To print the hostname:"
+    key: "uname -n"
+  - name: "To print the kernel release:"
+    key: "uname -r"
+  - name: "To print the kernel version, with more specific information:"
+    key: "uname -v"
+  - name: "To print the hardware instruction set:"
+    key: "uname -m"
+  - name: "To print the kernel name:"
+    key: "uname -s"
+  - name: "To print the operating system:"
+    key: "uname -o"

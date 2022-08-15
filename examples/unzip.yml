@@ -1,0 +1,11 @@
+# https://github.com/cheat/cheatsheets
+- name: unzip
+  keybinds:
+  - name: "To extract an archive:"
+    key: "unzip <archive>"
+  - name: "To extract an archive to a specific directory:"
+    key: "unzip <archive> -d <directory>"
+  - name: "To test integrity of archive:"
+    key: "unzip -tq <archive>"
+  - name: "To list files and directories an archive:"
+    key: "unzip -l <archive>"

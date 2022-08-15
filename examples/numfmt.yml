@@ -1,0 +1,5 @@
+# https://github.com/cheat/cheatsheets
+- name: numfmt
+  keybinds:
+  - name: "To convert bytes to Human readable format"
+    key: "numfmt --to=iec --suffix=B --padding=7 1048576"

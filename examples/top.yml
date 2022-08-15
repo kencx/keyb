@@ -1,0 +1,21 @@
+# https://github.com/cheat/cheatsheets
+- name: top
+  keybinds:
+  - name: "To update every <interval> samples:"
+    key: "top -i <interval>"
+  - name: "To set the delay between updates to <delay> seconds:"
+    key: "top -s <delay>"
+  - name: "To set event counting to accumulative mode:"
+    key: "top -a"
+  - name: "To set event counting to delta mode:"
+    key: "top -d"
+  - name: "To set event counting to absolute mode:"
+    key: "top -e"
+  - name: "To not calculate statistics on shared libraries, also known as frameworks:"
+    key: "top -F"
+  - name: "To calculate statistics on shared libraries, also known as frameworks (default):"
+    key: "top -f"
+  - name: "To print command line usage information and exit:"
+    key: "top -h"
+  - name: "To order the display by sorting on <key> in descending order:"
+    key: "top -o <key>"

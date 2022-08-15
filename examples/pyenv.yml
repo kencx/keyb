@@ -1,0 +1,17 @@
+# https://github.com/cheat/cheatsheets
+- name: pyenv
+  keybinds:
+  - name: "Install the specified version of Python:"
+    key: "pyenv install <version>"
+  - name: "Set the specified version of Python as system's default:"
+    key: "pyenv global <version>"
+  - name: "Set the specified version of Python to be used in the current directory:"
+    key: "pyenv local <version>"
+  - name: "Create a virtual environment based on the specified Python version (requires `pyenv-virtualenv` plugin):"
+    key: "pyenv virtualenv <version> <virtualenv_name>"
+  - name: "Uninstall the specified version of Python:"
+    key: "pyenv uninstall <version>"
+  - name: "List the versions installed:"
+    key: "pyenv versions"
+  - name: "Check the version of python currently in use:"
+    key: "pyenv version"

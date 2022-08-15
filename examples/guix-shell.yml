@@ -1,0 +1,7 @@
+# https://github.com/cheat/cheatsheets
+- name: guix-shell
+  keybinds:
+  - name: "Download/Build the desired packages in the store and make their executables available in the current interactive shell"
+    key: "guix shell <package-name> <package-name> ..."
+  - name: "Download/Build the desired packages in the store and invoke a `command` in the environment with package executables"
+    key: "guix shell <package-name> -- <command>"

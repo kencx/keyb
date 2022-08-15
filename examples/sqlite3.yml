@@ -1,0 +1,21 @@
+# https://github.com/cheat/cheatsheets
+- name: sqlite3
+  keybinds:
+  - name: "To create database and launch interactive shell:"
+    key: "sqlite3 <database>"
+  - name: "To create table:"
+    key: "sqlite3 <database> create table os(id integer primary key, name text, year integer);"
+  - name: "To insert data:"
+    key: "sqlite3 <database> insert into 'os' values(1,'linux',1991);"
+  - name: "To list tables:"
+    key: "sqlite3 <database> .tables"
+  - name: "To describe table:"
+    key: "sqlite3 <database> .schema 'os'"
+  - name: "To view records in table:"
+    key: "sqlite3 <database> select * from 'os';"
+  - name: "To view records in table conditionally:"
+    key: "sqlite3 <database> select * from 'os' where year='1991';"
+  - name: "To view records with fuzzy matching:"
+    key: "sqlite3 <database> select * from 'os' where year like '19%';"
+  - name: "To create a table named `cities` and import a csv into it:"
+    key: "sqlite3 <database> .import /path/to/city.csv cities"

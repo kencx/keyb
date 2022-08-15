@@ -1,0 +1,17 @@
+# https://github.com/cheat/cheatsheets
+- name: psql
+  keybinds:
+  - name: "Connect to a specific database:"
+    key: "psql -U <username> -h <host> -d <database>"
+  - name: "Get databases on a server:"
+    key: "psql -U <username> -h <host> --list"
+  - name: "Execute sql query and save output to file:"
+    key: "psql -U <username> -d <database> -c 'select * from tableName;' -o <outfile>"
+  - name: "Execute query and get tabular html output:"
+    key: "psql -U <username> -d <database> -H -c 'select * from tableName;'"
+  - name: "Execute query and save resulting rows to csv file:"
+    key: "psql -U <username> -d <database> -c 'copy (select * from tableName) to stdout with csv header;' -o <outfile>"
+  - name: "Read commands from file:"
+    key: "psql -f <outfile>"
+  - name: "Restore databases from file:"
+    key: "psql -f <outfile> <username>"

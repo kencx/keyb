@@ -1,0 +1,13 @@
+# https://github.com/cheat/cheatsheets
+- name: tail
+  keybinds:
+  - name: "To show the last 10 lines of <file>:"
+    key: "tail <file>"
+  - name: "To show the last <number> lines of <file>:"
+    key: "tail -n <number> <file>"
+  - name: "To show the last lines of <file> starting with <number>:"
+    key: "tail -n +<number> <file>"
+  - name: "To show the last <number> bytes of <file>:"
+    key: "tail -c <number> <file>"
+  - name: "To show the last 10 lines of <file> and to wait for <file> to grow:"
+    key: "tail -f <file>"

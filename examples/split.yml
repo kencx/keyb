@@ -1,0 +1,9 @@
+# https://github.com/cheat/cheatsheets
+- name: split
+  keybinds:
+  - name: "To split a large text file into smaller files of 1000 lines each:"
+    key: "split <file> -l 1000"
+  - name: "To split a large binary file into smaller files of 10M each:"
+    key: "split <file> -b 10M"
+  - name: "To consolidate split files into a single file:"
+    key: "cat x* > <file>"

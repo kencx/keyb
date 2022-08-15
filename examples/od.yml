@@ -1,0 +1,9 @@
+# https://github.com/cheat/cheatsheets
+- name: od
+  keybinds:
+  - name: "To dump a file in octal format:"
+    key: "od <binary-file>"
+  - name: "To dump a file in hexadecimal format:"
+    key: "od -x <binary-file>"
+  - name: "To dump a file in hexadecimal format, with hexadecimal offsets and a space between each byte:"
+    key: "od -A x -t x1 <binary-file>"

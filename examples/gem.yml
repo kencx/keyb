@@ -1,0 +1,21 @@
+# https://github.com/cheat/cheatsheets
+- name: gem
+  keybinds:
+  - name: "To search for a package:"
+    key: "gem search <package>"
+  - name: "To install a package:"
+    key: "gem install <package>"
+  - name: "To install a package in user space:"
+    key: "gem install --user-install <package>"
+  - name: "To install specific version of a package:"
+    key: "gem install <package> -v <version>"
+  - name: "To uninstall a package:"
+    key: "gem uninstall <package>"
+  - name: "To upgrade a package:"
+    key: "gem update <package>"
+  - name: "To show details of a package:"
+    key: "gem info <package>"
+  - name: "To list local packages:"
+    key: "gem list --local"
+  - name: "To show help on command:"
+    key: "gem help <command>"

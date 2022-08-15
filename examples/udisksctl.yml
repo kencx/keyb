@@ -1,0 +1,11 @@
+# https://github.com/cheat/cheatsheets
+- name: udisksctl
+  keybinds:
+  - name: "To get info about a device:"
+    key: "udisksctl info -b <device>"
+  - name: "To mount a device:"
+    key: "udisksctl mount --block-device <device>"
+  - name: "To unmount a device:"
+    key: "udisksctl unmount --block-device <device>"
+  - name: "To get help:"
+    key: "udisksctl help "

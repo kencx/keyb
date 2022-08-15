@@ -1,0 +1,11 @@
+# https://github.com/cheat/cheatsheets
+- name: shred
+  keybinds:
+  - name: "To shred a file (5 passes) and verbose output:"
+    key: "shred -n 5 -v <file>"
+  - name: "To shred a file (5 passes) and a final overwrite of zeroes:"
+    key: "shred -n 5 -vz <file>"
+  - name: "To do the above, and then truncate and rm the file:"
+    key: "shred -n 5 -vzu <file>"
+  - name: "To shred a partition:"
+    key: "shred -n 5 -vz /dev/sda"

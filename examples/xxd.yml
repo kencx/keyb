@@ -1,0 +1,7 @@
+# https://github.com/cheat/cheatsheets
+- name: xxd
+  keybinds:
+  - name: "To convert bin/string to hex:"
+    key: "echo '42 is the solution' | xxd -p"
+  - name: "To convert hex to bin/string:"
+    key: "echo '34322069732074686520736f6c7574696f6e0a' | xxd -r -p"

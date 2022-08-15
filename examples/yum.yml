@@ -1,0 +1,23 @@
+# https://github.com/cheat/cheatsheets
+- name: yum
+  keybinds:
+  - name: "To install the latest version of a package:"
+    key: "yum install <package>"
+  - name: "To perform a local install:"
+    key: "yum localinstall <package>"
+  - name: "To remove a package:"
+    key: "yum remove <package>"
+  - name: "To search for a package:"
+    key: "yum search <package>"
+  - name: "To find what package installs an executable:"
+    key: "yum whatprovides <executable>"
+  - name: "To find the dependencies of a package:"
+    key: "yum deplist <package>"
+  - name: "To find information about a package:"
+    key: "yum info <package>"
+  - name: "List currently enabled repositories:"
+    key: "yum repolist"
+  - name: "List packages matching <phrase>:"
+    key: "yum list <phrase>"
+  - name: "To download the source RPM for a package:"
+    key: "yumdownloader --source <package>"

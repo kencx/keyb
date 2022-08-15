@@ -1,0 +1,5 @@
+# https://github.com/cheat/cheatsheets
+- name: usermod
+  keybinds:
+  - name: "Add user to sudo group"
+    key: "sudo usermod -aG sudo <username>"

@@ -1,0 +1,19 @@
+# https://github.com/cheat/cheatsheets
+- name: npm
+  keybinds:
+  - name: "To install a package in the current directory:"
+    key: "npm install <package>"
+  - name: "To install a package, and save it in the `dependencies` section of `package.json`:"
+    key: "npm install --save <package>"
+  - name: "To install a package, and save it in the `devDependencies` section of `package.json`:"
+    key: "npm install --save-dev <package>"
+  - name: "To show outdated packages in the current directory:"
+    key: "npm outdated"
+  - name: "To update outdated packages:"
+    key: "npm update"
+  - name: "To update `npm` (will override the one shipped with Node.js):"
+    key: "npm install -g npm"
+  - name: "To uninstall a package:"
+    key: "npm uninstall <package>"
+  - name: "To set the `authToken` using env variable `NPM_TOKEN`:"
+    key: "npm config set //npm.intra/:_authToken=${NPM_TOKEN}"

@@ -1,0 +1,13 @@
+# https://github.com/cheat/cheatsheets
+- name: ifconfig
+  keybinds:
+  - name: "To display network settings of an interface:"
+    key: "ifconfig <interface>"
+  - name: "To display all interfaces, even if down:"
+    key: "ifconfig -a"
+  - name: "To take down / up the wireless adapter:"
+    key: "ifconfig wlan0 {up|down} "
+  - name: "To set a static IP and netmask:"
+    key: "ifconfig eth0 192.168.1.100 netmask 255.255.255.0"
+  - name: "You may also need to add a gateway IP:"
+    key: "route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.1"

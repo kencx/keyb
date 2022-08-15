@@ -1,0 +1,21 @@
+# https://github.com/cheat/cheatsheets
+- name: kubectl
+  keybinds:
+  - name: "To display list of all available commands:"
+    key: "kubectl -h"
+  - name: "To display an explanation of a specific command:"
+    key: "kubectl command_name -h"
+  - name: "To display complete list of supported resources:"
+    key: "kubectl api-resources"
+  - name: "To display an explanation of a specific resource:"
+    key: "kubectl explain resource_name"
+  - name: "To display an explanation of a specific field of resource:"
+    key: "kubectl explain resource_name.field_name"
+  - name: "To display list of global command-line options:"
+    key: "kubectl options"
+  - name: "To set up `kubectl` autocomplete in bash (press Tab to use):"
+    key: "source <(kubectl completion bash)"
+  - name: "To display all resources in all namespaces:"
+    key: "kubectl get all -A"
+  - name: "To order events by `creationTimestamp`:"
+    key: "kubectl get events --sort-by='.metadata.creationTimestamp'"

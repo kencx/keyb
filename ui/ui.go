@@ -34,11 +34,11 @@ func createParentTable(a config.Apps, sortKeys bool) *table.Model {
 		return a[i].Name < a[j].Name
 	})
 
-	parent := appToTable(a[0].Name, a[0], sortKeys)
+	parent := appToTable(a[0].Name, *a[0], sortKeys)
 
 	if len(a) > 1 {
 		for _, k := range a[1:] {
-			child := appToTable(k.Name, k, sortKeys)
+			child := appToTable(k.Name, *k, sortKeys)
 			parent.Join(child)
 		}
 	}

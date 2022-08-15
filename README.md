@@ -62,24 +62,18 @@ $ make build
 ## Usage
 
 ```text
-usage: keyb [options] [file]
+usage: keyb [options] <command>
 
-Flags:
-  -p, --print           Print to stdout
-  -e, --export [file]   Export to file
-  -k, --key [file]      Pass custom hotkeys file
-  -c, --config [file]   Pass custom config file
-  -v, --version         Version info
-  -h, --help            help for keyb
-```
+Options:
+  -p, --print     Print to stdout
+  -e, --export    Export to file
+  -k, --key       Key bindings at custom path
+  -c, --config    Config file at custom path
+  -v, --version   Version info
+  -h, --help      help for keyb
 
-### Printing
-
-keyb supports printing to stdout for use with other tools:
-
-```bash
-$ keyb -p | fzf
-$ keyb -p | rofi -dmenu
+Commands:
+  a, add          Add keybind to keyb file
 ```
 
 ### Search
@@ -91,6 +85,15 @@ $ keyb -p | rofi -dmenu
 To perform filtering on section headings only, prefix the
 search with `h:`. This will return all matching section headings with their
 respective rows.
+
+### Printing
+
+keyb supports printing to stdout for use with other tools:
+
+```bash
+$ keyb -p | fzf
+$ keyb -p | rofi -dmenu
+```
 
 ### keyb File
 
@@ -126,6 +129,27 @@ Prefixes are useful for applications with a common leading hotkey like tmux.
 Refer to the `examples` for more examples.
 
 >Multiline fields are not supported at the moment.
+
+### Quick Add
+
+```text
+usage: keyb [-k file] add [app; name; key]
+
+Options:
+  -b, --binding  Key binding
+  -p, --prefix   Ignore prefix
+```
+
+You can quick add bindings from the command line to a specified file. If `-k
+file` is given and exists, the new keybind will be appended to the file.
+Otherwise, `keyb_path` defined in `config.yml` will be used.
+
+```bash
+$ keyb add -b "kitty; open terminal; super + enter"
+```
+
+When adding a new keybind, the app name, keybind name and keybind must be
+specified. It is separated by `;` and wrapped in quotes (to prevent parsing errors).
 
 ### Configuration
 keyb is customized with a `config.yml` file that is automatically generated in
@@ -192,7 +216,7 @@ Multiple keys may be set for a single binding, separated by commas.
 
 - [x] Ability to customize keyb hotkeys
 - [ ] Export to additional file formats (`json, toml, conf/ini` etc.)
-- [ ] `-a, --add` flag to quickly add a single hotkey entry from the CLI
+- [x] `a, add` subcommand to quickly add a single hotkey entry from the CLI
 - [ ] Automatic parsing from online cheatsheet repos (eg. `cheat/cheatsheets`)
 
 ## Contributing
@@ -202,12 +226,6 @@ keyb requires Go 1.18.
 Bug reports, feature requests and PRs are very welcome.
 
 More examples for default keymaps in `examples/` are also welcome.
-
-## Screenshots
-
-<p align="center">
-	<img width="660" src="https://github.com/kencx/keyb/blob/master/assets/keyb.jpg?raw=true">
-</p>
 
 ## Similar Tools
 

@@ -1,0 +1,17 @@
+# https://github.com/cheat/cheatsheets
+- name: systemd
+  keybinds:
+  - name: "To display process startup time:"
+    key: "systemd-analyze"
+  - name: "To display process startup time at service level:"
+    key: "systemd-analyze blame"
+  - name: "To list running units:"
+    key: "systemctl list-units"
+  - name: "To load a unit at startup:"
+    key: "systemctl enable foo.service"
+  - name: "To start or Stop a unit:"
+    key: "systemctl <start | stop> foo.service"
+  - name: "To unit file locations:"
+    key: "/etc/systemd/system"
+  - name: "To unit file locations 2:"
+    key: "/usr/lib/systemd/system"

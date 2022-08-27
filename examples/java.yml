@@ -1,0 +1,19 @@
+# https://github.com/cheat/cheatsheets
+- name: java
+  keybinds:
+  - name: "To execute a java program"
+    key: "java -jar <filename.jar>"
+  - name: "To pass arguments to your java program"
+    key: "java -jar <filename.jar> <arg1> <arg2> ..."
+  - name: "To get the version of the installed java enviroment"
+    key: "java -showversion"
+  - name: "Use -Xms<size> to set inital memory allocation"
+    key: "java -Xms256m -Xmx2g -Xss1m -jar <filename.jar>"
+  - name: "Use -Xmx<size> to set maximun allowed memory allocation"
+    key: "java -Xmx256m -Xmx2g -Xss1m -jar <filename.jar>"
+  - name: "Use -Xss<size> to set maximun allowed thread stack size"
+    key: "java -Xss256m -Xmx2g -Xss1m -jar <filename.jar>"
+  - name: "To use the classpath variable"
+    key: "java -classpath <classpath> -jar <filename.jar>"
+  - name: "To execute a java class"
+    key: "java -cp <path> <class> <arg>"

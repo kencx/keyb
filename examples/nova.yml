@@ -1,0 +1,15 @@
+# https://github.com/cheat/cheatsheets
+- name: nova
+  keybinds:
+  - name: "To list VMs on current tenant:"
+    key: "nova list"
+  - name: "To list VMs of all tenants (admin user only):"
+    key: "nova list --all-tenants"
+  - name: "To boot a VM on a specific host:"
+    key: "nova boot --nic net-id=id --image img --flavor flavor --availability-zone nova:host vm_name"
+  - name: "To stop a server:"
+    key: "nova stop <server>"
+  - name: "To start a server:"
+    key: "nova start <server>"
+  - name: "To attach a network interface to a specific VM:"
+    key: "nova interface-attach --net-id <net_id> <server>"

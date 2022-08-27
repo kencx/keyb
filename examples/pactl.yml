@@ -1,0 +1,9 @@
+# https://github.com/cheat/cheatsheets
+- name: pactl
+  keybinds:
+  - name: "INCREASE the volume of default sink by 2.5%"
+    key: "pactl set-sink-volume @DEFAULT_SINK@ +2.5%"
+  - name: "DECREASE the volume of default sink by 2.5%"
+    key: "pactl set-sink-volume @DEFAULT_SINK@ -2.5%"
+  - name: "Toggle mute the default sink"
+    key: "pactl set-sink-mute @DEFAULT_SINK@ toggle"

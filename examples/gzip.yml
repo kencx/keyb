@@ -1,0 +1,15 @@
+# https://github.com/cheat/cheatsheets
+- name: gzip
+  keybinds:
+  - name: "To create a *.gz compressed file"
+    key: "gzip test.txt"
+  - name: "To create a *.gz compressed file to a specific location using -c option (standard out)"
+    key: "gzip -c test.txt > test_custom.txt.gz"
+  - name: "To uncompress a *.gz file"
+    key: "gzip -d test.txt.gz"
+  - name: "Display compression ratio of the compressed file using gzip -l"
+    key: "gzip -l *.gz"
+  - name: "Recursively compress all the files under a specified directory"
+    key: "gzip -r documents_directory"
+  - name: "To create a *.gz compressed file and keep the original"
+    key: "gzip < test.txt > test.txt.gz"

@@ -1,0 +1,17 @@
+# https://github.com/cheat/cheatsheets
+- name: gcc
+  keybinds:
+  - name: "To compile a file:"
+    key: "gcc file.c"
+  - name: "To compile a file with a custom output:"
+    key: "gcc -o file file.c"
+  - name: "debug symbols:"
+    key: "gcc -g"
+  - name: "debug with all symbols:"
+    key: "gcc -ggdb3"
+  - name: "To build for 64 bits:"
+    key: "gcc -m64"
+  - name: "With this option, no warning / error will be reported for the files in {/usr/include/myPersonnal/lib/}"
+    key: "gcc -isystem /usr/include/myPersonnal/lib/"
+  - name: "To build a GUI for windows (Mingw) (Will disable the term/console):"
+    key: "gcc -mwindows"

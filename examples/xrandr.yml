@@ -1,0 +1,11 @@
+# https://github.com/cheat/cheatsheets
+- name: xrandr
+  keybinds:
+  - name: "To enable HDMI2 output with maximal resolution:"
+    key: "xrandr --output HDMI2 --auto"
+  - name: "To enable HDMI2 output with specific resolution:"
+    key: "xrandr --output HDMI2 --mode 1280x800"
+  - name: "To enable HDMI2 output next to HDMI1 output:"
+    key: "xrandr --output HDMI2 --auto --right-of HDMI1"
+  - name: "To disable HDMI2 output:"
+    key: "xrandr --output HDMI2 --off"

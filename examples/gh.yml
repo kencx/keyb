@@ -1,0 +1,15 @@
+# https://github.com/cheat/cheatsheets
+- name: gh
+  keybinds:
+  - name: "View README.md:"
+    key: "gh repo view"
+  - name: "View issue list:"
+    key: "gh issue list"
+  - name: "View specific issue (e.g., the first being #1):"
+    key: "gh issue view 1"
+  - name: "Create issue (start an interactive CLI):"
+    key: "gh issue create"
+  - name: "Create pull request from a feature branch (start an interactive CLI):"
+    key: "gh pr create"
+  - name: "Create a public gist and open web browser to it:"
+    key: "gh gist create hello.py -d my Hello-World program in Python -w -p"

@@ -1,0 +1,13 @@
+# https://github.com/cheat/cheatsheets
+- name: z
+  keybinds:
+  - name: " To `cd` to most frecent dir matching `foo`"
+    key: "z foo"
+  - name: " To `cd` to most frecent dir matching `foo`, then `bar`"
+    key: "z foo bar"
+  - name: " To `cd` to highest ranked dir matching `foo`"
+    key: "z -r foo"
+  - name: " To `cd` to most recently accessed dir matching `foo`"
+    key: "z -t foo"
+  - name: " To list all dirs matching `foo` - by frecency"
+    key: "z -l foo"

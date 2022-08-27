@@ -1,0 +1,9 @@
+# https://github.com/cheat/cheatsheets
+- name: rm
+  keybinds:
+  - name: "To remove all files and subdirs in <dir>:"
+    key: "rm -rf <dir>"
+  - name: "To ignore non-existent files:"
+    key: "rm -f <dir>"
+  - name: "To remove a file with this inode:"
+    key: "find /tmp/ -inum 6666 -exec rm -i '{}' ;"

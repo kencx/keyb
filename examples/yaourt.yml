@@ -1,0 +1,13 @@
+# https://github.com/cheat/cheatsheets
+- name: yaourt
+  keybinds:
+  - name: "All pacman commands are working the same way with yaourt."
+    key: "pacman -S <package>"
+  - name: "To search for <package> and install it:"
+    key: "yaourt <package>"
+  - name: "To update the local package base and upgrade all out of date package,"
+    key: "yaourt -Suya --devel"
+  - name: "For all of the above commands, if you want yaourt to stop asking constantly for confirmations, "
+    key: "use the option --noconfirm"
+  - name: "To build <package> from source:"
+    key: "yaourt -Sb <package>"

@@ -1,0 +1,21 @@
+# https://github.com/cheat/cheatsheets
+- name: rsync
+  keybinds:
+  - name: "To copy files from remote to local, maintaining file properties and sym-links"
+  - name: "(-a), zipping for faster transfer (-z), verbose (-v):"
+    key: "rsync -avz host:file1 :file1 /dest/"
+  - name: "To copy files using checksum (-c) rather than time to detect if the file has changed"
+    key: "rsync -avc <src> <dest>"
+  - name: "To copy /src/foo folder into destination:"
+    key: "rsync -auv /src/foo /dest"
+  - name: "To copy contents of /src/foo into destination:"
+    key: "rsync -auv /src/foo/ /foo_bak"
+  - name: "To copy file from local to remote over ssh with non standard port 1234 to"
+    key: "rsync -avz -e ssh -p1234 <source> <username>@<host>:<dest>"
+  - name: "Use the specified authentication key, instead of typing a password:"
+    key: "rsync -avz -e ssh -i ~/.ssh/id_rsa <src> <dest>"
+  - name: "Log into remote as a user, but promote to root, to access privileged files:"
+    key: "rsync -avz --rsync-path=sudo rsync user@<src> <dest>"
+#Rsync only symlinks and preserve them as symlinks (dont follow them):
+#find /path/to/files -type l -print | \
+  #rsync -av --files-from=- /path/to/files user@targethost:/dest_path

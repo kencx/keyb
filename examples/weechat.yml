@@ -1,0 +1,17 @@
+# https://github.com/cheat/cheatsheets
+- name: weechat
+  keybinds:
+  - name: "To set an unread marker on all windows:"
+    key: "Ctrl-s Ctrl-u"
+  - name: "To switch to the left buffer:"
+    key: "Ctrl-p, Alt-left"
+  - name: "To switch to the right buffer:"
+    key: "Ctrl-n, Alt-right"
+  - name: "To switch to the next buffer with activity:"
+    key: "Alt-a"
+  - name: "To switch buffers:"
+    key: "Alt-0...9"
+  - name: "To scroll buffer title:"
+    key: "F9/F10"
+  - name: "To scroll nick list:"
+    key: "F11/F12"

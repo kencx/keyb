@@ -1,0 +1,17 @@
+# https://github.com/cheat/cheatsheets
+- name: nc
+  keybinds:
+  - name: "To open a TCP connection from <src-port> to <dest-port> of <dest-host>, with a timeout of <seconds>"
+    key: "nc -p <src-port> -w <seconds> <dest-host> <dest-port>"
+  - name: "To open a UDP connection to <dest-port> of <dest-host>:"
+    key: "nc -u <dest-host> <dest-port>"
+  - name: "To open a TCP connection to port 42 of <host> using <source-host> as the IP for the local end of the connection:"
+    key: "nc -s <source-host> <dest-host> <port>"
+  - name: "To create and listen on a UNIX-domain stream socket:"
+    key: "nc -lU /var/tmp/dsocket"
+  - name: "To connect to <dest-port> of <dest-host> via an HTTP proxy at <proxy-host>,"
+    key: "nc -x<proxy-host>:<proxy-port> -Xconnect <dest-host> <dest-port>"
+  - name: "The same example again, this time enabling proxy authentication with username ruser if the proxy requires it:"
+    key: "nc -x<proxy-host>:<proxy-port> -Xconnect -Pruser <host> <port>"
+  - name: "To choose the source IP for the testing using the -s option"
+    key: "nc -zv -s source_IP target_IP Port"

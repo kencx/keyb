@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# A raw script to convert a cheat file from
+# https://github.com/cheat/cheatsheets\
+# to a markdown file for keyb cheat sheets.
+FILENAME=${1//.yml/}
+sed -E -i 's/^[-]//g' "$1"
+sed -E -i '2s/^//' "$1"
+sed -E -i '/./!d' "$1"
+sed -E -i 's/"//g' "$1"
+sed -E -i 's/^# (.*)/\ \ - name: "\1"/' "$1"
+sed -E -i 's/^([a-zA-Z].*)/\ \ \ \ key: "\1"/' "$1"
+sed -E -i "1s|^|# https://github.com/cheat/cheatsheets\n|" "$1"
+sed -E -i "2s/^/- name: $FILENAME\n/" "$1"
+sed -E -i "3s/^/\ \ keybinds:\n/" "$1"

@@ -1,0 +1,11 @@
+# https://github.com/cheat/cheatsheets
+- name: multipass
+  keybinds:
+  - name: List all options
+    key: multipass 
+  - name: List existing VMs on your device
+    key: multiplass list
+  - name: Find what VMs can be downloaded
+    key: multipass find
+  - name: Download and start a temp VM
+    key: multipass launch -v --name todelete

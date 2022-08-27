@@ -1,0 +1,7 @@
+# https://github.com/cheat/cheatsheets
+- name: pgrep
+  keybinds:
+  - name: "To get a list of PIDs matching <pattern>:"
+    key: "pgrep <pattern>"
+  - name: "To kill all PIDs matching <pattern>:"
+    key: "pgrep -f <pattern> | xargs kill"

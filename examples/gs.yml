@@ -1,0 +1,5 @@
+# https://github.com/cheat/cheatsheets
+- name: gs
+  keybinds:
+  - name: "To reduce the size of a pdf file:"
+    key: "gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=output.pdf input.pdf"

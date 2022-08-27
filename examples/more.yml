@@ -1,0 +1,5 @@
+# https://github.com/cheat/cheatsheets
+- name: more
+  keybinds:
+  - name: "To show <file> beginning at line number 5:"
+    key: "more +5 <file>"

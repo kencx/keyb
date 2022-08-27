@@ -1,0 +1,17 @@
+# https://github.com/cheat/cheatsheets
+- name: iptables
+  keybinds:
+  - name: "To show hit for rules with auto refresh:"
+    key: "watch --interval 0 'iptables -nvL | grep -v 0     0'"
+  - name: "To show hit for rule with auto refresh and highlight any changes since the last refresh:"
+    key: "watch -d -n 2 iptables -nvL"
+  - name: "To block port 902 and hide this port from nmap:"
+    key: "iptables -A INPUT -i eth0 -p tcp --dport 902 -j REJECT --reject-with icmp-port-unreachable"
+  - name: "To add a comment to a rule:"
+    key: "iptables ... -m comment --comment This rule is here for this reason"
+  - name: "Show all rules"
+    key: "iptables -L INPUT --line-numbers"
+  - name: "REMOVE (-D) a rule. (here an INPUT rule)"
+    key: "iptables -D INPUT 2"
+  - name: "INSERT a rule."
+    key: "iptables -I INPUT {LINE_NUMBER} -i eth1 -p tcp --dport 21 -s 123.123.123.123 -j ACCEPT"

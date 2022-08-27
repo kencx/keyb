@@ -1,0 +1,13 @@
+# https://github.com/cheat/cheatsheets
+- name: paste
+  keybinds:
+  - name: "To concat columns from files:"
+    key: "paste <file>..."
+  - name: "To list the files in the current directory in three columns:"
+    key: "ls | paste - - -"
+  - name: "To combine pairs of lines from a file into single lines:"
+    key: "paste -s -d '\t\n' <file>"
+  - name: "To number the lines in a file, similar to nl(1):"
+    key: "sed = <file> | paste -s -d '\t\n' - -"
+  - name: "To create a colon-separated list of directories named bin"
+    key: "find / -name bin -type d | paste -s -d : -"

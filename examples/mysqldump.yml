@@ -1,0 +1,19 @@
+# https://github.com/cheat/cheatsheets
+- name: mysqldump
+  keybinds:
+  - name: "To dump a database to a file (Note that your password will appear in your command history!):"
+    key: "mysqldump -u<username> -p<password> <database> > db.sql"
+  - name: "To dump a database to a file:"
+    key: "mysqldump -u<username> -p <database> > db.sql"
+  - name: "To dump a database to a .tgz file (Note that your password will appear in your command history!):"
+    key: "mysqldump -u<username> -p<password> <database> | gzip -9 > db.sql"
+  - name: "To dump a database to a .tgz file:"
+    key: "mysqldump -u<username> -p <database> | gzip -9 > db.sql"
+  - name: "To dump all databases to a file (Note that your password will appear in your command history!):"
+    key: "mysqldump -u<username> -p<password> --all-databases > all-databases.sql"
+  - name: "To dump all databases to a file:"
+    key: "mysqldump -u<username> -p --all-databases > all-databases.sql"
+  - name: "To export the database structure only:"
+    key: "mysqldump --no-data -u<username> -p <database> > dump_file"
+  - name: "To export the database data only:"
+    key: "mysqldump --no-create-info -u<username> -p <database> > dump_file"

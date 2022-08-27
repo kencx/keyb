@@ -1,0 +1,21 @@
+# https://github.com/cheat/cheatsheets
+- name: fzf
+  keybinds:
+  - name: "To fuzzy find files in current directory"
+    key: "fzf"
+  - name: "To fuzzy find a file and cat it"
+    key: "cat $(fzf)"
+  - name: "Case sensitive search"
+    key: "fzf +i"
+  - name: "Case insensitve search"
+    key: "fzf -i"
+  - name: "Select multiple files (TAB to select, Shift+TAB to un-select) to delete"
+    key: "rm -rf $(fzf --multi)"
+  - name: "Run a preview command with fzf, specifiy a command inside the double quotes."
+    key: "fzf --preview file {}"
+  - name: "Find files from find command and preview it with fzf"
+    key: "find . -type f -name *.txt | fzf --preview head {}"
+  - name: "Display border around fzf output "
+    key: "fzf --border sharp"
+  - name: "Output only selected files and pipe it to a file"
+    key: "find . -type f *.txt | fzf --multi > output.txt"

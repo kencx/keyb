@@ -1,0 +1,13 @@
+# https://github.com/cheat/cheatsheets
+- name: ethtool
+  keybinds:
+  - name: "To show statistics for the selected interface"
+    key: "ethtool -S <interface>"
+  - name: "To show interface permanent address"
+    key: "ethotool -P <interface>"
+  - name: "To set interface speed"
+    key: "ethtool -s <interface> [ speed %d ]"
+  - name: "To set interface autonegotiation"
+    key: "ethtool -s <interface> [ autoneg on|off ]"
+  - name: "To get interface errors"
+    key: "ethtool -S <interface> | grep error"

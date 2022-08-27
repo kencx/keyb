@@ -1,0 +1,13 @@
+# https://github.com/cheat/cheatsheets
+- name: screen
+  keybinds:
+  - name: "To start a new named screen session:"
+    key: "screen -S <session-name>"
+  - name: "To detach from the current session:"
+    key: "Press Ctrl+A then press d"
+  - name: "To re-attach a detached session:"
+    key: "screen -r <session-name>"
+  - name: "To list all screen sessions:"
+    key: "screen -ls"
+  - name: "To quit a session:"
+    key: "screen -XS <session-name> quit"

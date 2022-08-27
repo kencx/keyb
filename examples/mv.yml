@@ -1,0 +1,13 @@
+# https://github.com/cheat/cheatsheets
+- name: mv
+  keybinds:
+  - name: "To move a file from one place to another:"
+    key: "mv <src> <dest>"
+  - name: "To move a file from one place to another and automatically overwrite if the destination file exists:"
+    key: "mv -f <src> <dest>"
+  - name: "To move a file from one place to another but ask before overwriting an existing file:"
+    key: "mv -i <src> <dest>"
+  - name: "To move a file from one place to another but never overwrite anything:"
+    key: "mv -n <src> <dest>"
+  - name: "To move listed file(s) to a directory"
+    key: "mv -t <dest> <file>..."

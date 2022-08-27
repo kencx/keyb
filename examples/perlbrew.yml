@@ -1,0 +1,19 @@
+# https://github.com/cheat/cheatsheets
+- name: perlbrew
+  keybinds:
+  - name: "setup perlbrew"
+    key: "perlbrew init"
+  - name: "list perls available to install"
+    key: "perlbrew available"
+  - name: "install a particular perl version (see `perlbrew available`)"
+    key: "perlbrew install <version>"
+  - name: "list perls installed"
+    key: "perlbrew list"
+  - name: "switch to a particular perl version"
+    key: "perlbrew switch <version>"
+  - name: "run a program against all installed versions"
+    key: "perlbrew exec perl <myprogram.pl>"
+  - name: "get list of installed modules in the current perl"
+    key: "perlbrew list-modules"
+  - name: "clone modules from one version to another"
+    key: "perlbrew clone-modules <from-version> <to-version>"

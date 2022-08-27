@@ -1,0 +1,17 @@
+# https://github.com/cheat/cheatsheets
+- name: hg
+  keybinds:
+  - name: "To clone a directory:"
+    key: hg clone
+  - name: "To add files to hg tracker:"
+    key: "hg add <file>"
+  - name: "To add all files in <dir> to hg tracker:"
+    key: "hg add <dir>"
+  - name: "To create a commit with all tracked changes and a message:"
+    key: "hg commit -m <message>"
+  - name: "To push commits to source repository:"
+    key: "hg push"
+  - name: "To pull changes from source repository:"
+    key: "hg pull"
+  - name: "To rebase local commits to disambiguate with remote repository:"
+    key: "hg pull --rebase"

@@ -1,0 +1,15 @@
+# https://github.com/cheat/cheatsheets
+- name: lsblk
+  keybinds:
+  - name: "To show all available block devices along with their partitioning schemes:"
+    key: "lsblk"
+  - name: "To show SCSI devices:"
+    key: "lsblk --scsi"
+  - name: "To show a specific device:"
+    key: "lsblk /dev/sda"
+  - name: "To verify TRIM support:"
+    key: "lsblk --discard"
+  - name: "To fetch info about filesystems:"
+    key: "lsblk --fs"
+  - name: "For JSON, LIST or TREE output formats use the following flags:"
+    key: "lsblk --json;lsblk --list;lsblk --tree # default view"

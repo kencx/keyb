@@ -1,7 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: p4
-  keybinds:
-  - name: "To print details related to client and server configuration:"
-    key: "p4 info "
-  - name: "To open a file and add it to depot:"
-    key: "p4 add <filename>"

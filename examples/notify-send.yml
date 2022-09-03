@@ -1,5 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: notify-send
-  keybinds:
-  - name: "To send a desktop notification via dbus:"
-    key: "notify-send -i 'icon-file/name' -a 'application_name' 'summary' 'body of message'"

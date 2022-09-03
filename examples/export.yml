@@ -1,5 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: export
-  keybinds:
-  - name: "To export an environment variable"
-    key: "export VARNAME=value"

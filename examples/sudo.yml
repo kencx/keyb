@@ -1,5 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: sudo
-  keybinds:
-  - name: "Preserve user environment when running command"
-    key: "sudo -E <cmd>"

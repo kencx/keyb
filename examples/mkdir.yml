@@ -1,9 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: mkdir
-  keybinds:
-  - name: "To create nested directories:"
-    key: "mkdir -p foo/bar/baz"
-  - name: "To create foo/bar and foo/baz directories:"
-    key: "mkdir -p foo/{bar,baz}"
-  - name: "To create the foo/bar, foo/baz, foo/baz/zip and foo/baz/zap directories:"
-    key: "mkdir -p foo/{bar,baz/{zip,zap}}"

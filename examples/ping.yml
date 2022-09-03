@@ -1,9 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: ping
-  keybinds:
-  - name: "To ping <host> with 15 packets:"
-    key: "ping -c 15 <host>"
-  - name: "To ping <host> with 15 packets, one every .5 seconds:"
-    key: "ping -c 15 -i .5 <host>"
-  - name: "To test if a packet size of 1500 bytes is supported (to check the MTU for example):"
-    key: "ping -s 1500 -c 10 -M do <host>"

@@ -1,5 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: tidy
-  keybinds:
-  - name: "Enable indentation, wrap lines at column 160, messages to stdout:"
-    key: "tidy -i -wrap 160 -o output.html input.html"

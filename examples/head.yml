@@ -1,9 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: head
-  keybinds:
-  - name: "To show the first 10 lines of <file>:"
-    key: "head <file>"
-  - name: "To show the first <number> lines of <file>:"
-    key: "head -n <number> <file>"
-  - name: "To show the first <number> bytes of <file>:"
-    key: "head -c <number> <file>"

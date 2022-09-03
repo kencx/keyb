@@ -1,9 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: truncate
-  keybinds:
-  - name: "To clear the contents from <file>:"
-    key: "truncate -s 0 <file>"
-  - name: "To truncate <file> to 100 bytes:"
-    key: "truncate -s 100 <file>"
-  - name: "To truncate <file> to 100 KB:"
-    key: "truncate -s 100K <file>"

@@ -1,5 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: su
-  keybinds:
-  - name: "To switch to another user account:"
-    key: "su <user>"

@@ -1,5 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: ping6
-  keybinds:
-  - name: "To Get all ipv6 neighbors via broadcast ping:"
-    key: "ping6 -I eth0 ff02::1"

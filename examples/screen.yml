@@ -4,7 +4,7 @@
   - name: "To start a new named screen session:"
     key: "screen -S <session-name>"
   - name: "To detach from the current session:"
-    key: "Press Ctrl+A then press d"
+    key: "Ctrl+A; d"
   - name: "To re-attach a detached session:"
     key: "screen -r <session-name>"
   - name: "To list all screen sessions:"

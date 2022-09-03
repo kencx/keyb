@@ -1,7 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: ln
-  keybinds:
-  - name: "To create a symlink:"
-    key: "ln -s <source-location> <symlink-location>"
-  - name: "To symlink, while overwriting existing destination files"
-    key: "ln -sf <source-location> <symlink-location>"

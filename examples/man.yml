@@ -1,9 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: man
-  keybinds:
-  - name: "To convert a man page to pdf:"
-    key: "man -t bash | ps2pdf - bash.pdf"
-  - name: "To view the ascii chart:"
-    key: "man 7 ascii"
-  - name: "To see config:"
-    key: "cat /private/etc/man.conf"

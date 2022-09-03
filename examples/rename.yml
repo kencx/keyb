@@ -1,7 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: rename
-  keybinds:
-  - name: "To lowercase all files and folders in current directory:"
-    key: "rename 'y/A-Z/a-z/' *"
-  - name: "To replace 'sometext' with 'replacedby' in all files in current directory:"
-    key: "rename 's/sometext/replacedby/' *"

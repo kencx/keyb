@@ -1,7 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: ulimit
-  keybinds:
-  - name: "Report all current limits"
-    key: "ulimit -a"
-  - name: "Unlimited file descriptors"
-    key: "ulimit -n unlimited"

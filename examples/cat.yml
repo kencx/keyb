@@ -1,9 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: cat
-  keybinds:
-    - name: "To display the contents of a file"
-      key: "cat <file>"
-    - name: "To display file contents with line numbers"
-      key: "cat -n <file>"
-    - name: "To display file contents with line numbers (blank lines excluded)"
-      key: "cat -b <file>"

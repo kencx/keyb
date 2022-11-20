@@ -220,6 +220,11 @@ func GetorCreateConfigDir(baseDir string) (string, error) {
 }
 
 func GetBaseDir() (string, error) {
+	val, ok := os.LookupEnv("XDG_CONFIG_HOME")
+	if ok {
+		return val, nil
+	}
+
 	path, err := os.UserConfigDir()
 	if err != nil {
 		return "", fmt.Errorf("base config directory not found: %v", err)

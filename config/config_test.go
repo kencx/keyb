@@ -97,3 +97,17 @@ func TestParse(t *testing.T) {
 		t.Errorf("got %v, want %v", got, want)
 	}
 }
+
+func TestGetBaseDirWithSetEnvVar(t *testing.T) {
+	want := "/foo/bar/.config"
+	t.Setenv("XDG_CONFIG_HOME", want)
+
+	got, err := GetBaseDir()
+	if err != nil {
+		t.Fatalf("unexpected err: %v", err)
+	}
+
+	if got != want {
+		t.Errorf("got %v, want %v", got, want)
+	}
+}

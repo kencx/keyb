@@ -141,8 +141,7 @@ func main() {
 
 func start(m *ui.Model) error {
 
-	p := tea.NewProgram(m)
-	p.EnableMouseCellMotion()
+	p := tea.NewProgram(m, tea.WithMouseCellMotion())
 
 	if err := p.Start(); err != nil {
 		return fmt.Errorf("failed to start: %w", err)

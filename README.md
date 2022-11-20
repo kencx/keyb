@@ -175,7 +175,8 @@ By default, the following options are included.
 | `padding`     | `1`                      | Space between border and text |
 | `border`      | `"hidden"`               | Border style: `normal, rounded, double, thick, hidden`|
 
->OS-specific keyb directory path:
+> If set, `XDG_CONFIG_HOME` will be used in Unix and Darwin systems. Otherwise, keyb
+> will fall back to the default OS config directory:
 >
 >- Unix: `$XDG_CONFIG_HOME/keyb/keyb.yml`,
 >- MacOS or Darwin: `$HOME/Library/Application Support/keyb/keyb.yml`,

@@ -150,7 +150,6 @@ func (m *Model) Resize(width, height int) {
 func (m *Model) Reset() {
 	m.filteredTable.Reset()
 	m.filterState = unfiltered
-	m.searchBar.Reset()
 	m.currentHeading = ""
 	m.cursorToBeginning()
 	m.visibleRows()
@@ -192,10 +191,11 @@ func (m *Model) searchMode() bool {
 	return m.search && m.searchBar.Focused()
 }
 
-func (m *Model) startSearch() {
+func (m *Model) startSearch() tea.Cmd {
 	m.search = true
 	m.filterState = filtering
 	m.searchBar.Focus()
+	return textinput.Blink
 }
 
 func (m *Model) cursorToBeginning() {

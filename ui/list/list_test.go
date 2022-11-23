@@ -67,7 +67,7 @@ func TestReset(t *testing.T) {
 	tm.Reset()
 
 	assertEqual(t, tm.filteredTable.Render(), "")
-	assertEqual(t, tm.searchBar.Value(), "")
+	assertEqual(t, tm.searchBar.Value(), "searching...")
 	assertEqual(t, tm.filterState, unfiltered)
 	assertEqual(t, tm.cursor, 0)
 	assertEqual(t, tm.maxRows, tm.table.LineCount)

@@ -76,11 +76,11 @@ func (m *Model) handleNormal(msg tea.Msg) tea.Cmd {
 			return tea.Quit
 
 		case key.Matches(msg, m.keys.Search):
-			m.startSearch()
+			return m.startSearch()
 
 		case key.Matches(msg, m.keys.ClearSearch):
-			m.Reset()
-			m.startSearch()
+			m.searchBar.Reset()
+			return m.startSearch()
 
 		case key.Matches(msg, m.keys.Up):
 			m.cursor--
@@ -183,8 +183,8 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 			return tea.Quit
 
 		case key.Matches(msg, m.keys.ClearSearch):
-			m.Reset()
-			m.startSearch()
+			m.searchBar.Reset()
+			return m.startSearch()
 
 		case key.Matches(msg, m.keys.Normal):
 			m.search = false
@@ -195,19 +195,19 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 			}
 			return nil
 		}
-
-		// filter with search input
-		m.searchBar, cmd = m.searchBar.Update(msg)
-		cmds = append(cmds, cmd)
-
-		prefix := "h:"
-		if strings.HasPrefix(m.searchBar.Value(), prefix) {
-			matchHeadings(m, prefix)
-		} else {
-			matchRows(m)
-		}
-		m.cursorToBeginning()
 	}
+
+	// filter with search input
+	m.searchBar, cmd = m.searchBar.Update(msg)
+	cmds = append(cmds, cmd)
+
+	prefix := "h:"
+	if strings.HasPrefix(m.searchBar.Value(), prefix) {
+		matchHeadings(m, prefix)
+	} else {
+		matchRows(m)
+	}
+	m.cursorToBeginning()
 
 	// reset if search input is empty regardless of filterState
 	if m.searchBar.Value() == "" {

@@ -21,4 +21,4 @@
     - name: "linemode"
       key: "M"
     - name: "+, -, ="
-      key: "setting access rights to files"	
+      key: "setting access rights to files"

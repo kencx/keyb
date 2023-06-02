@@ -4,6 +4,7 @@ import (
 	"github.com/kencx/keyb/config"
 	"github.com/kencx/keyb/ui/table"
 
+	"github.com/charmbracelet/bubbles/cursor"
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
@@ -57,6 +58,17 @@ func New(t *table.Model, config *config.Config) Model {
 		searchBar:    textinput.New(),
 		counterStyle: lipgloss.NewStyle().Faint(true).Margin(0, 1),
 	}
+	m.searchBar = textinput.Model{
+		Prompt:           config.Prompt,
+		PromptStyle:      lipgloss.NewStyle().Foreground(lipgloss.Color(config.PromptColor)),
+		Placeholder:      config.Placeholder,
+		PlaceholderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("240")),
+		EchoCharacter:    '*',
+		CharLimit:        0,
+		Cursor:           cursor.New(),
+		KeyMap:           textinput.KeyMap(CreateTextInputKeyMap()),
+	}
+
 	m.configure(config)
 
 	if m.startInSearchMode {
@@ -67,15 +79,6 @@ func New(t *table.Model, config *config.Config) Model {
 }
 
 func (m *Model) configure(c *config.Config) {
-
-	m.searchBar.Prompt = c.Prompt
-	m.searchBar.PromptStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color(c.PromptColor))
-	m.searchBar.Placeholder = c.Placeholder
-
-    // temp measure: clear default keymap
-    // TODO allow customization of text input keymap
-    m.searchBar.KeyMap = textinput.KeyMap{}
 
 	if c.PlaceholderFg != "" || c.PlaceholderBg != "" {
 		m.searchBar.PlaceholderStyle = lipgloss.NewStyle().
@@ -95,8 +98,9 @@ func (m *Model) configure(c *config.Config) {
 
 	m.title = c.Title
 	m.debug = c.Debug
-	m.keys = CreateKeyMap(c.Keys)
 	m.promptLocation = c.PromptLocation
+
+	m.keys = CreateKeyMap(c.Keys)
 
 	m.margin = c.Margin
 	m.padding = c.Padding

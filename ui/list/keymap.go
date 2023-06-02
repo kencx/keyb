@@ -31,6 +31,22 @@ type KeyMap struct {
 	Normal      key.Binding
 }
 
+type TextInputKeyMap struct {
+	CharacterForward        key.Binding
+	CharacterBackward       key.Binding
+	WordForward             key.Binding
+	WordBackward            key.Binding
+	DeleteWordBackward      key.Binding
+	DeleteWordForward       key.Binding
+	DeleteAfterCursor       key.Binding
+	DeleteBeforeCursor      key.Binding
+	DeleteCharacterBackward key.Binding
+	DeleteCharacterForward  key.Binding
+	LineStart               key.Binding
+	LineEnd                 key.Binding
+	Paste                   key.Binding
+}
+
 func CreateKeyMap(keys config.Keys) KeyMap {
 	return KeyMap{
 		Quit:          SetKey(keys.Quit),
@@ -52,6 +68,24 @@ func CreateKeyMap(keys config.Keys) KeyMap {
 		ClearSearch: SetKey(keys.ClearSearch),
 		Normal:      SetKey(keys.Normal),
 	}
+}
+
+func CreateTextInputKeyMap() TextInputKeyMap {
+    return TextInputKeyMap {
+		CharacterForward:        SetKey("right"),
+		CharacterBackward:       SetKey("left"),
+		WordForward:             SetKey("alt+right, alt+f"),
+		WordBackward:            SetKey("alt+left, alt+b"),
+		DeleteWordBackward:      SetKey("alt+backspace"),
+		DeleteWordForward:       SetKey("alt+delete"),
+		DeleteAfterCursor:       SetKey("alt+k"),
+		DeleteBeforeCursor:      SetKey("alt+u"),
+		DeleteCharacterBackward: SetKey("backspace"),
+		DeleteCharacterForward:  SetKey("delete"),
+		LineStart:               SetKey("home, ctrl+a"),
+		LineEnd:                 SetKey("end, ctrl+e"),
+		Paste:                   SetKey("ctrl+v"),
+    }
 }
 
 func SetKey(s string) key.Binding {

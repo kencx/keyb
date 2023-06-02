@@ -16,6 +16,8 @@ type KeyMap struct {
 	HalfDown      key.Binding
 	FullUp        key.Binding
 	FullDown      key.Binding
+	UpFocus       key.Binding
+	DownFocus     key.Binding
 	GoToFirstLine key.Binding
 	GoToLastLine  key.Binding
 	GoToTop       key.Binding
@@ -38,6 +40,8 @@ func CreateKeyMap(keys config.Keys) KeyMap {
 		HalfDown:      SetKey(keys.HalfDown),
 		FullUp:        SetKey(keys.FullUp),
 		FullDown:      SetKey(keys.FullDown),
+		UpFocus:       SetKey(keys.UpFocus),
+		DownFocus:     SetKey(keys.DownFocus),
 		GoToFirstLine: SetKey(keys.GoToFirstLine),
 		GoToLastLine:  SetKey(keys.GoToLastLine),
 		GoToTop:       SetKey(keys.GoToTop),

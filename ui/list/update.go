@@ -93,6 +93,17 @@ func (m *Model) handleNormal(msg tea.Msg) tea.Cmd {
 				m.viewport.LineDown(1)
 			}
 
+		case key.Matches(msg, m.keys.UpFocus):
+			m.cursor--
+			if m.cursorPastViewTop() {
+				m.viewport.LineUp(1)
+			}
+		case key.Matches(msg, m.keys.DownFocus):
+			m.cursor++
+			if m.cursorPastViewBottom() {
+				m.viewport.LineDown(1)
+			}
+
 		case key.Matches(msg, m.keys.HalfUp):
 			m.cursor -= m.viewport.Height / 2
 			if m.cursorPastViewTop() {
@@ -186,6 +197,67 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 			m.searchBar.Reset()
 			return m.startSearch()
 
+        // scrolling in search mode
+		case key.Matches(msg, m.keys.UpFocus):
+			m.cursor--
+			if m.cursorPastViewTop() {
+				m.viewport.LineUp(1)
+			}
+            return nil
+		case key.Matches(msg, m.keys.DownFocus):
+			m.cursor++
+			if m.cursorPastViewBottom() {
+				m.viewport.LineDown(1)
+			}
+            return nil
+
+		case key.Matches(msg, m.keys.HalfUp):
+			m.cursor -= m.viewport.Height / 2
+			if m.cursorPastViewTop() {
+				m.viewport.HalfViewUp()
+			}
+
+			// don't loop around
+			if m.cursorPastBeginning() {
+				m.cursorToBeginning()
+				m.viewport.GotoTop()
+			}
+		case key.Matches(msg, m.keys.HalfDown):
+			m.cursor += m.viewport.Height / 2
+			if m.cursorPastViewBottom() {
+				m.viewport.HalfViewDown()
+			}
+
+			// don't loop around
+			if m.cursorPastEnd() {
+				m.cursorToEnd()
+				m.viewport.GotoBottom()
+			}
+
+		case key.Matches(msg, m.keys.FullUp):
+			m.cursor -= m.viewport.Height
+			if m.cursorPastViewTop() {
+				m.viewport.ViewUp()
+			}
+
+			// don't loop around
+			if m.cursorPastBeginning() {
+				m.cursorToBeginning()
+				m.viewport.GotoTop()
+			}
+
+		case key.Matches(msg, m.keys.FullDown):
+			m.cursor += m.viewport.Height
+			if m.cursorPastViewBottom() {
+				m.viewport.ViewDown()
+			}
+
+			// don't loop around
+			if m.cursorPastEnd() {
+				m.cursorToEnd()
+				m.viewport.GotoBottom()
+			}
+
 		case key.Matches(msg, m.keys.Normal):
 			m.search = false
 			m.searchBar.Blur()
@@ -207,7 +279,6 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 	} else {
 		matchRows(m)
 	}
-	m.cursorToBeginning()
 
 	// reset if search input is empty regardless of filterState
 	if m.searchBar.Value() == "" {

@@ -56,6 +56,8 @@ type Keys struct {
 	Quit          string
 	Up            string
 	Down          string
+	UpFocus       string `yaml:"up_focus"`
+	DownFocus     string `yaml:"down_focus"`
 	HalfUp        string `yaml:"half_up"`
 	HalfDown      string `yaml:"half_down"`
 	FullUp        string `yaml:"full_up"`
@@ -188,6 +190,8 @@ func generateDefaultConfig() (*Config, error) {
 			Quit:          "q, ctrl+c",
 			Up:            "k, up",
 			Down:          "j, down",
+			UpFocus:       "ctrl+k",
+			DownFocus:     "ctrl+j",
 			HalfUp:        "ctrl+u",
 			HalfDown:      "ctrl+d",
 			FullUp:        "ctrl+b",

@@ -73,6 +73,10 @@ func (m *Model) configure(c *config.Config) {
 		Foreground(lipgloss.Color(c.PromptColor))
 	m.searchBar.Placeholder = c.Placeholder
 
+    // temp measure: clear default keymap
+    // TODO allow customization of text input keymap
+    m.searchBar.KeyMap = textinput.KeyMap{}
+
 	if c.PlaceholderFg != "" || c.PlaceholderBg != "" {
 		m.searchBar.PlaceholderStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color(c.PlaceholderFg)).
@@ -169,6 +173,10 @@ func (m *Model) SyncContent(table *table.Model) {
 	if table.Empty() {
 		m.viewport.SetContent("")
 		return
+	}
+
+	if m.cursor > table.LineCount {
+		m.cursor = table.LineCount - 1
 	}
 
 	for i, row := range table.Rows {

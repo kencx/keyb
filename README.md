@@ -128,7 +128,7 @@ Prefixes are useful for applications with a common leading hotkey like tmux.
 
 Refer to the `examples` for more examples.
 
->Multiline fields are not supported at the moment.
+>Multiline fields are not supported!
 
 ### Quick Add
 
@@ -175,12 +175,15 @@ By default, the following options are included.
 | `padding`     | `1`                      | Space between border and text |
 | `border`      | `"hidden"`               | Border style: `normal, rounded, double, thick, hidden`|
 
-> If set, `XDG_CONFIG_HOME` will be used in Unix and Darwin systems. Otherwise, keyb
-> will fall back to the default OS config directory:
->
->- Unix: `$XDG_CONFIG_HOME/keyb/keyb.yml`,
->- MacOS or Darwin: `$HOME/Library/Application Support/keyb/keyb.yml`,
->- Windows: `%Appdata%\keyb\keyb.yml`
+#### keyb Configuration Path
+
+If `XDG_CONFIG_HOME` is set, it will be prioritized and used in Unix and Darwin
+systems. Otherwise, keyb will fall back to the default OS config directory
+defined as such:
+
+- Unix: `$XDG_CONFIG_HOME/keyb/keyb.yml`,
+- MacOS/Darwin: `$HOME/Library/Application Support/keyb/keyb.yml`,
+- Windows: `%Appdata%\keyb\keyb.yml`
 
 #### Color
 Both ANSI and hex color codes are supported.
@@ -204,8 +207,9 @@ Multiple keys may be set for a single binding, separated by commas.
 | Hotkey                  | Default                    | Description      |
 | ----------------------- | -------------------------- | ---------------- |
 | `up`, `down`            | <kbd>j, k / Up, Down</kbd> | Move cursor      |
-| `half_up, half_down`    | <kbd>Ctrl + u, d</kbd>     | Move half window |
-| `full_up, full_down`    | <kbd>Ctrl + b, f</kbd>     | Move full window |
+| `up_focus`, `down_focus`| <kbd>Ctrl + j, ctrl + k </kbd> | Move cursor in search mode |
+| `half_up, half_down`    | <kbd>Ctrl + u, d</kbd>     | Move half window (also works in search mode) |
+| `full_up, full_down`    | <kbd>Ctrl + b, f</kbd>     | Move full window (also works in search mode) |
 | `top, middle, bottom`   | <kbd>H, M, L</kbd>         | Go to top, middle, bottom of screen |
 | `first_line, last_line` | <kbd>g, G</kbd>            | Go to first, last line |
 | `search`                | <kbd>/</kbd>               | Enter search mode      |
@@ -213,12 +217,17 @@ Multiple keys may be set for a single binding, separated by commas.
 | `normal`                | <kbd>Esc</kbd>             | Exit search mode |
 | `quit`                  | <kbd>Ctrl + c, q</kbd>     | Quit		      |
 
+>The
+>[default](https://github.com/charmbracelet/bubbles/blob/afd7868712d4a4f817829dc7e1868c337c5e5cff/textinput/textinput.go#L61)
+>key bindings for the search bar have been reset temporarily. Customization of
+>these key bindings are coming soon.
+
 ## Roadmap
 
 - [x] Ability to customize keyb hotkeys
-- [ ] Export to additional file formats (`json, toml, conf/ini` etc.)
 - [x] `a, add` subcommand to quickly add a single hotkey entry from the CLI
-- [ ] Automatic parsing from online cheatsheet repos (eg. `cheat/cheatsheets`)
+- [ ] Export to additional file formats (`json, toml, conf/ini` etc.)
+- [ ] Allow customization of search bar key bindings
 
 ## Contributing
 

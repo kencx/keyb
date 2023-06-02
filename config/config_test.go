@@ -74,6 +74,8 @@ func TestParse(t *testing.T) {
 			Quit:          "q, ctrl+c",
 			Up:            "k, up",
 			Down:          "j, down",
+			UpFocus:       "ctrl+k",
+			DownFocus:     "ctrl+j",
 			HalfUp:        "ctrl+u",
 			HalfDown:      "ctrl+d",
 			FullUp:        "ctrl+b",

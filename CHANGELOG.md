@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [v0.2.0]: https://github.com/kencx/keyb/compare/v0.1.0...v0.2.0
 [v0.3.0]: https://github.com/kencx/keyb/compare/v0.2.0...v0.3.0
+[v0.4.0]: https://github.com/kencx/keyb/compare/v0.3.0...v0.4.0
+
+## [v0.4.0]
+### BREAKING
+- Use `XDG_CONFIG_HOME` environment variable in macOS if set [#18](https://github.com/keyb/pull/18)
+
+### Added
+- Add ability to move cursor in search mode
+  [55dd7ad](https://github.com/kencx/keyb/commit/55dd7adead29316d3952e7c19bb5b15546394668)
+- Add ability to customize cursor movement keys in search mode
+  [55dd7ad](https://github.com/kencx/keyb/commit/55dd7adead29316d3952e7c19bb5b15546394668)
+
+### Changed
+- Update dependencies [#19](https://github.com/kencx/keyb/pull/19) and
+  [3cba5b8](https://github.com/kencx/keyb/commit/3cba5b801acd617e9d1c37734582f3f15d2ec41b)
+
+### Fixed
+- Fix search bar cursor not blinking when focused [#20](https://github.com/kencx/keyb/pull/20)
 
 ## [v0.3.0]
 ### Added

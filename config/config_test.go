@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	testDirPath     = "../testdata"
+	testDirPath   = "../testdata"
 	testConfigDir = keybDirPath
 )
 
@@ -71,23 +71,32 @@ func TestReadConfigFile(t *testing.T) {
 				FilterFg: "#FFA066",
 			},
 			Keys: Keys{
-				Quit:          "q, ctrl+c",
-				Up:            "k, up",
-				Down:          "j, down",
-				UpFocus:       "alt+k",
-				DownFocus:     "alt+j",
-				HalfUp:        "ctrl+u",
-				HalfDown:      "ctrl+d",
-				FullUp:        "ctrl+b",
-				FullDown:      "ctrl+f",
-				GoToFirstLine: "g",
-				GoToLastLine:  "G",
-				GoToTop:       "H",
-				GoToMiddle:    "M",
-				GoToBottom:    "L",
-				Search:        "/",
-				ClearSearch:   "alt+d",
-				Normal:        "esc",
+				Quit:                     "q, ctrl+c",
+				Up:                       "k, up",
+				Down:                     "j, down",
+				UpFocus:                  "alt+k",
+				DownFocus:                "alt+j",
+				HalfUp:                   "ctrl+u",
+				HalfDown:                 "ctrl+d",
+				FullUp:                   "ctrl+b",
+				FullDown:                 "ctrl+f",
+				GoToFirstLine:            "g",
+				GoToLastLine:             "G",
+				GoToTop:                  "H",
+				GoToMiddle:               "M",
+				GoToBottom:               "L",
+				Search:                   "/",
+				ClearSearch:              "alt+d",
+				Normal:                   "esc",
+				CursorWordForward:        "alt+right, alt+f",
+				CursorWordBackward:       "alt+left, alt+b",
+				CursorDeleteWordBackward: "alt+backspace",
+				CursorDeleteWordForward:  "alt+delete",
+				CursorDeleteAfterCursor:  "alt+k",
+				CursorDeleteBeforeCursor: "alt+u",
+				CursorLineStart:          "home, ctrl+a",
+				CursorLineEnd:            "end, ctrl+e",
+				CursorPaste:              "ctrl+v",
 			},
 		}
 		got, err := ReadConfigFile(filepath.Join(testDirPath, "testConfig.yml"))

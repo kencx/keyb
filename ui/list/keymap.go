@@ -29,6 +29,8 @@ type KeyMap struct {
 	Search      key.Binding
 	ClearSearch key.Binding
 	Normal      key.Binding
+
+	TextInputKeyMap
 }
 
 type TextInputKeyMap struct {
@@ -67,25 +69,23 @@ func CreateKeyMap(keys config.Keys) KeyMap {
 		Search:      SetKey(keys.Search),
 		ClearSearch: SetKey(keys.ClearSearch),
 		Normal:      SetKey(keys.Normal),
-	}
-}
 
-func CreateTextInputKeyMap() TextInputKeyMap {
-    return TextInputKeyMap {
-		CharacterForward:        SetKey("right"),
-		CharacterBackward:       SetKey("left"),
-		WordForward:             SetKey("alt+right, alt+f"),
-		WordBackward:            SetKey("alt+left, alt+b"),
-		DeleteWordBackward:      SetKey("alt+backspace"),
-		DeleteWordForward:       SetKey("alt+delete"),
-		DeleteAfterCursor:       SetKey("alt+k"),
-		DeleteBeforeCursor:      SetKey("alt+u"),
-		DeleteCharacterBackward: SetKey("backspace"),
-		DeleteCharacterForward:  SetKey("delete"),
-		LineStart:               SetKey("home, ctrl+a"),
-		LineEnd:                 SetKey("end, ctrl+e"),
-		Paste:                   SetKey("ctrl+v"),
-    }
+		TextInputKeyMap: TextInputKeyMap{
+			CharacterForward:        SetKey("right"),
+			CharacterBackward:       SetKey("left"),
+			WordForward:             SetKey(keys.CursorWordForward),
+			WordBackward:            SetKey(keys.CursorWordBackward),
+			DeleteWordBackward:      SetKey(keys.CursorDeleteWordBackward),
+			DeleteWordForward:       SetKey(keys.CursorDeleteWordForward),
+			DeleteAfterCursor:       SetKey(keys.CursorDeleteAfterCursor),
+			DeleteBeforeCursor:      SetKey(keys.CursorDeleteBeforeCursor),
+			DeleteCharacterBackward: SetKey("backspace"),
+			DeleteCharacterForward:  SetKey("delete"),
+			LineStart:               SetKey(keys.CursorLineStart),
+			LineEnd:                 SetKey(keys.CursorLineEnd),
+			Paste:                   SetKey(keys.CursorPaste),
+		},
+	}
 }
 
 func SetKey(s string) key.Binding {

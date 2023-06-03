@@ -39,3 +39,12 @@ keys:
   search: /
   clear_search: alt+d
   normal: esc
+  cursor_word_forward: "alt+right, alt+f"
+  cursor_word_backward: "alt+left, alt+b"
+  cursor_delete_word_backward: "alt+backspace"
+  cursor_delete_word_forward: "alt+delete"
+  cursor_delete_after_cursor: "alt+k"
+  cursor_delete_before_cursor: "alt+u"
+  cursor_line_start: "home, ctrl+a"
+  cursor_line_end: "end, ctrl+e"
+  cursor_paste: "ctrl+v"

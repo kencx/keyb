@@ -197,19 +197,19 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 			m.searchBar.Reset()
 			return m.startSearch()
 
-        // scrolling in search mode
+			// scrolling in search mode
 		case key.Matches(msg, m.keys.UpFocus):
 			m.cursor--
 			if m.cursorPastViewTop() {
 				m.viewport.LineUp(1)
 			}
-            return nil
+			return nil
 		case key.Matches(msg, m.keys.DownFocus):
 			m.cursor++
 			if m.cursorPastViewBottom() {
 				m.viewport.LineDown(1)
 			}
-            return nil
+			return nil
 
 		case key.Matches(msg, m.keys.HalfUp):
 			m.cursor -= m.viewport.Height / 2

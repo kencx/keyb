@@ -164,7 +164,7 @@ See [config](examples/config/README.md) for all configuration options.
 - [x] Ability to customize keyb hotkeys
 - [x] `a, add` subcommand to quickly add a single hotkey entry from the CLI
 - [ ] Export to additional file formats (`json, toml, conf/ini` etc.)
-- [ ] Allow customization of search bar key bindings
+- [ ] Support multiple keyb files or directories
 
 ## Contributing
 

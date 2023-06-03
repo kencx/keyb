@@ -45,8 +45,10 @@ type Model struct {
 }
 
 func New(t *table.Model, c *config.Config) Model {
+	keyMap := CreateKeyMap(c.Keys)
+
 	m := Model{
-		keys: CreateKeyMap(c.Keys),
+		keys: keyMap,
 		viewport: viewport.Model{
 			YOffset:           0,
 			MouseWheelDelta:   3,
@@ -62,7 +64,7 @@ func New(t *table.Model, c *config.Config) Model {
 			EchoCharacter:    '*',
 			CharLimit:        0,
 			Cursor:           cursor.New(),
-			KeyMap:           textinput.KeyMap(CreateTextInputKeyMap()),
+			KeyMap:           textinput.KeyMap(keyMap.TextInputKeyMap),
 		},
 		startInSearchMode: c.SearchMode,
 
@@ -80,7 +82,10 @@ func New(t *table.Model, c *config.Config) Model {
 		promptLocation: c.PromptLocation,
 	}
 
-	m.configure(c)
+	m.table.SepWidth = c.SepWidth
+	m.filteredTable.SepWidth = c.SepWidth
+	m.scrollOffset += (m.margin * 2) + (m.padding * 2)
+	m.style(c)
 
 	if m.startInSearchMode {
 		m.startSearch()
@@ -89,8 +94,7 @@ func New(t *table.Model, c *config.Config) Model {
 	return m
 }
 
-func (m *Model) configure(c *config.Config) {
-
+func (m *Model) style(c *config.Config) {
 	if c.PlaceholderFg != "" || c.PlaceholderBg != "" {
 		m.searchBar.PlaceholderStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color(c.PlaceholderFg)).
@@ -100,11 +104,6 @@ func (m *Model) configure(c *config.Config) {
 	if c.CounterFg != "" || c.CounterBg != "" {
 		m.counterStyle = lipgloss.NewStyle().Foreground(lipgloss.Color(c.CounterFg)).Background(lipgloss.Color(c.CounterBg)).Margin(0, 1)
 	}
-
-	m.table.SepWidth = c.SepWidth
-	m.filteredTable.SepWidth = c.SepWidth
-
-	m.scrollOffset += (m.margin * 2) + (m.padding * 2)
 
 	var b lipgloss.Border
 	switch c.BorderStyle {

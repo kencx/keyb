@@ -51,81 +51,99 @@ type Color struct {
 }
 
 type Keys struct {
-	Quit          string
-	Up            string
-	Down          string
-	UpFocus       string `yaml:"up_focus"`
-	DownFocus     string `yaml:"down_focus"`
-	HalfUp        string `yaml:"half_up"`
-	HalfDown      string `yaml:"half_down"`
-	FullUp        string `yaml:"full_up"`
-	FullDown      string `yaml:"full_bottom"`
-	GoToFirstLine string `yaml:"first_line"`
-	GoToLastLine  string `yaml:"last_line"`
-	GoToTop       string `yaml:"top"`
-	GoToMiddle    string `yaml:"middle"`
-	GoToBottom    string `yaml:"bottom"`
-	Search        string
-	ClearSearch   string `yaml:"clear_search"`
-	Normal        string
+	Quit                     string
+	Up                       string
+	Down                     string
+	UpFocus                  string `yaml:"up_focus"`
+	DownFocus                string `yaml:"down_focus"`
+	HalfUp                   string `yaml:"half_up"`
+	HalfDown                 string `yaml:"half_down"`
+	FullUp                   string `yaml:"full_up"`
+	FullDown                 string `yaml:"full_bottom"`
+	GoToFirstLine            string `yaml:"first_line"`
+	GoToLastLine             string `yaml:"last_line"`
+	GoToTop                  string `yaml:"top"`
+	GoToMiddle               string `yaml:"middle"`
+	GoToBottom               string `yaml:"bottom"`
+	Search                   string
+	ClearSearch              string `yaml:"clear_search"`
+	Normal                   string
+	CursorWordForward        string `yaml:"cursor_word_forward"`
+	CursorWordBackward       string `yaml:"cursor_word_backward"`
+	CursorDeleteWordBackward string `yaml:"cursor_delete_word_backward"`
+	CursorDeleteWordForward  string `yaml:"cursor_delete_word_forward"`
+	CursorDeleteAfterCursor  string `yaml:"cursor_delete_after_cursor"`
+	CursorDeleteBeforeCursor string `yaml:"cursor_delete_before_cursor"`
+	CursorLineStart          string `yaml:"cursor_line_start"`
+	CursorLineEnd            string `yaml:"cursor_line_end"`
+	CursorPaste              string `yaml:"cursor_paste"`
 }
 
 var DefaultConfig = &Config{
-		Settings: Settings{
-			Debug:          false,
-			Reverse:        false,
-			Mouse:          true,
-			SearchMode:     false,
-			SortKeys:       false,
-			Title:          "",
-			Prompt:         "keys > ",
-			PromptLocation: "top",
-			Placeholder:    "...",
-			PrefixSep:      ";",
-			SepWidth:       4,
-			Margin:         0,
-			Padding:        1,
-			BorderStyle:    "hidden",
-		},
-		Color: Color{
-			FilterFg: "#FFA066",
-		},
-		Keys: Keys{
-			Quit:          "q, ctrl+c",
-			Up:            "k, up",
-			Down:          "j, down",
-			UpFocus:       "ctrl+k",
-			DownFocus:     "ctrl+j",
-			HalfUp:        "ctrl+u",
-			HalfDown:      "ctrl+d",
-			FullUp:        "ctrl+b",
-			FullDown:      "ctrl+f",
-			GoToFirstLine: "g",
-			GoToLastLine:  "G",
-			GoToTop:       "H",
-			GoToMiddle:    "M",
-			GoToBottom:    "L",
-			Search:        "/",
-			ClearSearch:   "alt+d",
-			Normal:        "esc",
-		},
-	}
+	Settings: Settings{
+		Debug:          false,
+		Reverse:        false,
+		Mouse:          true,
+		SearchMode:     false,
+		SortKeys:       false,
+		Title:          "",
+		Prompt:         "keys > ",
+		PromptLocation: "top",
+		Placeholder:    "...",
+		PrefixSep:      ";",
+		SepWidth:       4,
+		Margin:         0,
+		Padding:        1,
+		BorderStyle:    "hidden",
+	},
+	Color: Color{
+		FilterFg: "#FFA066",
+	},
+	Keys: Keys{
+		Quit:                     "q, ctrl+c",
+		Up:                       "k, up",
+		Down:                     "j, down",
+		UpFocus:                  "ctrl+k",
+		DownFocus:                "ctrl+j",
+		HalfUp:                   "ctrl+u",
+		HalfDown:                 "ctrl+d",
+		FullUp:                   "ctrl+b",
+		FullDown:                 "ctrl+f",
+		GoToFirstLine:            "g",
+		GoToLastLine:             "G",
+		GoToTop:                  "H",
+		GoToMiddle:               "M",
+		GoToBottom:               "L",
+		Search:                   "/",
+		ClearSearch:              "alt+d",
+		Normal:                   "esc",
+		CursorWordForward:        "alt+right, alt+f",
+		CursorWordBackward:       "alt+left, alt+b",
+		CursorDeleteWordBackward: "alt+backspace",
+		CursorDeleteWordForward:  "alt+delete",
+		CursorDeleteAfterCursor:  "alt+k",
+		CursorDeleteBeforeCursor: "alt+u",
+		CursorLineStart:          "home, ctrl+a",
+		CursorLineEnd:            "end, ctrl+e",
+		CursorPaste:              "ctrl+v",
+	},
+}
 
 func Parse(flagKPath, configPath string) (Apps, *Config, error) {
-    var (
-        config *Config
-        err error
-    )
+	var (
+		config *Config
+		err    error
+	)
 
-    switch configPath {
-    case "":
-        config, err = ReadDefaultConfigFile()
-    default:
-        config, err = ReadConfigFile(configPath)
-    }
-    if err != nil {
-        return nil, nil, err
-    }
+	switch configPath {
+	case "":
+		config, err = ReadDefaultConfigFile()
+	default:
+		config, err = ReadConfigFile(configPath)
+	}
+	if err != nil {
+		return nil, nil, err
+	}
 
 	// priority: flag > file
 	var kPath string
@@ -133,7 +151,7 @@ func Parse(flagKPath, configPath string) (Apps, *Config, error) {
 		kPath = flagKPath
 	}
 
-    // If no keyb file present, create a default file and set it as kPath
+	// If no keyb file present, create a default file and set it as kPath
 	if kPath == "" {
 		kPath = config.KeybPath
 		if !pathExists(kPath) {
@@ -152,29 +170,29 @@ func Parse(flagKPath, configPath string) (Apps, *Config, error) {
 
 // Read config file at default path if exist. Otherwise, return default config
 func ReadDefaultConfigFile() (*Config, error) {
-    baseDir, err := getBaseDir()
-    if err != nil {
-        return nil, err
-    }
-    configDir, err := getConfigDir(baseDir)
-    if err != nil {
-        return nil, err
-    }
+	baseDir, err := getBaseDir()
+	if err != nil {
+		return nil, err
+	}
+	configDir, err := getConfigDir(baseDir)
+	if err != nil {
+		return nil, err
+	}
 
-    var config *Config
-    defaultConfigFilePath := filepath.Join(configDir, configFileName)
-    if !pathExists(defaultConfigFilePath) {
-        config, err = newDefaultConfig()
-        if err != nil {
-            return nil, err
-        }
-    } else {
-        config, err = ReadConfigFile(defaultConfigFilePath)
-        if err != nil {
-            return nil, err
-        }
-    }
-    return config, nil
+	var config *Config
+	defaultConfigFilePath := filepath.Join(configDir, configFileName)
+	if !pathExists(defaultConfigFilePath) {
+		config, err = newDefaultConfig()
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		config, err = ReadConfigFile(defaultConfigFilePath)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return config, nil
 }
 
 // Read given config file and merge with default config
@@ -201,7 +219,7 @@ func ReadConfigFile(path string) (*Config, error) {
 }
 
 func newDefaultConfig() (*Config, error) {
-    res := DefaultConfig
+	res := DefaultConfig
 
 	baseDir, err := getBaseDir()
 	if err != nil {

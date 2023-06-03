@@ -66,8 +66,16 @@ Multiple keys may be set for a single binding, separated by commas.
 | `normal`                | <kbd>Esc</kbd>             | Exit search mode |
 | `quit`                  | <kbd>Ctrl + c, q</kbd>     | Quit		      |
 
->The
->[default](https://github.com/charmbracelet/bubbles/blob/afd7868712d4a4f817829dc7e1868c337c5e5cff/textinput/textinput.go#L61)
->key bindings for the search bar have been reset temporarily. Customization of
->these key bindings are coming soon.
+These hotkeys configure the cursor behaviour in the search bar only:
 
+| Hotkey                  | Default                     | Description      |
+| ----------------------- | --------------------------- | ---------------- |
+| `cursor_word_forward`     | <kbd>alt+right, alt+f</kbd> | Move forward by word |
+| `cursor_word_backward`    | <kbd>alt+left, alt+b</kbd>  | Move backward by word |
+| `cursor_delete_word_backward` | <kbd>alt+backspace</kbd> | Delete word backward |
+| `cursor_delete_word_forward`  | <kbd>alt+delete</kbd>   | Delete word forward |
+| `cursor_delete_after_cursor`  | <kbd>alt+k</kbd>        | Delete after cursor |
+| `cursor_delete_before_cursor` | <kbd>alt+u</kbd>        | Delete before cursor |
+| `cursor_line_start`       | <kbd>home, ctrl+a</kbd>     | Move cursor to start |
+| `cursor_line_end`         | <kbd>end, ctrl+e</kbd>      | Move cursor to end |
+| `cursor_paste`            | <kbd>ctrl+v</kbd>           | Paste into search bar|

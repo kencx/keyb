@@ -27,3 +27,7 @@ snapshot:
 ## build: build binary
 build:
 	go build ${ldflags} -o ${binary}
+
+## install: install binary at ~/.local/bin
+install:
+	cp ${binary} ~/.local/bin/

@@ -1,0 +1,41 @@
+settings:
+  keyb_path: "$HOME/.config/keyb/keyb.yml"
+  debug: false
+  reverse: false
+  mouse: true
+  search_mode: false
+  sort_keys: false
+  title: ""
+  prompt: 'keys > '
+  prompt_location: "top"
+  placeholder: '...'
+  prefix_sep: ;
+  sep_width: 4
+  margin: 0
+  padding: 1
+  border: hidden
+color:
+  prompt: ""
+  cursor_fg: ""
+  cursor_bg: ""
+  filter_fg: "#FFA066"
+  filter_bg: ""
+  border_color: ""
+keys:
+  quit: q, ctrl+c
+  up: k, up
+  down: j, down
+  up_focus: ctrl+k
+  down_focus: ctrl+j
+  half_up: ctrl+u
+  half_down: ctrl+d
+  full_up: ctrl+b
+  full_bottom: ctrl+f
+  first_line: g
+  last_line: G
+  top: H
+  middle: M
+  bottom: L
+  search: /
+  clear_search: alt+d
+  normal: esc

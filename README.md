@@ -151,76 +151,13 @@ $ keyb add -b "kitty; open terminal; super + enter"
 When adding a new keybind, the app name, keybind name and keybind must be
 specified. It is separated by `;` and wrapped in quotes (to prevent parsing errors).
 
-### Configuration
+## Configuration
 
-keyb can be customized with a configuration file at the default OS config
+keyb can be customized with a config file at the default OS config
 directory (i.e. `$XDG_CONFIG_HOME/keyb/config.yml`). If no such file exists, the
 default configuration will be used.
 
-| Option        | Default                  | Description |
-| ------------- | ------------------------ | ----------- |
-| `keyb_path`   | OS-dependent (see below) | keyb file path |
-| `debug`       | `false`                  | Debug mode |
-| `mouse`       | `true`                   | Mouse enabled |
-| `reverse`     | `false`                  | Swap the name and key columns |
-| `search_mode` | `false`                  | Start in search mode |
-| `sort_keys`   | `false`                  | Sort keys alphabetically |
-| `title`       | `""`                     | Title text |
-| `prompt`      | `"keys > "`              | Search bar prompt text |
-| `prompt_location` | `"top"`                | Location of search bar: `top, bottom` |
-| `placeholder` | `"..."`                  | Search bar placeholder text |
-| `prefix_sep`  | `";"`                    | Separator symbol between prefix and key |
-| `sep_width`   | `4`                      | Separation width between columns |
-| `margin`      | `0`                      | Space between window and border |
-| `padding`     | `1`                      | Space between border and text |
-| `border`      | `"hidden"`               | Border style: `normal, rounded, double, thick, hidden`|
-
-#### keyb Configuration Path
-
-If `$XDG_CONFIG_HOME` is set, it will be prioritized and used in Unix and Darwin
-systems. Otherwise, keyb will fall back to the default OS config directory
-defined as such:
-
-- Unix: `$XDG_CONFIG_HOME/keyb/keyb.yml`,
-- MacOS/Darwin: `$HOME/Library/Application Support/keyb/keyb.yml`,
-- Windows: `%Appdata%\keyb\keyb.yml`
-
-#### Color
-Both ANSI and hex color codes are supported.
-
-| Color Option     | Default    | Description |
-| ---------------- | ---------- | ----------- |
-| `prompt`         | -          | Prompt text color |
-| `cursor_fg`      | -          | Cursor foreground |
-| `cursor_bg`      | -          | Cursor background |
-| `filter_fg`      | `"#FFA066"`| Filter matching text foreground |
-| `filter_bg`      | -          | Filter matching text background |
-| `counter_fg`     | -          | Counter foreground |
-| `counter_bg`     | -          | Counter background |
-| `placeholder_fg` | -          | Placeholder foreground |
-| `placeholder_bg` | -          | Placeholder background |
-| `border_color`   | -          | Border color |
-
-#### Hotkeys
-Multiple keys may be set for a single binding, separated by commas.
-
-| Hotkey                  | Default                    | Description      |
-| ----------------------- | -------------------------- | ---------------- |
-| `up`, `down`            | <kbd>j, k / Up, Down</kbd> | Move cursor      |
-| `up_focus`, `down_focus`| <kbd>Ctrl + j, ctrl + k </kbd> | Move cursor in search mode |
-| `half_up, half_down`    | <kbd>Ctrl + u, d</kbd>     | Move half window (also works in search mode) |
-| `full_up, full_down`    | <kbd>Ctrl + b, f</kbd>     | Move full window (also works in search mode) |
-| `top, middle, bottom`   | <kbd>H, M, L</kbd>         | Go to top, middle, bottom of screen |
-| `first_line, last_line` | <kbd>g, G</kbd>            | Go to first, last line |
-| `search`                | <kbd>/</kbd>               | Enter search mode      |
-| `clear_search`          | <kbd>Alt + d</kbd>         | Clear current search (remains in search mode) |
-| `normal`                | <kbd>Esc</kbd>             | Exit search mode |
-| `quit`                  | <kbd>Ctrl + c, q</kbd>     | Quit		      |
-
->The
->[default](https://github.com/charmbracelet/bubbles/blob/afd7868712d4a4f817829dc7e1868c337c5e5cff/textinput/textinput.go#L61)
->key bindings for the search bar have been reset temporarily. Customization of
->these key bindings are coming soon.
+See [config](examples/config/README.md) for all configuration options.
 
 ## Roadmap
 

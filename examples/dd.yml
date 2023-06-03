@@ -1,6 +1,4 @@
 # https://github.com/cheat/cheatsheets
-# https://github.com/mfgbhatti
-# https://mfgbhatti.com
 - name: dd
   keybinds:
     - name: "Backup disk partition with dd"

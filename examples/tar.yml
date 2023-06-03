@@ -19,7 +19,3 @@
     key: "tar -cjvf /path/to/foo.tar.bz2 /path/to/foo/"
   - name: "To list the content of an .tar.bz2 archive:"
     key: "tar -tjvf /path/to/foo.tar.bz2"
-  - name: "To create a .tgz archive and exclude all jpg,gif,... from the tgz"
-    key: "tar -czvf /path/to/foo.tgz --exclude=*.{jpg,gif,png,wmv,flv,tar.gz,zip} /path/to/foo/"
-  - name: "To use parallel (multi-threaded) implementation of compression algorithms:"
-    key: "tar -z ... -> tar -Ipigz ... | tar -j ... -> tar -Ipbzip2 ... | tar -J ... -> tar -Ipixz ..."

@@ -1,7 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: smbclient
-  keybinds:
-  - name: "To display public shares on the server:"
-    key: "smbclient -L <host> -U%"
-  - name: "To connect to a share:"
-    key: "smbclient //<host>/<share> -U<user>%<password>"

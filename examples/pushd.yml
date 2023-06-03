@@ -1,7 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: pushd
-  keybinds:
-  - name: "To pushes your current directory to the top of a stack while changing to the specified directory:"
-    key: "pushd <directory>"
-  - name: "To return use popd:"
-    key: "popd"

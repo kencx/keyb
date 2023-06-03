@@ -1,7 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: df
-  keybinds:
-    - name: "To print free disk space in a human-readable format"
-      key: "df -h"
-    - name: "To print the disk for a given path"
-      key: "df -d <path>"

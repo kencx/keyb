@@ -1,7 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: rpm2cpio
-  keybinds:
-  - name: "To list contents of an RPM:"
-    key: "rpm2cpio <rpm-file> | cpio -vt"
-  - name: "To extract contents of an RPM:"
-    key: "rpm2cpio <rpm-file> | cpio -vid"

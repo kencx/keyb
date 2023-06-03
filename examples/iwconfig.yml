@@ -1,9 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: iwconfig
-  keybinds:
-  - name: "To display wireless settings of the first wireless adapter:"
-    key: "iwconfig wlan0"
-  - name: "To take down / up the wireless adapter:"
-    key: "iwconfig wlan0 txpower {on|auto|off}"
-  - name: "To change the mode of the wireless adapter:"
-    key: "iwconfig wlan0 mode {managed|ad-hoc|monitor}"

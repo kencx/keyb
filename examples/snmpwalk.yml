@@ -1,7 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: snmpwalk
-  keybinds:
-  - name: "To retrieve all of the variables under system for host zeus:"
-    key: "snmpwalk -Os -c public -v 1 zeus system"
-  - name: "To retrieve the scalar values, but omit the sysORTable for host zeus:"
-    key: "snmpwalk -Os -c public -v 1 -CE sysORTable zeus system"

@@ -1,7 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: pkcon
-  keybinds:
-  - name: "To update cached information about available updates:"
-    key: "pkcon refresh"
-  - name: "To update installed packages:"
-    key: "pkcon update"

@@ -1,7 +1,0 @@
-# https://github.com/cheat/cheatsheets
-- name: pkill
-  keybinds:
-  - name: "To kill a process using its full process name:"
-    key: "pkill <process-name>"
-  - name: "To kill a process by its partial name:"
-    key: "pkill -f <string>"

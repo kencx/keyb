@@ -44,32 +44,43 @@ type Model struct {
 	promptLocation string
 }
 
-func New(t *table.Model, config *config.Config) Model {
+func New(t *table.Model, c *config.Config) Model {
 	m := Model{
-		table:         t,
-		maxRows:       t.LineCount,
-		filteredTable: table.NewEmpty(t.LineCount),
-		cursor:        0,
-		scrollOffset:  5,
+		keys: CreateKeyMap(c.Keys),
 		viewport: viewport.Model{
-			YOffset:         0,
-			MouseWheelDelta: 3,
+			YOffset:           0,
+			MouseWheelDelta:   3,
+			MouseWheelEnabled: c.Mouse,
 		},
-		searchBar:    textinput.New(),
-		counterStyle: lipgloss.NewStyle().Faint(true).Margin(0, 1),
-	}
-	m.searchBar = textinput.Model{
-		Prompt:           config.Prompt,
-		PromptStyle:      lipgloss.NewStyle().Foreground(lipgloss.Color(config.PromptColor)),
-		Placeholder:      config.Placeholder,
-		PlaceholderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("240")),
-		EchoCharacter:    '*',
-		CharLimit:        0,
-		Cursor:           cursor.New(),
-		KeyMap:           textinput.KeyMap(CreateTextInputKeyMap()),
+		table: t,
+
+		searchBar: textinput.Model{
+			Prompt:           c.Prompt,
+			PromptStyle:      lipgloss.NewStyle().Foreground(lipgloss.Color(c.PromptColor)),
+			Placeholder:      c.Placeholder,
+			PlaceholderStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("240")),
+			EchoCharacter:    '*',
+			CharLimit:        0,
+			Cursor:           cursor.New(),
+			KeyMap:           textinput.KeyMap(CreateTextInputKeyMap()),
+		},
+		startInSearchMode: c.SearchMode,
+
+		filteredTable: table.NewEmpty(t.LineCount),
+
+		title:   c.Title,
+		debug:   c.Debug,
+		cursor:  0,
+		maxRows: t.LineCount,
+
+		margin:         c.Margin,
+		padding:        c.Padding,
+		scrollOffset:   5,
+		counterStyle:   lipgloss.NewStyle().Faint(true).Margin(0, 1),
+		promptLocation: c.PromptLocation,
 	}
 
-	m.configure(config)
+	m.configure(c)
 
 	if m.startInSearchMode {
 		m.startSearch()
@@ -90,20 +101,9 @@ func (m *Model) configure(c *config.Config) {
 		m.counterStyle = lipgloss.NewStyle().Foreground(lipgloss.Color(c.CounterFg)).Background(lipgloss.Color(c.CounterBg)).Margin(0, 1)
 	}
 
-	m.viewport.MouseWheelEnabled = c.Mouse
 	m.table.SepWidth = c.SepWidth
 	m.filteredTable.SepWidth = c.SepWidth
 
-	m.startInSearchMode = c.SearchMode
-
-	m.title = c.Title
-	m.debug = c.Debug
-	m.promptLocation = c.PromptLocation
-
-	m.keys = CreateKeyMap(c.Keys)
-
-	m.margin = c.Margin
-	m.padding = c.Padding
 	m.scrollOffset += (m.margin * 2) + (m.padding * 2)
 
 	var b lipgloss.Border

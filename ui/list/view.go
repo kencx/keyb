@@ -7,7 +7,6 @@ import (
 )
 
 func (m *Model) View() string {
-
 	if m.table.Empty() {
 		m.viewport.SetContent("\nNo key bindings found")
 	}
@@ -15,7 +14,6 @@ func (m *Model) View() string {
 	counter := formCounter(m)
 
 	var view string
-
 	if m.promptLocation == "bottom" {
 		view = lipgloss.JoinVertical(
 			lipgloss.Left,

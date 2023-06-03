@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/kencx/keyb/config"
@@ -53,12 +52,6 @@ func main() {
 		addPrefix bool
 	)
 
-	baseDir, err := config.GetBaseDir()
-	if err != nil {
-		log.Fatalf("os not supported: %v", err)
-	}
-	defaultConfig := path.Join(baseDir, "keyb", "config.yml")
-
 	shortVersion := flag.Bool("v", false, "version information")
 	longVersion := flag.Bool("version", false, "version information")
 
@@ -71,8 +64,8 @@ func main() {
 	flag.StringVar(&keybFile, "k", "", "keybindings file")
 	flag.StringVar(&keybFile, "key", "", "keybindings file")
 
-	flag.StringVar(&configFile, "c", defaultConfig, "config file")
-	flag.StringVar(&configFile, "config", defaultConfig, "config file")
+	flag.StringVar(&configFile, "c", "", "config file")
+	flag.StringVar(&configFile, "config", "", "config file")
 
 	addCmd := flag.NewFlagSet("add", flag.ExitOnError)
 	addCmd.StringVar(&addBind, "b", "", "keybind")

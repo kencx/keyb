@@ -25,6 +25,8 @@ keys:
   quit: q, ctrl+c
   up: k, up
   down: j, down
+  up_focus: alt+k
+  down_focus: alt+j
   half_up: ctrl+u
   half_down: ctrl+d
   full_up: ctrl+b

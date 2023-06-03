@@ -2,7 +2,7 @@ package config
 
 import (
 	"os"
-	"path"
+	"path/filepath"
 	"reflect"
 	"testing"
 )
@@ -12,8 +12,7 @@ var (
 	tempKeybFile = "temp.yml"
 )
 
-func TestParseApps(t *testing.T) {
-
+func TestReadKeybFile(t *testing.T) {
 	t.Run("file present", func(t *testing.T) {
 		want := Apps{{
 			Name: "test",
@@ -23,7 +22,7 @@ func TestParseApps(t *testing.T) {
 			}},
 		}}
 
-		got, err := ParseApps(path.Join(parentDir, testKeybFile))
+		got, err := ReadKeybFile(filepath.Join(testDirPath, testKeybFile))
 		if err != nil {
 			t.Fatalf("unexpected err: %v", err)
 		}
@@ -34,15 +33,15 @@ func TestParseApps(t *testing.T) {
 	})
 
 	t.Run("file absent", func(t *testing.T) {
-		testpath := path.Join(parentDir, tempKeybFile)
+		testpath := filepath.Join(testDirPath, tempKeybFile)
 
-		_, err := ParseApps(testpath)
+		_, err := ReadKeybFile(testpath)
 		if err == nil {
 			t.Errorf("expected err: %s does not exist", testpath)
 		}
 
 		t.Cleanup(func() {
-			os.RemoveAll(path.Join(parentDir, tempKeybFile))
+			os.RemoveAll(filepath.Join(testDirPath, tempKeybFile))
 		})
 
 		_, err = os.Stat(testpath)
@@ -53,7 +52,6 @@ func TestParseApps(t *testing.T) {
 }
 
 func TestAddOrUpdate(t *testing.T) {
-
 	t.Run("update existing", func(t *testing.T) {
 		apps := Apps{{
 			Name: "test",

@@ -3,27 +3,26 @@ package config
 import (
 	"fmt"
 	"os"
-	"path"
 	"path/filepath"
 	"reflect"
 	"testing"
 )
 
-var (
-	parentDir     = "../testdata"
-	testConfigDir = "keyb"
+const (
+	testDirPath     = "../testdata"
+	testConfigDir = keybDirPath
 )
 
-func TestCreateConfigDir(t *testing.T) {
+func TestGetConfigDir(t *testing.T) {
+	want := filepath.Join(testDirPath, testConfigDir)
 
-	want := filepath.Join(parentDir, testConfigDir)
-	got, err := GetorCreateConfigDir(parentDir)
+	got, err := getConfigDir(testDirPath)
 	if err != nil {
 		t.Fatalf("unexpected err: %v", err)
 	}
 
 	t.Cleanup(func() {
-		os.RemoveAll(path.Join(parentDir, testConfigDir))
+		os.RemoveAll(filepath.Join(testDirPath, testConfigDir))
 	})
 
 	if got != want {
@@ -48,63 +47,81 @@ func TestCreateConfigDir(t *testing.T) {
 	}
 }
 
-func TestParse(t *testing.T) {
-	want := &Config{
-		Settings: Settings{
-			KeybPath:       "./custom.yml",
-			Debug:          true,
-			Reverse:        true,
-			Mouse:          false,
-			SearchMode:     false,
-			SortKeys:       true,
-			Title:          "",
-			Prompt:         "keys > ",
-			PromptLocation: "bottom",
-			Placeholder:    "...",
-			PrefixSep:      ";",
-			SepWidth:       4,
-			Margin:         1,
-			Padding:        1,
-			BorderStyle:    "normal",
-		},
-		Color: Color{
-			FilterFg: "#FFA066",
-		},
-		Keys: Keys{
-			Quit:          "q, ctrl+c",
-			Up:            "k, up",
-			Down:          "j, down",
-			UpFocus:       "ctrl+k",
-			DownFocus:     "ctrl+j",
-			HalfUp:        "ctrl+u",
-			HalfDown:      "ctrl+d",
-			FullUp:        "ctrl+b",
-			FullDown:      "ctrl+f",
-			GoToFirstLine: "g",
-			GoToLastLine:  "G",
-			GoToTop:       "H",
-			GoToMiddle:    "M",
-			GoToBottom:    "L",
-			Search:        "/",
-			ClearSearch:   "alt+d",
-			Normal:        "esc",
-		},
-	}
-	got, err := ParseConfig(path.Join(parentDir, "testconfig.yml"))
-	if err != nil {
-		t.Fatalf("unexpected err: %v", err)
-	}
+func TestReadConfigFile(t *testing.T) {
+	t.Run("full config", func(t *testing.T) {
+		want := &Config{
+			Settings: Settings{
+				KeybPath:       "./custom.yml",
+				Debug:          true,
+				Reverse:        true,
+				Mouse:          false,
+				SearchMode:     false,
+				SortKeys:       true,
+				Title:          "",
+				Prompt:         "keys > ",
+				PromptLocation: "bottom",
+				Placeholder:    "...",
+				PrefixSep:      ";",
+				SepWidth:       4,
+				Margin:         1,
+				Padding:        1,
+				BorderStyle:    "normal",
+			},
+			Color: Color{
+				FilterFg: "#FFA066",
+			},
+			Keys: Keys{
+				Quit:          "q, ctrl+c",
+				Up:            "k, up",
+				Down:          "j, down",
+				UpFocus:       "alt+k",
+				DownFocus:     "alt+j",
+				HalfUp:        "ctrl+u",
+				HalfDown:      "ctrl+d",
+				FullUp:        "ctrl+b",
+				FullDown:      "ctrl+f",
+				GoToFirstLine: "g",
+				GoToLastLine:  "G",
+				GoToTop:       "H",
+				GoToMiddle:    "M",
+				GoToBottom:    "L",
+				Search:        "/",
+				ClearSearch:   "alt+d",
+				Normal:        "esc",
+			},
+		}
+		got, err := ReadConfigFile(filepath.Join(testDirPath, "testConfig.yml"))
+		if err != nil {
+			t.Fatalf("unexpected err: %v", err)
+		}
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("got %v, want %v", got, want)
-	}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("minimal config", func(t *testing.T) {
+		want, err := newDefaultConfig()
+		if err != nil {
+			t.Fatalf("unexpected err: %v", err)
+		}
+
+		got, err := ReadConfigFile(filepath.Join(testDirPath, "testConfigMinimal.yml"))
+		if err != nil {
+			t.Fatalf("unexpected err: %v", err)
+		}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
 }
 
 func TestGetBaseDirWithSetEnvVar(t *testing.T) {
 	want := "/foo/bar/.config"
 	t.Setenv("XDG_CONFIG_HOME", want)
 
-	got, err := GetBaseDir()
+	got, err := getBaseDir()
 	if err != nil {
 		t.Fatalf("unexpected err: %v", err)
 	}

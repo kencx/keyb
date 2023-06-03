@@ -152,10 +152,10 @@ When adding a new keybind, the app name, keybind name and keybind must be
 specified. It is separated by `;` and wrapped in quotes (to prevent parsing errors).
 
 ### Configuration
-keyb is customized with a `config.yml` file that is automatically generated in
-the system's config directory.
 
-By default, the following options are included.
+keyb can be customized with a configuration file at the default OS config
+directory (i.e. `$XDG_CONFIG_HOME/keyb/config.yml`). If no such file exists, the
+default configuration will be used.
 
 | Option        | Default                  | Description |
 | ------------- | ------------------------ | ----------- |
@@ -177,7 +177,7 @@ By default, the following options are included.
 
 #### keyb Configuration Path
 
-If `XDG_CONFIG_HOME` is set, it will be prioritized and used in Unix and Darwin
+If `$XDG_CONFIG_HOME` is set, it will be prioritized and used in Unix and Darwin
 systems. Otherwise, keyb will fall back to the default OS config directory
 defined as such:
 
@@ -231,11 +231,7 @@ Multiple keys may be set for a single binding, separated by commas.
 
 ## Contributing
 
-keyb requires Go 1.18.
-
-Bug reports, feature requests and PRs are very welcome.
-
-More examples for default keymaps in `examples/` are also welcome.
+keyb requires Go 1.20. Bug reports, feature requests and PRs are very welcome.
 
 ## Similar Tools
 

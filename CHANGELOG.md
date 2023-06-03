@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.3.0]: https://github.com/kencx/keyb/compare/v0.2.0...v0.3.0
 [v0.4.0]: https://github.com/kencx/keyb/compare/v0.3.0...v0.4.0
 [v0.4.1]: https://github.com/kencx/keyb/compare/v0.4.0...v0.4.1
+[v0.5.0]: https://github.com/kencx/keyb/compare/v0.4.1...v0.5.0
+
+## [v0.5.0]
+### Added
+- Add ability to customize search bar cursor bindings.
+
+### Changed
+- Default configuration file is no longer automatically generated. `keyb` will
+  default to reading any config file at `$XDG_CONFIG_HOME/keyb/config.yml`. If
+  not present, the default configuration is used.
 
 ## [v0.4.1]
 ### Fixed

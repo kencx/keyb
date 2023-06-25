@@ -135,11 +135,10 @@ func Parse(flagKPath, configPath string) (Apps, *Config, error) {
 		err    error
 	)
 
-	switch configPath {
-	case "":
-		config, err = ReadDefaultConfigFile()
-	default:
+	if configPath != "" {
 		config, err = ReadConfigFile(configPath)
+	} else {
+		config, err = ReadConfigFileAtDefaultPath()
 	}
 	if err != nil {
 		return nil, nil, err
@@ -153,7 +152,7 @@ func Parse(flagKPath, configPath string) (Apps, *Config, error) {
 
 	// If no keyb file present, create a default file and set it as kPath
 	if kPath == "" {
-		kPath = config.KeybPath
+		kPath = os.ExpandEnv(config.KeybPath)
 		if !pathExists(kPath) {
 			if err := writeDefaultKeybFile(); err != nil {
 				return nil, nil, err
@@ -169,7 +168,7 @@ func Parse(flagKPath, configPath string) (Apps, *Config, error) {
 }
 
 // Read config file at default path if exist. Otherwise, return default config
-func ReadDefaultConfigFile() (*Config, error) {
+func ReadConfigFileAtDefaultPath() (*Config, error) {
 	baseDir, err := getBaseDir()
 	if err != nil {
 		return nil, err

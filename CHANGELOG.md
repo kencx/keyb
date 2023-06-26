@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.4.1]: https://github.com/kencx/keyb/compare/v0.4.0...v0.4.1
 [v0.5.0]: https://github.com/kencx/keyb/compare/v0.4.1...v0.5.0
 
+## Upcoming
+
+### Changed
+- Update bubbletea to v0.24.2
+
+### Fixed
+- Fix environment variables not being expanded in the config's `settings.keyb_path`.
+
 ## [v0.5.0]
 ### Added
 - Add ability to customize search bar cursor bindings.

@@ -1,7 +1,7 @@
 package output
 
 import (
-	"io/ioutil"
+	"io"
 	"os"
 	"testing"
 
@@ -28,7 +28,7 @@ func TestToStdout(t *testing.T) {
 	}
 	w.Close()
 
-	got, _ := ioutil.ReadAll(r)
+	got, _ := io.ReadAll(r)
 	os.Stdout = rescueStdout
 
 	want := "foo      \nbar     "

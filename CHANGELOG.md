@@ -9,10 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.4.0]: https://github.com/kencx/keyb/compare/v0.3.0...v0.4.0
 [v0.4.1]: https://github.com/kencx/keyb/compare/v0.4.0...v0.4.1
 [v0.5.0]: https://github.com/kencx/keyb/compare/v0.4.1...v0.5.0
+[v0.6.0]: https://github.com/kencx/keyb/compare/v0.5.0...v0.6.0
 
 ## Upcoming
 
+## [v0.6.0]
+
 ### Changed
+- Bump goreleaser/goreleaser-action from 4 to 5 [#25](https://github.com/kencx/keyb/pull/25)
+- Simplify config package
+- Bump actions/checkout from 3 to 4 [#24](https://github.com/kencx/keyb/pull/24)
+- Update Go to v1.21
 - Update bubbletea to v0.24.2
 
 ### Fixed
@@ -33,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v0.4.0]
 ### BREAKING
-- Use `XDG_CONFIG_HOME` environment variable in macOS if set [#18](https://github.com/keyb/pull/18)
+- Use `XDG_CONFIG_HOME` environment variable in macOS if set [#18](https://github.com/kencx/keyb/pull/18)
 
 ### Added
 - Add ability to move cursor in search mode

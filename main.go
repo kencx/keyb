@@ -81,7 +81,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	keys, cfg, err := config.Parse(keybFile, configFile)
+	keys, cfg, err := config.Parse(configFile, keybFile)
 	if err != nil {
 		log.Fatal(err)
 	}

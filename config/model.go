@@ -3,13 +3,10 @@ package config
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"gopkg.in/yaml.v2"
 )
-
-const keybFileName = "keyb.yml"
 
 type App struct {
 	Name     string    `yaml:"name"`
@@ -32,61 +29,14 @@ type KeyBind struct {
 	IgnorePrefix bool `yaml:"ignore_prefix,omitempty"`
 }
 
-// Read keyb file at given path
-func ReadKeybFile(path string) (Apps, error) {
-	if path == "" {
-		return nil, fmt.Errorf("no keyb path given")
-	}
-
-	path = os.ExpandEnv(path)
-	if !pathExists(path) {
-		return nil, fmt.Errorf("%s does not exist", path)
-	}
-
-	file, err := os.ReadFile(path)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read keyb file: %w", err)
-	}
-
-	var b Apps
-	if err := yaml.Unmarshal(file, &b); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal keyb file: %w", err)
-	}
-	return b, nil
-}
-
-// Write new keyb file at default path
-func writeDefaultKeybFile() error {
-	baseDir, err := getBaseDir()
+func AddEntry(path, binding string, kbIgnorePrefix bool) error {
+	xdgConfigDir, err := getXDGConfigDir()
 	if err != nil {
 		return err
 	}
 
-	path := filepath.Join(baseDir, keybDirPath, keybFileName)
-	data, err := yaml.Marshal(newDefaultKeyb(path))
-	if err != nil {
-		return fmt.Errorf("failed to generate default keyb: %w", err)
-	}
-	if err := os.WriteFile(path, data, 0644); err != nil {
-		return fmt.Errorf("failed to create keyb file: %w", err)
-	}
-	return nil
-}
-
-func newDefaultKeyb(path string) Apps {
-	return Apps{{
-		Name: "example",
-		Keybinds: []KeyBind{{
-			Name: "add your keys in",
-			Key:  path,
-		}},
-	}}
-}
-
-func AddEntry(path, binding string, kbIgnorePrefix bool) error {
-
 	// load existing struct from filepath
-	apps, err := ReadKeybFile(path)
+	apps, err := UnmarshalKeyb(path, xdgConfigDir)
 	if err != nil {
 		return err
 	}

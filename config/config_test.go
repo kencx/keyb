@@ -1,53 +1,15 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"reflect"
 	"testing"
 )
 
-const (
-	testDirPath   = "../testdata"
-	testConfigDir = keybDirPath
-)
+const testBasePath = "../testdata"
 
-func TestGetConfigDir(t *testing.T) {
-	want := filepath.Join(testDirPath, testConfigDir)
-
-	got, err := getConfigDir(testDirPath)
-	if err != nil {
-		t.Fatalf("unexpected err: %v", err)
-	}
-
-	t.Cleanup(func() {
-		os.RemoveAll(filepath.Join(testDirPath, testConfigDir))
-	})
-
-	if got != want {
-		t.Errorf("got %v, want %v", got, want)
-	}
-
-	info, err := os.Stat(got)
-	if err != nil {
-		t.Fatalf("unexpected err: %v", err)
-	}
-
-	if info.Name() != testConfigDir {
-		t.Errorf("got %v, want %v", info.Name(), testConfigDir)
-	}
-
-	if !info.IsDir() {
-		t.Errorf("%v not a directory", info.Name())
-	}
-
-	if fmt.Sprintf("%#o", info.Mode().Perm()) != "0744" {
-		t.Errorf("got %v, want %v", info.Mode().Perm(), "0744")
-	}
-}
-
-func TestReadConfigFile(t *testing.T) {
+func TestUnmarshalConfig(t *testing.T) {
 	t.Run("full config", func(t *testing.T) {
 		want := &Config{
 			Settings: Settings{
@@ -99,7 +61,7 @@ func TestReadConfigFile(t *testing.T) {
 				CursorPaste:              "ctrl+v",
 			},
 		}
-		got, err := ReadConfigFile(filepath.Join(testDirPath, "testConfig.yml"))
+		got, err := UnmarshalConfig(filepath.Join(testBasePath, "testConfig.yml"), testBasePath)
 		if err != nil {
 			t.Fatalf("unexpected err: %v", err)
 		}
@@ -110,12 +72,35 @@ func TestReadConfigFile(t *testing.T) {
 	})
 
 	t.Run("minimal config", func(t *testing.T) {
-		want, err := newDefaultConfig()
+		want := newDefaultConfig(testBasePath)
+
+		got, err := UnmarshalConfig(filepath.Join(testBasePath, "testConfigMinimal.yml"), testBasePath)
 		if err != nil {
 			t.Fatalf("unexpected err: %v", err)
 		}
 
-		got, err := ReadConfigFile(filepath.Join(testDirPath, "testConfigMinimal.yml"))
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("empty config file path", func(t *testing.T) {
+		want := newDefaultConfig(testBasePath)
+
+		got, err := UnmarshalConfig("", testBasePath)
+		if err != nil {
+			t.Fatalf("unexpected err: %v", err)
+		}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("config file absent", func(t *testing.T) {
+		want := newDefaultConfig(testBasePath)
+
+		got, err := UnmarshalConfig(filepath.Join(testBasePath, "testConfigAbsent.yml"), testBasePath)
 		if err != nil {
 			t.Fatalf("unexpected err: %v", err)
 		}
@@ -126,16 +111,51 @@ func TestReadConfigFile(t *testing.T) {
 	})
 }
 
-func TestGetBaseDirWithSetEnvVar(t *testing.T) {
-	want := "/foo/bar/.config"
-	t.Setenv("XDG_CONFIG_HOME", want)
+func TestUnmarshalKeyb(t *testing.T) {
+	t.Run("file present", func(t *testing.T) {
+		want := Apps{{
+			Name: "test",
+			Keybinds: []KeyBind{{
+				Name: "foo",
+				Key:  "bar",
+			}},
+		}}
 
-	got, err := getBaseDir()
-	if err != nil {
-		t.Fatalf("unexpected err: %v", err)
-	}
+		got, err := UnmarshalKeyb(filepath.Join(testBasePath, "testkeyb.yml"), testBasePath)
+		if err != nil {
+			t.Fatalf("unexpected err: %v", err)
+		}
 
-	if got != want {
-		t.Errorf("got %v, want %v", got, want)
-	}
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("file absent", func(t *testing.T) {
+		_, err := UnmarshalKeyb(filepath.Join(testBasePath, "temp.yml"), testBasePath)
+		if err != nil {
+			t.Fatalf("unexpected err: %v", err)
+		}
+
+		t.Cleanup(func() {
+			err := os.Remove(filepath.Join(testBasePath, "temp.yml"))
+			if err != nil {
+				t.Fatal(err)
+			}
+		})
+	})
+
+	t.Run("empty filepath", func(t *testing.T) {
+		_, err := UnmarshalKeyb("", testBasePath)
+		if err != nil {
+			t.Fatalf("unexpected err: %v", err)
+		}
+
+		t.Cleanup(func() {
+			err := os.Remove(filepath.Join(testBasePath, defaultKeybFile))
+			if err != nil {
+				t.Fatal(err)
+			}
+		})
+	})
 }

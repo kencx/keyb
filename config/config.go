@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,8 +10,9 @@ import (
 )
 
 const (
-	keybDirPath    = "keyb"
-	configFileName = "config.yml"
+	defaultConfigDir  = "keyb"
+	defaultConfigFile = "config.yml"
+	defaultKeybFile   = "keyb.yml"
 )
 
 type Config struct {
@@ -129,124 +131,114 @@ var DefaultConfig = &Config{
 	},
 }
 
-func Parse(flagKPath, configPath string) (Apps, *Config, error) {
-	var (
-		config *Config
-		err    error
-	)
-
-	if configPath != "" {
-		config, err = ReadConfigFile(configPath)
-	} else {
-		config, err = ReadConfigFileAtDefaultPath()
-	}
+// Read configuration and keyb file from flags, default path.
+// If config directory and/or files do not exist, create them.
+func Parse(flagCPath, flagKPath string) (Apps, *Config, error) {
+	xdgConfigDir, err := getXDGConfigDir()
 	if err != nil {
 		return nil, nil, err
 	}
 
-	// priority: flag > file
-	var kPath string
-	if flagKPath != "" {
-		kPath = flagKPath
+	basePath := filepath.Join(xdgConfigDir, defaultConfigDir)
+	err = os.MkdirAll(basePath, 0744)
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to create config dir: %w", err)
 	}
 
-	// If no keyb file present, create a default file and set it as kPath
-	if kPath == "" {
-		kPath = os.ExpandEnv(config.KeybPath)
-		if !pathExists(kPath) {
-			if err := writeDefaultKeybFile(); err != nil {
-				return nil, nil, err
-			}
-		}
+	config, err := UnmarshalConfig(flagCPath, basePath)
+	if err != nil {
+		return nil, nil, err
 	}
 
-	keys, err := ReadKeybFile(kPath)
+	if flagKPath == "" {
+		flagKPath = config.KeybPath
+	}
+
+	keys, err := UnmarshalKeyb(flagKPath, basePath)
 	if err != nil {
 		return nil, nil, err
 	}
 	return keys, config, nil
 }
 
-// Read config file at default path if exist. Otherwise, return default config
-func ReadConfigFileAtDefaultPath() (*Config, error) {
-	baseDir, err := getBaseDir()
-	if err != nil {
-		return nil, err
-	}
-	configDir, err := getConfigDir(baseDir)
-	if err != nil {
-		return nil, err
+// Read config file and merge with default config
+func UnmarshalConfig(configFile, basePath string) (*Config, error) {
+
+	// set default config filepath
+	if configFile == "" {
+		configFile = filepath.Join(basePath, defaultConfigFile)
 	}
 
-	var config *Config
-	defaultConfigFilePath := filepath.Join(configDir, configFileName)
-	if !pathExists(defaultConfigFilePath) {
-		config, err = newDefaultConfig()
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		config, err = ReadConfigFile(defaultConfigFilePath)
-		if err != nil {
-			return nil, err
+	res := newDefaultConfig(basePath)
+	configFile = os.ExpandEnv(configFile)
+
+	file, err := os.ReadFile(configFile)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return res, nil
+		} else {
+			return nil, fmt.Errorf("failed to read config file \"%s\": %w", configFile, err)
 		}
 	}
-	return config, nil
-}
 
-// Read given config file and merge with default config
-func ReadConfigFile(path string) (*Config, error) {
-	path = os.ExpandEnv(path)
-	if !pathExists(path) {
-		return nil, fmt.Errorf("config file \"%s\" does not exist", path)
+	if err = yaml.Unmarshal(file, &res); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal config file \"%s\": %w", configFile, err)
 	}
-
-	file, err := os.ReadFile(path)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read config file \"%s\": %w", path, err)
-	}
-
-	c, err := newDefaultConfig()
-	if err != nil {
-		return nil, err
-	}
-
-	if err = yaml.Unmarshal(file, &c); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal config file \"%s\": %w", path, err)
-	}
-	return c, nil
-}
-
-func newDefaultConfig() (*Config, error) {
-	res := DefaultConfig
-
-	baseDir, err := getBaseDir()
-	if err != nil {
-		return nil, err
-	}
-
-	res.KeybPath = filepath.Join(baseDir, keybDirPath, keybFileName)
 	return res, nil
 }
 
-// Get or create keyb config directory
-func getConfigDir(baseDir string) (string, error) {
-	if baseDir == "" {
-		return "", fmt.Errorf("base config directory not found")
-	}
-	configPath := filepath.Join(baseDir, keybDirPath)
-
-	if !pathExists(configPath) {
-		err := os.MkdirAll(configPath, 0744)
-		if err != nil {
-			return "", fmt.Errorf("failed to create config dir: %w", err)
-		}
-	}
-	return configPath, nil
+func newDefaultConfig(basePath string) *Config {
+	res := DefaultConfig
+	res.KeybPath = filepath.Join(basePath, defaultKeybFile)
+	return res
 }
 
-// Fetch OS-dependent user config directory
-func getBaseDir() (string, error) {
+// Read keyb file or create default keyb file not exist
+func UnmarshalKeyb(keybFile, basePath string) (Apps, error) {
+	if keybFile == "" {
+		keybFile = filepath.Join(basePath, defaultKeybFile)
+	}
+
+	keybFile = os.ExpandEnv(keybFile)
+	file, err := os.ReadFile(keybFile)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+
+			k := newDefaultKeyb(keybFile)
+			data, err := yaml.Marshal(k)
+			if err != nil {
+				return nil, fmt.Errorf("failed to generate default keyb: %w", err)
+			}
+
+			if err := os.WriteFile(keybFile, data, 0644); err != nil {
+				return nil, fmt.Errorf("failed to create keyb file: %w", err)
+			}
+			return k, nil
+
+		} else {
+			return nil, fmt.Errorf("failed to read keyb file: %w", err)
+		}
+	}
+
+	var b Apps
+	if err := yaml.Unmarshal(file, &b); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal keyb file: %w", err)
+	}
+	return b, nil
+}
+
+func newDefaultKeyb(path string) Apps {
+	return Apps{{
+		Name: "example",
+		Keybinds: []KeyBind{{
+			Name: "add your keys in",
+			Key:  path,
+		}},
+	}}
+}
+
+// get user XDG_CONFIG_HOME directory
+func getXDGConfigDir() (string, error) {
 	val, ok := os.LookupEnv("XDG_CONFIG_HOME")
 	if ok {
 		return val, nil
@@ -254,12 +246,7 @@ func getBaseDir() (string, error) {
 
 	path, err := os.UserConfigDir()
 	if err != nil {
-		return "", fmt.Errorf("base config directory not found: %v", err)
+		return "", fmt.Errorf("user config directory not found: %w", err)
 	}
 	return path, nil
-}
-
-func pathExists(path string) bool {
-	_, err := os.Stat(path)
-	return err == nil
 }

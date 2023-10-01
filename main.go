@@ -134,7 +134,7 @@ func main() {
 
 func start(m *ui.Model) error {
 
-	p := tea.NewProgram(m, tea.WithMouseCellMotion())
+	p := tea.NewProgram(m, tea.WithMouseCellMotion(), tea.WithAltScreen())
 
 	if _, err := p.Run(); err != nil {
 		return fmt.Errorf("failed to start: %w", err)

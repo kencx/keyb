@@ -47,6 +47,9 @@ type TextInputKeyMap struct {
 	LineStart               key.Binding
 	LineEnd                 key.Binding
 	Paste                   key.Binding
+	AcceptSuggestion        key.Binding
+	NextSuggestion          key.Binding
+	PrevSuggestion          key.Binding
 }
 
 func CreateKeyMap(keys config.Keys) KeyMap {
@@ -84,6 +87,9 @@ func CreateKeyMap(keys config.Keys) KeyMap {
 			LineStart:               SetKey(keys.CursorLineStart),
 			LineEnd:                 SetKey(keys.CursorLineEnd),
 			Paste:                   SetKey(keys.CursorPaste),
+			AcceptSuggestion:        SetKey("tab"),
+			NextSuggestion:          SetKey("ctrl+n"),
+			PrevSuggestion:          SetKey("ctrl+p"),
 		},
 	}
 }

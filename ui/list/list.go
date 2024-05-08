@@ -65,6 +65,7 @@ func New(t *table.Model, c *config.Config) Model {
 			CharLimit:        0,
 			Cursor:           cursor.New(),
 			KeyMap:           textinput.KeyMap(keyMap.TextInputKeyMap),
+			ShowSuggestions:  false,
 		},
 		startInSearchMode: c.SearchMode,
 

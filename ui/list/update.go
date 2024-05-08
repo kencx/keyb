@@ -33,13 +33,13 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		if !m.viewport.MouseWheelEnabled {
 			break
 		}
-		switch msg.Type {
-		case tea.MouseWheelUp:
+		switch msg.Button {
+		case tea.MouseButtonWheelUp:
 			m.cursor -= m.viewport.MouseWheelDelta
 			if m.cursorPastViewTop() {
 				m.viewport.LineUp(m.viewport.MouseWheelDelta)
 			}
-		case tea.MouseWheelDown:
+		case tea.MouseButtonWheelDown:
 			m.cursor += m.viewport.MouseWheelDelta
 			if m.cursorPastViewBottom() {
 				m.viewport.LineDown(m.viewport.MouseWheelDelta)

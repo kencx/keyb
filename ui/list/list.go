@@ -127,13 +127,14 @@ func (m *Model) style(c *config.Config) {
 			Background(lipgloss.Color(c.CursorBg))
 
 		s := table.RowStyles{
-			Normal:          lipgloss.NewStyle().Margin(0, 2),
-			Heading:         lipgloss.NewStyle().Margin(0, 1).Bold(true),
-			Selected:        cursor.Copy().Margin(0, 2),
-			SelectedHeading: cursor.Copy().Margin(0, 1).Bold(true),
+			Normal:          lipgloss.NewStyle().Margin(0, 2).TabWidth(lipgloss.NoTabConversion),
+			Heading:         lipgloss.NewStyle().Margin(0, 1).Bold(true).TabWidth(lipgloss.NoTabConversion),
+			Selected:        cursor.Copy().Margin(0, 2).TabWidth(lipgloss.NoTabConversion),
+			SelectedHeading: cursor.Copy().Margin(0, 1).Bold(true).TabWidth(lipgloss.NoTabConversion),
 			Filtered: lipgloss.NewStyle().
 				Foreground(lipgloss.Color(c.FilterFg)).
-				Background(lipgloss.Color(c.FilterBg)),
+				Background(lipgloss.Color(c.FilterBg)).
+				TabWidth(lipgloss.NoTabConversion),
 		}
 
 		for _, row := range m.table.Rows {

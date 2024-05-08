@@ -1,6 +1,6 @@
 module github.com/kencx/keyb
 
-go 1.21
+go 1.22
 
 require (
 	github.com/charmbracelet/bubbles v0.18.0

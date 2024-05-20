@@ -168,7 +168,7 @@ See [config](examples/config/README.md) for all configuration options.
 
 ## Contributing
 
-keyb requires Go 1.21. Bug reports, feature requests and PRs are very welcome.
+keyb requires Go 1.22. Bug reports, feature requests and PRs are very welcome.
 
 ## Similar Tools
 

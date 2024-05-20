@@ -9,9 +9,9 @@ import (
 )
 
 type App struct {
-	Name     string    `yaml:"name"`
-	Prefix   string    `yaml:"prefix,omitempty"`
-	Keybinds []KeyBind `yaml:"keybinds"`
+	Prefix   string    `yaml:"prefix,omitempty" json:"prefix,omitempty"`
+	Name     string    `yaml:"name" json:"name"`
+	Keybinds []KeyBind `yaml:"keybinds" json:"keybinds"`
 }
 
 type Apps []*App
@@ -21,12 +21,12 @@ func (a App) String() string {
 }
 
 type KeyBind struct {
-	Name string `yaml:"name"`
-	Key  string `yaml:"key"`
+	Name string `yaml:"name" json:"name"`
+	Key  string `yaml:"key" json:"key"`
 
 	// ignore prefix defaults to false
 	// so user can choose to ignore prefix for a specific kb
-	IgnorePrefix bool `yaml:"ignore_prefix,omitempty"`
+	IgnorePrefix bool `yaml:"ignore_prefix,omitempty" json:"ignore_prefix,omitempty"`
 }
 
 func AddEntry(path, binding string, kbIgnorePrefix bool) error {

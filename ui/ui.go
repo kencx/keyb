@@ -13,6 +13,7 @@ import (
 
 type Model struct {
 	List list.Model
+	Apps *config.Apps
 }
 
 func NewModel(a config.Apps, config *config.Config) *Model {
@@ -20,6 +21,7 @@ func NewModel(a config.Apps, config *config.Config) *Model {
 	table := createParentTable(a, config.SortKeys)
 	return &Model{
 		List: list.New(table, config),
+		Apps: &a,
 	}
 }
 

@@ -3,6 +3,8 @@ package output
 import (
 	"io"
 	"os"
+	"path/filepath"
+	"reflect"
 	"testing"
 
 	"github.com/kencx/keyb/config"
@@ -14,8 +16,40 @@ import (
 var (
 	testTable  = table.New([]*table.Row{table.NewHeading("foo"), {Text: "bar"}})
 	testConfig = &config.Config{}
-	m          = &ui.Model{List: list.New(testTable, testConfig)}
+	testApps   = &config.Apps{
+		&config.App{
+			Name:   "foo",
+			Prefix: "bar",
+			Keybinds: []config.KeyBind{
+				{
+					Name: "key foo",
+					Key:  "key bar",
+				},
+			},
+		},
+	}
+	m = &ui.Model{List: list.New(testTable, testConfig), Apps: testApps}
 )
+
+func TestToJson(t *testing.T) {
+	tempDir := t.TempDir()
+	path := filepath.Join(tempDir, "test.json")
+
+	err := ToFile(m, path)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	got, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := []byte(`[{"prefix":"bar","name":"foo","keybinds":[{"name":"key foo","key":"key bar"}]}]`)
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %s, want %s", got, want)
+	}
+}
 
 func TestToStdout(t *testing.T) {
 	rescueStdout := os.Stdout

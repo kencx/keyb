@@ -132,7 +132,6 @@ var DefaultConfig = &Config{
 }
 
 // Read configuration and keyb file from flags, default path.
-// If config directory and/or files do not exist, create them.
 func Parse(flagCPath, flagKPath string) (Apps, *Config, error) {
 	xdgConfigDir, err := getXDGConfigDir()
 	if err != nil {

@@ -22,6 +22,7 @@ type Model struct {
 	keys     KeyMap
 	viewport viewport.Model
 	table    *table.Model
+	err      error
 
 	searchBar         textinput.Model
 	search            bool

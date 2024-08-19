@@ -25,6 +25,7 @@ type KeyMap struct {
 	GoToBottom    key.Binding
 
 	CenterCursor key.Binding
+	PrintKey     key.Binding
 
 	Search      key.Binding
 	ClearSearch key.Binding
@@ -68,6 +69,7 @@ func CreateKeyMap(keys config.Keys) KeyMap {
 		GoToTop:       SetKey(keys.GoToTop),
 		GoToMiddle:    SetKey(keys.GoToMiddle),
 		GoToBottom:    SetKey(keys.GoToBottom),
+		PrintKey:      SetKey(keys.PrintKey),
 
 		Search:      SetKey(keys.Search),
 		ClearSearch: SetKey(keys.ClearSearch),

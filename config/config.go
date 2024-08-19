@@ -67,6 +67,7 @@ type Keys struct {
 	GoToTop                  string `yaml:"top"`
 	GoToMiddle               string `yaml:"middle"`
 	GoToBottom               string `yaml:"bottom"`
+	PrintKey                 string `yaml:"print_key"`
 	Search                   string
 	ClearSearch              string `yaml:"clear_search"`
 	Normal                   string
@@ -116,6 +117,7 @@ var DefaultConfig = &Config{
 		GoToTop:                  "H",
 		GoToMiddle:               "M",
 		GoToBottom:               "L",
+		PrintKey:                 "enter",
 		Search:                   "/",
 		ClearSearch:              "alt+d",
 		Normal:                   "esc",

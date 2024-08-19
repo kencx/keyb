@@ -1,6 +1,7 @@
 package list
 
 import (
+	"os/exec"
 	"sort"
 	"strings"
 
@@ -9,6 +10,8 @@ import (
 	"github.com/kencx/keyb/ui/table"
 	"github.com/sahilm/fuzzy"
 )
+
+type finishedMsg struct{ err error }
 
 func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 
@@ -45,6 +48,12 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 				m.viewport.LineDown(m.viewport.MouseWheelDelta)
 			}
 		}
+
+	case finishedMsg:
+		if msg.err != nil {
+			m.err = msg.err
+		}
+		return m, tea.Quit
 	}
 
 	switch {
@@ -74,6 +83,18 @@ func (m *Model) handleNormal(msg tea.Msg) tea.Cmd {
 		switch {
 		case key.Matches(msg, m.keys.Quit):
 			return tea.Quit
+
+		case key.Matches(msg, m.keys.PrintKey):
+
+			output := fetchCurrentRowKey(m)
+			if output == "" {
+				break
+			}
+
+			c := exec.Command("xdotool", "key", output)
+			return tea.ExecProcess(c, func(err error) tea.Msg {
+				return finishedMsg{err}
+			})
 
 		case key.Matches(msg, m.keys.Search):
 			return m.startSearch()
@@ -350,4 +371,18 @@ func matchRows(m *Model) {
 		}
 		m.filteredTable.AppendRows(hlMatches...)
 	}
+}
+
+func fetchCurrentRowKey(m *Model) string {
+	var output string
+
+	row := m.table.Rows[m.cursor].String()
+	sp := strings.Split(row, "\t")
+
+	if len(sp) <= 1 {
+		return ""
+	} else {
+		output = sp[1]
+	}
+	return strings.Join(strings.Split(output, " "), "")
 }

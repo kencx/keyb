@@ -20,6 +20,7 @@ const (
     -e, --export    Export to file
     -k, --key       Key bindings at custom path
     -c, --config    Config file at custom path
+    -x, --xdotool   Output keys for xdotool
     -v, --version   Version info
     -h, --help	    Show help
 
@@ -47,6 +48,7 @@ func main() {
 		exportFile string
 		keybFile   string
 		configFile string
+		xdotool    bool
 
 		addBind   string
 		addPrefix bool
@@ -66,6 +68,9 @@ func main() {
 
 	flag.StringVar(&configFile, "c", "", "config file")
 	flag.StringVar(&configFile, "config", "", "config file")
+
+	flag.BoolVar(&xdotool, "x", false, "output keys for xdotool")
+	flag.BoolVar(&xdotool, "xdotool", false, "output keys for xdotool")
 
 	addCmd := flag.NewFlagSet("add", flag.ExitOnError)
 	addCmd.StringVar(&addBind, "b", "", "keybind")

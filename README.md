@@ -159,6 +159,11 @@ default configuration will be used.
 
 See [config](examples/config/README.md) for all configuration options.
 
+### Missing Colors
+
+If you're missing colors, a workaround is to add the environment variable `CLICOLOR_FORCE=1` to
+[force ANSI color support](https://pkg.go.dev/github.com/muesli/termenv#Output.EnvColorProfile).
+
 ## Roadmap
 
 - [x] Ability to customize keyb hotkeys

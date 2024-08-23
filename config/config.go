@@ -1,6 +1,7 @@
 package config
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -16,69 +17,69 @@ const (
 )
 
 type Config struct {
-	Settings `yaml:"settings"`
-	Color    `yaml:"color"`
-	Keys     `yaml:"keys"`
+	Settings `yaml:"settings" json:"settings"`
+	Color    `yaml:"color" json:"color"`
+	Keys     `yaml:"keys" json:"keys"`
 }
 
 type Settings struct {
-	KeybPath       string `yaml:"keyb_path"`
+	KeybPath       string `yaml:"keyb_path" json:"keyb_path"`
 	Debug          bool
 	Reverse        bool
 	Mouse          bool
-	SearchMode     bool `yaml:"search_mode"`
-	SortKeys       bool `yaml:"sort_keys"`
+	SearchMode     bool `yaml:"search_mode" json:"search_mode"`
+	SortKeys       bool `yaml:"sort_keys" json:"sort_keys"`
 	Title          string
 	Prompt         string
-	PromptLocation string `yaml:"prompt_location"`
+	PromptLocation string `yaml:"prompt_location" json:"prompt_location"`
 	Placeholder    string
-	PrefixSep      string `yaml:"prefix_sep"`
-	SepWidth       int    `yaml:"sep_width"`
+	PrefixSep      string `yaml:"prefix_sep" json:"prefix_sep"`
+	SepWidth       int    `yaml:"sep_width" json:"sep_width"`
 	Margin         int
 	Padding        int
-	BorderStyle    string `yaml:"border"`
+	BorderStyle    string `yaml:"border" json:"border"`
 }
 
 type Color struct {
-	PromptColor   string `yaml:"prompt"`
-	CursorFg      string `yaml:"cursor_fg"`
-	CursorBg      string `yaml:"cursor_bg"`
-	FilterFg      string `yaml:"filter_fg"`
-	FilterBg      string `yaml:"filter_bg"`
-	CounterFg     string `yaml:"counter_fg"`
-	CounterBg     string `yaml:"counter_bg"`
-	PlaceholderFg string `yaml:"placeholder_fg"`
-	PlaceholderBg string `yaml:"placeholder_bg"`
-	BorderColor   string `yaml:"border_color"`
+	PromptColor   string `yaml:"prompt" json:"prompt"`
+	CursorFg      string `yaml:"cursor_fg" json:"cursor_fg"`
+	CursorBg      string `yaml:"cursor_bg" json:"cursor_bg"`
+	FilterFg      string `yaml:"filter_fg" json:"filter_fg"`
+	FilterBg      string `yaml:"filter_bg" json:"filter_bg"`
+	CounterFg     string `yaml:"counter_fg" json:"counter_fg"`
+	CounterBg     string `yaml:"counter_bg" json:"counter_bg"`
+	PlaceholderFg string `yaml:"placeholder_fg" json:"placeholder_fg"`
+	PlaceholderBg string `yaml:"placeholder_bg" json:"placeholder_bg"`
+	BorderColor   string `yaml:"border_color" json:"border_color"`
 }
 
 type Keys struct {
 	Quit                     string
 	Up                       string
 	Down                     string
-	UpFocus                  string `yaml:"up_focus"`
-	DownFocus                string `yaml:"down_focus"`
-	HalfUp                   string `yaml:"half_up"`
-	HalfDown                 string `yaml:"half_down"`
-	FullUp                   string `yaml:"full_up"`
-	FullDown                 string `yaml:"full_bottom"`
-	GoToFirstLine            string `yaml:"first_line"`
-	GoToLastLine             string `yaml:"last_line"`
-	GoToTop                  string `yaml:"top"`
-	GoToMiddle               string `yaml:"middle"`
-	GoToBottom               string `yaml:"bottom"`
+	UpFocus                  string `yaml:"up_focus" json:"up_focus"`
+	DownFocus                string `yaml:"down_focus" json:"down_focus"`
+	HalfUp                   string `yaml:"half_up" json:"half_up"`
+	HalfDown                 string `yaml:"half_down" json:"half_down"`
+	FullUp                   string `yaml:"full_up" json:"full_up"`
+	FullDown                 string `yaml:"full_bottom" json:"full_bottom"`
+	GoToFirstLine            string `yaml:"first_line" json:"first_line"`
+	GoToLastLine             string `yaml:"last_line" json:"last_line"`
+	GoToTop                  string `yaml:"top" json:"top"`
+	GoToMiddle               string `yaml:"middle" json:"middle"`
+	GoToBottom               string `yaml:"bottom" json:"bottom"`
 	Search                   string
-	ClearSearch              string `yaml:"clear_search"`
+	ClearSearch              string `yaml:"clear_search" json:"clear_search"`
 	Normal                   string
-	CursorWordForward        string `yaml:"cursor_word_forward"`
-	CursorWordBackward       string `yaml:"cursor_word_backward"`
-	CursorDeleteWordBackward string `yaml:"cursor_delete_word_backward"`
-	CursorDeleteWordForward  string `yaml:"cursor_delete_word_forward"`
-	CursorDeleteAfterCursor  string `yaml:"cursor_delete_after_cursor"`
-	CursorDeleteBeforeCursor string `yaml:"cursor_delete_before_cursor"`
-	CursorLineStart          string `yaml:"cursor_line_start"`
-	CursorLineEnd            string `yaml:"cursor_line_end"`
-	CursorPaste              string `yaml:"cursor_paste"`
+	CursorWordForward        string `yaml:"cursor_word_forward" json:"cursor_word_forward"`
+	CursorWordBackward       string `yaml:"cursor_word_backward" json:"cursor_word_backward"`
+	CursorDeleteWordBackward string `yaml:"cursor_delete_word_backward" json:"cursor_delete_word_backward"`
+	CursorDeleteWordForward  string `yaml:"cursor_delete_word_forward" json:"cursor_delete_word_forward"`
+	CursorDeleteAfterCursor  string `yaml:"cursor_delete_after_cursor" json:"cursor_delete_after_cursor"`
+	CursorDeleteBeforeCursor string `yaml:"cursor_delete_before_cursor" json:"cursor_delete_before_cursor"`
+	CursorLineStart          string `yaml:"cursor_line_start" json:"cursor_line_start"`
+	CursorLineEnd            string `yaml:"cursor_line_end" json:"cursor_line_end"`
+	CursorPaste              string `yaml:"cursor_paste" json:"cursor_paste"`
 }
 
 var DefaultConfig = &Config{
@@ -180,9 +181,17 @@ func UnmarshalConfig(configFile, basePath string) (*Config, error) {
 		}
 	}
 
-	if err = yaml.Unmarshal(file, &res); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal config file \"%s\": %w", configFile, err)
+	switch filepath.Ext(configFile) {
+	case ".json":
+		if err = json.Unmarshal(file, &res); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal config file \"%s\": %w", configFile, err)
+		}
+	case ".yaml", ".yml":
+		if err = yaml.Unmarshal(file, &res); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal config file \"%s\": %w", configFile, err)
+		}
 	}
+
 	return res, nil
 }
 
@@ -220,8 +229,15 @@ func UnmarshalKeyb(keybFile, basePath string) (Apps, error) {
 	}
 
 	var b Apps
-	if err := yaml.Unmarshal(file, &b); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal keyb file: %w", err)
+	switch filepath.Ext(keybFile) {
+	case ".json":
+		if err = json.Unmarshal(file, &b); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal keyb file: %w", err)
+		}
+	case ".yaml", ".yml":
+		if err := yaml.Unmarshal(file, &b); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal keyb file: %w", err)
+		}
 	}
 	return b, nil
 }

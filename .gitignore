@@ -4,6 +4,9 @@
 *.gitcommit
 
 testdata/keyb*
+!testdata/*.json
+!testdata/*.yml
+!testdata/*.yaml
 keyb
 
 dist/

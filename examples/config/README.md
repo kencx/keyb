@@ -50,6 +50,8 @@ Both ANSI and hex color codes are supported.
 | `placeholder_bg` | -          | Placeholder background |
 | `border_color`   | -          | Border color |
 
+If you are missing colors, see [README.md#missing-colors].
+
 ### Hotkeys
 Multiple keys may be set for a single binding, separated by commas.
 

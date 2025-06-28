@@ -31,6 +31,8 @@ annoying to look them up so I resorted to writing them down on a paper
 cheatsheet. Then, I thought: maybe there's a tool that does this better. I
 didn't find one I liked so I built keyb.
 
+I also wrote a blog [post](https://blog.cheo.dev/posts/keyb) about building keyb.
+
 With keyb, I can list:
 
 - Hotkeys that I occasionally forget or am new to

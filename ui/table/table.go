@@ -152,10 +152,3 @@ func (t *Model) GetAllRowsofHeading(heading string) []*Row {
 	}
 	return res
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}

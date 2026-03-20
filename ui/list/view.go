@@ -52,10 +52,3 @@ func formCounter(m *Model) string {
 	}
 	return m.counterStyle.Render(counter)
 }
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}

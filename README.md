@@ -53,6 +53,14 @@ Download a compiled binary from the [releases](https://github.com/kencx/keyb/rel
 $ go install github.com/kencx/keyb@latest
 ```
 
+### AUR
+
+Packages can be found in the AUR:
+- [keyb-bin](https://aur.archlinux.org/packages/keyb-bin)
+- [keyb](https://aur.archlinux.org/packages/keyb)
+
+These are NOT maintained by me.
+
 ### Build from source
 
 ```bash

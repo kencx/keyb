@@ -49,17 +49,12 @@ func AddEntry(path, binding string, kbIgnorePrefix bool) error {
 	if len(s) < 3 {
 		return fmt.Errorf("binding must be given in format [app; name; keybind]")
 	}
-	input := struct {
-		AppName string
-		Name    string
-		Key     string
-	}{
-		AppName: strings.Trim(s[0], " "),
-		Name:    strings.Trim(s[1], " "),
-		Key:     strings.Trim(s[2], " "),
-	}
 
-	apps.addOrUpdate(input.AppName, input.Name, input.Key, kbIgnorePrefix)
+	appName := strings.TrimSpace(s[0])
+	name := strings.TrimSpace(s[1])
+	key := strings.TrimSpace(s[2])
+
+	apps.addOrUpdate(appName, name, key, kbIgnorePrefix)
 
 	// rewrite file
 	data, err := yaml.Marshal(apps)

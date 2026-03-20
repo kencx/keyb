@@ -20,11 +20,11 @@ builds:
       - "-s -w -X main.version={{ .Tag }}"
 archives:
   - name_template: "{{ .ProjectName }}-v{{ .Version }}-{{ .Os }}-{{ .Arch }}"
-    format: tar.gz
+    formats: tar.gz
     format_overrides:
       - goos: windows
-        format: zip
+        formats: zip
 checksum:
   name_template: 'checksums.txt'
 changelog:
-  skip: true
+  disable: true

@@ -68,7 +68,7 @@ usage: keyb [options] <command>
 
 Options:
   -p, --print     Print to stdout
-  -e, --export    Export to file
+  -e, --export    Export to file [yaml, json]
   -k, --key       Key bindings at custom path
   -c, --config    Config file at custom path
   -v, --version   Version info
@@ -99,8 +99,9 @@ $ keyb -p | rofi -dmenu
 
 ### keyb File
 
-keyb requires a `yaml` file with a list of hotkeys to work. A default file is
-generated in your system's config directory if no other file is specified.
+keyb requires a `yaml` or `json` file with a list of hotkeys to work. A default
+`yaml` file is generated in your system's config directory if no other file is
+specified.
 
 Hotkeys are classified into sections with a name and (optional) prefix field.
 When displayed, sections are sorted by alphabetical order while the keys
@@ -170,7 +171,7 @@ If you're missing colors, a workaround is to add the environment variable `CLICO
 
 - [x] Ability to customize keyb hotkeys
 - [x] `a, add` subcommand to quickly add a single hotkey entry from the CLI
-- [x] Export to additional file formats (`json, toml, conf/ini` etc.)
+- [ ] Export to additional file formats (`json, toml, conf/ini` etc.)
 - [ ] Support multiple keyb files or directories
 
 ## Contributing

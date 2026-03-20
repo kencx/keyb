@@ -14,6 +14,8 @@ defined as such:
 - MacOS/Darwin: `$HOME/Library/Application Support/keyb/`,
 - Windows: `%Appdata%\keyb\`
 
+**Note**: `*.json` files are also supported.
+
 ## Options
 
 | Option        | Default                  | Description |

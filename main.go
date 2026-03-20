@@ -17,7 +17,7 @@ const (
 
   Options:
     -p, --print	    Print to stdout
-    -e, --export    Export to file
+    -e, --export    Export to file [yaml, json]
     -k, --key       Key bindings at custom path
     -c, --config    Config file at custom path
     -v, --version   Version info

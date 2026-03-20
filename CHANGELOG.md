@@ -1,9 +1,6 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
 [v0.2.0]: https://github.com/kencx/keyb/compare/v0.1.0...v0.2.0
 [v0.3.0]: https://github.com/kencx/keyb/compare/v0.2.0...v0.3.0
 [v0.4.0]: https://github.com/kencx/keyb/compare/v0.3.0...v0.4.0
@@ -11,6 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.5.0]: https://github.com/kencx/keyb/compare/v0.4.1...v0.5.0
 [v0.6.0]: https://github.com/kencx/keyb/compare/v0.5.0...v0.6.0
 [v0.7.0]: https://github.com/kencx/keyb/compare/v0.6.0...v0.7.0
+[v0.8.0]: https://github.com/kencx/keyb/compare/v0.7.0...v0.8.0
+
+## [v0.8.0]
+
+### Added
+- Add support for json config and keyb files
+- Add support to export keyb files to json and yaml
+
+### Changed
+- Update Go to v1.26.1
+- Update bubbles to v1.0.0
+- Update bubbletea to v1.3.10
+- Update lipgloss to v1.1.0
+- Bump goreleaser/goreleaser-action from 5 to 7
+- Bump actions/checkout from 4 to 6
+- Bump actions/setup-go from 4 to 6
 
 ## [v0.7.0]
 

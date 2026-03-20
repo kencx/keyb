@@ -110,7 +110,7 @@ func (r *Row) Render() string {
 
 	if r.IsFiltered {
 		unmatched := s.Normal.Inline(true)
-		matched := s.Filtered.Copy().Inherit(unmatched)
+		matched := s.Filtered.Inherit(unmatched)
 		str := lipgloss.StyleRunes(r.String(), r.MatchedIndex, matched, unmatched)
 
 		if r.IsHeading {

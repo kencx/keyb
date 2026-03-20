@@ -170,12 +170,12 @@ If you're missing colors, a workaround is to add the environment variable `CLICO
 
 - [x] Ability to customize keyb hotkeys
 - [x] `a, add` subcommand to quickly add a single hotkey entry from the CLI
-- [ ] Export to additional file formats (`json, toml, conf/ini` etc.)
+- [x] Export to additional file formats (`json, toml, conf/ini` etc.)
 - [ ] Support multiple keyb files or directories
 
 ## Contributing
 
-keyb requires Go 1.22. Bug reports, feature requests and PRs are very welcome.
+Contributing to keyb requires Go 1.26. Bug reports, feature requests and PRs are very welcome.
 
 ## Similar Tools
 

@@ -93,7 +93,7 @@ func (r *Row) Render() string {
 		if r.IsFiltered {
 			// Inline to remove margins, paddings and borders from styledrunes
 			unmatched := s.Selected.Inline(true)
-			matched := s.Filtered.Copy().Inherit(unmatched)
+			matched := s.Filtered.Inherit(unmatched)
 			str := lipgloss.StyleRunes(r.String(), r.MatchedIndex, matched, unmatched)
 
 			if r.IsHeading {

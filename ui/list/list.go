@@ -130,8 +130,8 @@ func (m *Model) style(c *config.Config) {
 		s := table.RowStyles{
 			Normal:          lipgloss.NewStyle().Margin(0, 2).TabWidth(lipgloss.NoTabConversion),
 			Heading:         lipgloss.NewStyle().Margin(0, 1).Bold(true).TabWidth(lipgloss.NoTabConversion),
-			Selected:        cursor.Copy().Margin(0, 2).TabWidth(lipgloss.NoTabConversion),
-			SelectedHeading: cursor.Copy().Margin(0, 1).Bold(true).TabWidth(lipgloss.NoTabConversion),
+			Selected:        cursor.Margin(0, 2).TabWidth(lipgloss.NoTabConversion),
+			SelectedHeading: cursor.Margin(0, 1).Bold(true).TabWidth(lipgloss.NoTabConversion),
 			Filtered: lipgloss.NewStyle().
 				Foreground(lipgloss.Color(c.FilterFg)).
 				Background(lipgloss.Color(c.FilterBg)).

@@ -37,12 +37,12 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		case tea.MouseButtonWheelUp:
 			m.cursor -= m.viewport.MouseWheelDelta
 			if m.cursorPastViewTop() {
-				m.viewport.LineUp(m.viewport.MouseWheelDelta)
+				m.viewport.ScrollUp(m.viewport.MouseWheelDelta)
 			}
 		case tea.MouseButtonWheelDown:
 			m.cursor += m.viewport.MouseWheelDelta
 			if m.cursorPastViewBottom() {
-				m.viewport.LineDown(m.viewport.MouseWheelDelta)
+				m.viewport.ScrollDown(m.viewport.MouseWheelDelta)
 			}
 		}
 	}
@@ -85,29 +85,29 @@ func (m *Model) handleNormal(msg tea.Msg) tea.Cmd {
 		case key.Matches(msg, m.keys.Up):
 			m.cursor--
 			if m.cursorPastViewTop() {
-				m.viewport.LineUp(1)
+				m.viewport.ScrollUp(1)
 			}
 		case key.Matches(msg, m.keys.Down):
 			m.cursor++
 			if m.cursorPastViewBottom() {
-				m.viewport.LineDown(1)
+				m.viewport.ScrollDown(1)
 			}
 
 		case key.Matches(msg, m.keys.UpFocus):
 			m.cursor--
 			if m.cursorPastViewTop() {
-				m.viewport.LineUp(1)
+				m.viewport.ScrollUp(1)
 			}
 		case key.Matches(msg, m.keys.DownFocus):
 			m.cursor++
 			if m.cursorPastViewBottom() {
-				m.viewport.LineDown(1)
+				m.viewport.ScrollDown(1)
 			}
 
 		case key.Matches(msg, m.keys.HalfUp):
 			m.cursor -= m.viewport.Height / 2
 			if m.cursorPastViewTop() {
-				m.viewport.HalfViewUp()
+				m.viewport.HalfPageUp()
 			}
 
 			// don't loop around
@@ -118,7 +118,7 @@ func (m *Model) handleNormal(msg tea.Msg) tea.Cmd {
 		case key.Matches(msg, m.keys.HalfDown):
 			m.cursor += m.viewport.Height / 2
 			if m.cursorPastViewBottom() {
-				m.viewport.HalfViewDown()
+				m.viewport.HalfPageDown()
 			}
 
 			// don't loop around
@@ -130,7 +130,7 @@ func (m *Model) handleNormal(msg tea.Msg) tea.Cmd {
 		case key.Matches(msg, m.keys.FullUp):
 			m.cursor -= m.viewport.Height
 			if m.cursorPastViewTop() {
-				m.viewport.ViewUp()
+				m.viewport.PageUp()
 			}
 
 			// don't loop around
@@ -142,7 +142,7 @@ func (m *Model) handleNormal(msg tea.Msg) tea.Cmd {
 		case key.Matches(msg, m.keys.FullDown):
 			m.cursor += m.viewport.Height
 			if m.cursorPastViewBottom() {
-				m.viewport.ViewDown()
+				m.viewport.PageDown()
 			}
 
 			// don't loop around
@@ -201,20 +201,20 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 		case key.Matches(msg, m.keys.UpFocus):
 			m.cursor--
 			if m.cursorPastViewTop() {
-				m.viewport.LineUp(1)
+				m.viewport.ScrollUp(1)
 			}
 			return nil
 		case key.Matches(msg, m.keys.DownFocus):
 			m.cursor++
 			if m.cursorPastViewBottom() {
-				m.viewport.LineDown(1)
+				m.viewport.ScrollDown(1)
 			}
 			return nil
 
 		case key.Matches(msg, m.keys.HalfUp):
 			m.cursor -= m.viewport.Height / 2
 			if m.cursorPastViewTop() {
-				m.viewport.HalfViewUp()
+				m.viewport.HalfPageUp()
 			}
 
 			// don't loop around
@@ -225,7 +225,7 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 		case key.Matches(msg, m.keys.HalfDown):
 			m.cursor += m.viewport.Height / 2
 			if m.cursorPastViewBottom() {
-				m.viewport.HalfViewDown()
+				m.viewport.HalfPageDown()
 			}
 
 			// don't loop around
@@ -237,7 +237,7 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 		case key.Matches(msg, m.keys.FullUp):
 			m.cursor -= m.viewport.Height
 			if m.cursorPastViewTop() {
-				m.viewport.ViewUp()
+				m.viewport.PageUp()
 			}
 
 			// don't loop around
@@ -249,7 +249,7 @@ func (m *Model) handleSearch(msg tea.Msg) tea.Cmd {
 		case key.Matches(msg, m.keys.FullDown):
 			m.cursor += m.viewport.Height
 			if m.cursorPastViewBottom() {
-				m.viewport.ViewDown()
+				m.viewport.PageDown()
 			}
 
 			// don't loop around

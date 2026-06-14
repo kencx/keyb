@@ -8,7 +8,7 @@ require (
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/juju/ansiterm v1.0.0
 	github.com/muesli/reflow v0.3.0
-	github.com/sahilm/fuzzy v0.1.1
+	github.com/sahilm/fuzzy v0.1.3
 	gopkg.in/yaml.v2 v2.4.0
 )
 

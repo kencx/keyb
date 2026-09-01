@@ -176,9 +176,8 @@ func UnmarshalConfig(configFile, basePath string) (*Config, error) {
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			return res, nil
-		} else {
-			return nil, fmt.Errorf("failed to read config file \"%s\": %w", configFile, err)
 		}
+		return nil, fmt.Errorf("failed to read config file \"%s\": %w", configFile, err)
 	}
 
 	switch filepath.Ext(configFile) {
@@ -201,7 +200,7 @@ func newDefaultConfig(basePath string) *Config {
 	return res
 }
 
-// Read keyb file or create default keyb file not exist
+// Read keyb file, creates default keyb file if not exist
 func UnmarshalKeyb(keybFile, basePath string) (Apps, error) {
 	if keybFile == "" {
 		keybFile = filepath.Join(basePath, defaultKeybFile)
@@ -211,7 +210,6 @@ func UnmarshalKeyb(keybFile, basePath string) (Apps, error) {
 	file, err := os.ReadFile(keybFile)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-
 			k := newDefaultKeyb(keybFile)
 			data, err := yaml.Marshal(k)
 			if err != nil {
@@ -222,10 +220,8 @@ func UnmarshalKeyb(keybFile, basePath string) (Apps, error) {
 				return nil, fmt.Errorf("failed to create keyb file: %w", err)
 			}
 			return k, nil
-
-		} else {
-			return nil, fmt.Errorf("failed to read keyb file: %w", err)
 		}
+		return nil, fmt.Errorf("failed to read keyb file: %w", err)
 	}
 
 	var b Apps

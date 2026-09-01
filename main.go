@@ -93,12 +93,10 @@ func main() {
 			addCmd.Usage = func() { os.Stdout.Write([]byte(addHelp)) }
 			addCmd.Parse(args[1:])
 
-			var addFile string
-			if keybFile != "" {
-				// use flag -k path
-				addFile = keybFile
-			} else {
-				// use default path in config
+			// use -k path by default
+			addFile := keybFile
+			if addFile == "" {
+				// otherwise, use keybPath in config
 				addFile = cfg.KeybPath
 			}
 			if err := config.AddEntry(addFile, addBind, addPrefix); err != nil {
@@ -133,7 +131,6 @@ func main() {
 }
 
 func start(m *ui.Model) error {
-
 	p := tea.NewProgram(m, tea.WithMouseCellMotion(), tea.WithAltScreen())
 
 	if _, err := p.Run(); err != nil {
